@@ -1,0 +1,6 @@
+framework module Pods_Moozy_App {
+  umbrella header "Pods-Moozy_App-umbrella.h"
+
+  export *
+  module * { export * }
+}

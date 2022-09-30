@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Friend_Data" representedClassName="Friend_Data" syncable="YES">
+        <attribute name="isblocked" optional="YES" attributeType="String"/>
+        <attribute name="ishidden" optional="YES" attributeType="String"/>
+        <attribute name="ismuted" optional="YES" attributeType="String"/>
+        <attribute name="lastActive" optional="YES" attributeType="String"/>
+        <attribute name="lastchat" optional="YES" attributeType="String"/>
+        <attribute name="lastChatCounter" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="messageType" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="onlinestatus" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pstatus" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="red_recipt" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="seenstatus" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="u_id" optional="YES" attributeType="String"/>
+        <attribute name="user_img" optional="YES" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="Friend_Data" positionX="-36" positionY="9" width="128" height="253"/>
+    </elements>
+</model>
