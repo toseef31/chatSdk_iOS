@@ -18,7 +18,7 @@ class ChatListCell: UITableViewCell{
     var lblName: UILabel?
     var lblLastMessage: UILabel?
     var lblDate: UILabel?
-    var muteImageIcon = UIImageView(image: UIImage(systemName: "speaker.slash")!, contentModel: .scaleAspectFill)
+    var muteImageIcon = UIImageView(image: UIImage(systemName: "speaker.slash")!.withTintColor(AppColors.primaryColor), contentModel: .scaleAspectFill)
     var lblUnreadMessage: UILabel?
     var notificationView: UIView?
     var statusView: UIView?
@@ -28,8 +28,9 @@ class ChatListCell: UITableViewCell{
         didSet{
             
             let name = chatData?.name.capitalizingFirstLetter() ?? ""
-            lblName?.text = name != "" ? name : "No Nameee".capitalizingFirstLetter()
-            
+            print(name)
+            lblName?.text = name != "" ? name : "No Nameee"
+            print(name)
             lblDate?.text =  (chatData?.createdAt.getActualDate()) ?? ""
             statusView?.backgroundColor = chatData?.onlineStatus == 1 ?  #colorLiteral(red: 0, green: 0.8901960784, blue: 0.3725490196, alpha: 1) : #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
             let image = chatData?.profile_image ?? nil
@@ -49,12 +50,16 @@ class ChatListCell: UITableViewCell{
                 imgTitle?.isHidden = true
                 lblProfileTitle?.isHidden = false
             }
-            self.lblLastMessage?.textColor = chatData?.message ==  "typing..." ?  #colorLiteral(red: 0, green: 0.8901960784, blue: 0.3725490196, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            self.lblLastMessage?.textColor = chatData?.message ==  "typing..." ?  #colorLiteral(red: 0.2352941176, green: 0.2352941176, blue: 0.2352941176, alpha: 1) : #colorLiteral(red: 0.2352941176, green: 0.2352941176, blue: 0.2352941176, alpha: 1)
 
             if let messageType = chatData?.messageType {
                 switch messageType {
                 case  0:
-                    self.lblLastMessage?.text = "\(chatData?.message ?? "")"
+                    if chatData?.message == "" {
+                        self.lblLastMessage?.text = "Start Chat"
+                        break
+                    }
+                    self.lblLastMessage?.text = "\(chatData?.message ?? "Start Chat")"
                     break
                 case  1:
                     self.lblLastMessage?.text = "🖼️ Image"
@@ -112,14 +117,19 @@ class ChatListCell: UITableViewCell{
     
     //MARK: -- Initialized Controls
     func initializedControls(){
-        contentView.backgroundColor = #colorLiteral(red: 0.9803921569, green: 0.9803921569, blue: 0.9803921569, alpha: 1)
+       // contentView.backgroundColor = .clear//AppColors.secondaryColor
+       
+        mainView = UIView(backgroundColor:  #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), cornerRadius: 20, maskToBounds: true)
+        mainView?.addBorder(width: 2, color: #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1))
         
-        mainView = UIView(backgroundColor: UIColor.white, cornerRadius: 10)
+        //UIView(backgroundColor:  #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), cornerRadius: 20, borderColor: #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1), borderWidth: 2 , maskToBounds: true)
         
+//        UIView(backgroundColor:  #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), cornerRadius: 20, borderColor: #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1), borderWidth: 2 , maskToBounds: true)
+       
         viewProfile = UIView(cornerRadius: 50/2)
         view.clipsToBounds = true
         
-        view.setGradientBackground(frame: CGRect(x: 0, y: 0, width: 50, height: 50), colorLeft: AppGradentColors.colorLeft, colorRight: AppGradentColors.colorRight)
+        view.setGradientBackground(frame: CGRect(x: 0, y: 0, width: 50, height: 50), colorLeft: AppGradentColor.colorLeft, colorRight: AppGradentColor.colorRight)
         
         lblProfileTitle = UILabel(fontColor: UIColor.white, alignment: .left, font: UIFont.font(.Poppins, type: .Medium, size: 22))
         
@@ -127,13 +137,14 @@ class ChatListCell: UITableViewCell{
         
         statusView = UIView(backgroundColor: UIColor.green, cornerRadius: 8/2)
         
-        lblName = UILabel(fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Muli, type: .Medium, size: 15))
+        lblName = UILabel(fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Roboto, type: .Medium, size: 14))
         
         lblLastMessage = UILabel(fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Muli, type: .none, size: 12))
         
-        lblDate = UILabel(fontColor: UIColor.gray, alignment: .right, font: UIFont.font(.Muli, type: .Regular, size: 12))
+        lblDate = UILabel(fontColor: #colorLiteral(red: 0.2352941176, green: 0.2352941176, blue: 0.2352941176, alpha: 1), alignment: .right, font: UIFont.font(.Roboto, type: .Light, size: 12))
         
-        notificationView = UIView(backgroundColor: #colorLiteral(red: 0, green: 0.8588235294, blue: 0.7607843137, alpha: 1), cornerRadius: 20/2)
+        
+        notificationView = UIView(backgroundColor: #colorLiteral(red: 0.2980392157, green: 0.8509803922, blue: 0.3921568627, alpha: 1), cornerRadius: 20/2)
         
         lblUnreadMessage = UILabel(fontColor: UIColor.white, alignment: .right, font: UIFont.font(.Muli, type: .Bold, size: 11))
     }
@@ -141,7 +152,6 @@ class ChatListCell: UITableViewCell{
     //MARK: -- Setup UI
     func configureUI(){
         initializedControls()
-        
         contentView.addSubview(mainView!)
         notificationView?.constraintsWidhHeight(size: .init(width: 20, height: 20))
         muteImageIcon.constraintsWidhHeight(size: .init(width: 20, height: 20))
@@ -152,14 +162,14 @@ class ChatListCell: UITableViewCell{
         viewProfile?.addMultipleSubViews(views: statusView!, view)
         view.addMultipleSubViews(views: imgTitle!, lblProfileTitle!)
         
-        mainView?.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 4, left: 8, bottom: 4, right: 8), size: .init(width: 0, height: 85))
+        mainView?.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 6, left: 0, bottom: 6, right: 0), size: .init(width: 0, height: 85))
         
         viewProfile?.anchor(top: nil, leading: mainView?.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 10, bottom: 0, right: 0), size: .init(width: 50, height: 50))
         viewProfile?.verticalCenterWith(withView: mainView)
         
         view.fillSuperView()
         
-        statusView?.anchor(top: viewProfile?.topAnchor, leading: viewProfile?.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 2.5, bottom: 0, right: 0), size: .init(width: 10, height: 8))
+        statusView?.anchor(top: viewProfile?.topAnchor, leading: viewProfile?.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 2.5, bottom: 0, right: 0), size: .init(width: 8, height: 8))
         
         lblProfileTitle?.centerSuperView()
         imgTitle?.fillSuperView()
@@ -185,6 +195,30 @@ class ChatListCell: UITableViewCell{
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+//    override func layoutSubviews() {
+//     super.layoutSubviews()
+//     setRemoveSwipeAction()
+//    }
+//
+//    override func layoutIfNeeded() {
+//     super.layoutIfNeeded()
+//     setRemoveSwipeAction()
+//    }
     
 }
 
+//extension UITableViewCell {
+//
+//   var cellActionPullView: UIView? {
+//    superview?.subviews
+//     .filter{ String(describing: $0).range(of: "UISwipeActionPullView") != nil }
+//     .compactMap { $0 }.first
+//   }
+//
+//   func setRemoveSwipeAction() {
+//       cellActionPullView?.resizableSnapshotView(from: CGRect(x: 10, y: 10, width: 12, height: 12), afterScreenUpdates: true, withCapInsets: .init(top: 8, left: 8, bottom: 8, right: 8))
+////      cellActionPullView?.snp.makeConstraints({ make in
+////      make.top.equalTo(self.snp.top).offset(8)
+////      make.bottom.equalTo(self.snp.bottom).inset(8)})
+//   }
+//}

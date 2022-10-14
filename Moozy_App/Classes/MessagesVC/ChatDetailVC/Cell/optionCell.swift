@@ -20,7 +20,7 @@ class OptionCallCell: UITableViewCell{
     
     let image = UIImageView(image: UIImage(systemName: "speaker.slash")!, contentModel: .scaleAspectFit)
     
-    let lnlName = UILabel(title: "Mute", fontColor: UIColor.black, alignment: .left, font: UIFont.systemFont(ofSize: 12))
+    let lnlName = UILabel(title: "Mute", fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Roboto, type: .Medium, size: 12))
     var ismute = 0
     var ismuted : Int  = 0 {
         didSet {
@@ -68,7 +68,7 @@ class OptionCallCell: UITableViewCell{
     
     func configureUI(){
         
-        image.setImageColor(color: AppColors.primaryColor)
+        image.setImageColor(color: AppColors.BlackColor)
         
         contentView.addMultipleSubViews(views: image, lnlName)
         

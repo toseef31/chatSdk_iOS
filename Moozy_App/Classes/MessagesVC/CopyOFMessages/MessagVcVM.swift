@@ -10,18 +10,19 @@ import Foundation
 import SimpleTwoWayBinding
 import UIKit
 
-struct ChatMessageModelselection {
+struct ChatMessageModelselection : Codable {
     var isSelected: Bool?
     var isSending: Bool?
     var isDownloading: Bool?
     var messages : chat_data?
 }
 
-struct ChatMessagesModel{
+struct ChatMessagesModel : Codable {
     var isSelected: Bool?
     var date : String?
     var messagesData : [ChatMessageModelselection]?
 }
+
 
 class ChatDataVM {
     
@@ -46,26 +47,34 @@ class ChatDataVM {
     
     var isSelecting : Bool = false
     var selectedMessage : [chat_data]  = []
+    private let utilityQueues = DispatchQueue.global(qos: .utility)
     
     init(receiverId: String? = ""){
         receiverID.value = receiverId!
-        //getChatMessageLocal()
-        getChat()
+         getChat()
         dataBinding()
     }
-    func updatalocalChat(){
+    func updatalocalChat(data : [ChatMessagesModel]){
         
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let datae = try! encoder.encode(data)
+        UserDefaults.removeSpecificKeys(key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
+        AppUtils.shared.saveChatMessa(chat: datae, key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
+    
     }
     
     //Get All chat
     func getChat(){
+        
         APIServices.shared.getChat(receiverId: receiverID.value!, limit: 0, chatHideStat: false) { [self] (response, errorMessage) in
             if response != nil{
                 isSelecting = false
-                print("\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
-                UserDefaults.removeSpecificKeys(key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
-                AppUtils.shared.saveChatMessages(chat: response, key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
-                 DispatchQueue.main.asyncAfter(deadline: .now()+0.2, execute: {
+               
+//                UserDefaults.removeSpecificKeys(key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
+//                AppUtils.shared.saveChatMessages(chat: response, key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
+                
+                 DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
                     allChat.value = response
                 })
                }else{
@@ -78,6 +87,7 @@ class ChatDataVM {
     //Send Messages
     func sendMessage(message: String, chatType: Int, messageType: Int, commentId: String? = "" , commentData : [chat_data]? = [] , selectedUserData: String? = ""){
         
+        isForwardByMe = true
         
         APIServices.shared.sendMessage(receiver_Id: receiverID.value!, message: message, messageType: messageType, chatType: chatType, comment_Id: commentId!, commentData: commentData, createdAt: "", selectedUserData: selectedUserData ?? "") { [self] (response, errorMessage) in
             if response != nil{
@@ -92,6 +102,8 @@ class ChatDataVM {
     
     //Send Messages
     func UpdateMessage(Messages: [ChatMessagesModel], message_Id : IndexPath ,message: String, chatType: Int, messageType: Int, commentId: String? = "", selectedUserData: String? = ""){
+        isForwardByMe = true
+        
         var arrayOfMessages = Messages
        
         var data = arrayOfMessages
@@ -115,15 +127,16 @@ class ChatDataVM {
     
     
     func getChatMessageLocal(){
+        
         let senderId = AppUtils.shared.senderID
         print("\(senderId)\(receiverID.value!)")
-        AppUtils.shared.getChatMessages(key: "\(senderId)\(receiverID.value!)") { [self] (response, errorMessage) in
+        AppUtils.shared.getLocalChatMessages(key: "\(senderId)\(receiverID.value!)") { [self] (response, errorMessage) in
             if response != nil{
                 print(response?.count)
                 isSelecting = false
                 DispatchQueue.main.asyncAfter(deadline: .now()+0.2, execute: {
-               
-                    allChat.value = response
+                    AllChatMsg.value = response
+                   // allChat.value = response
                     
                 })
             }else{
@@ -134,7 +147,7 @@ class ChatDataVM {
     
     
     func sendMessage(message: String, chatType: Int, messageType: Int, commentId: String? = "" , commentData : [chat_data] ){
-        
+        isForwardByMe = true
         APIServices.shared.sendMessage(receiver_Id: receiverID.value!, message: message, messageType: messageType, chatType: chatType, comment_Id: commentId!, commentData: commentData, createdAt: "", selectedUserData: "") { [self] (response, errorMessage) in
             if response != nil{
                 print(response)
@@ -159,7 +172,7 @@ class ChatDataVM {
     
     func createMessageSection(from messagesArray:[chatModel]?) {
         chatMessagesArr.removeAll()
-        chatMessagesArr.insert(NewChatMessages(isDowloading: false, date: chatMessages.createdDate!, messages: []), at: 0)
+//        chatMessagesArr.insert(NewChatMessages(isDowloading: false, date: chatMessages.createdDate!, messages: []), at: 0)
         
         for messagesIndex in 0..<messagesArray!.count {
             
@@ -178,6 +191,7 @@ class ChatDataVM {
         }
         
         
+        //chatMessagesArr.append(NewChatMessages(isDowloading: false, date: chatMessages.createdDate!, messages: []))
         
         
         AllChatMessage.value = chatMessagesArr
@@ -191,19 +205,19 @@ class ChatDataVM {
         
         allChat.bind { [self] (data, _) in
             ChatMessagesArray.removeAll()
-            if data.value?.count != 0 {
-                
-                ChatMessagesArray.insert(ChatMessagesModel(isSelected: false, date: "", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: data.value![0])]), at: 0)
-                
-            } else {
-                var messages: [chat_data] = []
-                
-                if let data = constatntChatModel.data(using: .utf8) {
-                    let login = try? JSONDecoder().decode(chat_data.self, from: data)
-                    // messages.append(login!)
-                    ChatMessagesArray.append(ChatMessagesModel(isSelected: false, date: "", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: login!)]))
-                }
-            }
+//            if data.value?.count != 0 {
+//
+//            // ChatMessagesArray.insert(ChatMessagesModel(isSelected: false, date: "sdfsd", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: data.value![0])]), at: 0)
+//
+//            } else {
+//                var messages: [chat_data] = []
+//
+//                if let data = constatntChatModel.data(using: .utf8) {
+//                    let login = try? JSONDecoder().decode(chat_data.self, from: data)
+//                    // messages.append(login!)
+//                    ChatMessagesArray.append(ChatMessagesModel(isSelected: false, date: "no", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: login!)]))
+//                }
+//            }
             
             for msgIndex in 0..<data.value!.count {
                 var actualDate = ""
@@ -211,7 +225,7 @@ class ChatDataVM {
                 if data.value![msgIndex].createdAt != ""{
                     actualDate = data.value![msgIndex].createdAt.getActualDate()
                 }
-                if ChatMessagesArray.count >= 1 {
+                if ChatMessagesArray.count >= 0 {
                     if let filteredIndex = ChatMessagesArray.firstIndex(where: {$0.date == actualDate}) {
                         ChatMessagesArray[filteredIndex].messagesData?.append(contentsOf: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages:  data.value![msgIndex])])
                     }
@@ -322,7 +336,7 @@ class ChatDataVM {
     
     func sendFile(image: UIImage? = nil , fileName: String? = "", audioData:Data?, videoData:Data? = nil, friendId: String, messageType: Int, receiptStatus: Int, receiverId: String ) {
         isSelecting = false
-        
+        isForwardByMe = true
         APIServices.shared.sendFiles(image: image, fileName: fileName, audioData: audioData,videoData: videoData,  friendId: friendId, messageType: messageType , receiptStatus: 0, receiverId: receiverId) { response, progress, errorMessage in
             if response != nil{
                 print("SentSucessfullu")

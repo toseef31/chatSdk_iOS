@@ -46,7 +46,7 @@ class SocketVC{
         }
         
         //MARK: -- GetChatMessages
-        SocketIOManager.sharedMainInstance.getChatMessage {( messageInfo) in
+        SocketIOManager.sharedMainInstance.getChatMessage {( messageInfo ,data) in
             print(messageInfo)
         }
         

@@ -12,7 +12,7 @@ class SettingCell: UITableViewCell{
     var onSwitchValueChange: onChangedValue<String>?
     let image = UIImageView(image: UIImage(systemName: "speaker.slash")!, contentModel: .scaleAspectFit)
     
-    let lnlName = UILabel(title: "Mute", fontColor: UIColor.black, alignment: .left, font: UIFont.systemFont(ofSize: 12))
+    let lnlName = UILabel(title: "Mute", fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Roboto, type: .Medium, size: 12))
     var settingSwitch = UISwitch(backgroundColor: .clear, maskToBounds: true)
     
    
@@ -25,11 +25,11 @@ class SettingCell: UITableViewCell{
             }
             else if setData?.title == "Typing" {
                 print("typing")
-                    image.setImageColor(color: AppColors.primaryColor)
+                    image.setImageColor(color: AppColors.BlackColor)
                 settingSwitch.isHidden = false
             }
             else{
-                image.setImageColor(color: AppColors.primaryColor)
+                image.setImageColor(color: AppColors.BlackColor)
                 settingSwitch.isHidden = true
             }
                     image.image = setData?.image ?? nil
@@ -45,10 +45,9 @@ class SettingCell: UITableViewCell{
     }
     
     func configureUI(){
-        image.setImageColor(color: AppColors.primaryColor)
-        
+        image.setImageColor(color: AppColors.BlackColor)
         contentView.addMultipleSubViews(views: image, lnlName,settingSwitch)
-        settingSwitch.onTintColor = AppColors.primaryColor
+        settingSwitch.onTintColor = AppColors.BlackColor
         settingSwitch.isHidden = true
         
         image.anchor(top: nil, leading: contentView.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 8, bottom: 0, right: 0), size: .init(width: 22, height: 22))

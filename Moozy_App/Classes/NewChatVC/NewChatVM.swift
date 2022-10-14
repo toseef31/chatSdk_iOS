@@ -109,8 +109,11 @@ class AllFriendsVM {
     func sendMessage(message: [chat_data]){
         selecteFriends.forEach { data in
             message.forEach { messageData in
-            
-                APIServices.shared.sendMessage(receiver_Id: data._id ?? "", message: messageData.message, messageType: messageData.messageType, chatType: 0, comment_Id: "" , createdAt: "", selectedUserData: messageData._id) { [self] (response, errorMessage) in
+               print(data._id ?? "")
+                print(selectdfrind)
+                isForwardByMe = selectdfrind == data._id ?? "" ?  true : false
+                print(isForwardByMe)
+                APIServices.shared.forwardsendMessage(receiver_Id: data._id ?? "", message: messageData.message, messageType: messageData.messageType, chatType: 0, comment_Id: "" , createdAt: "", selectedUserData: messageData._id) { [self] (response, errorMessage) in
                     if response != nil{
                         print("Send Message")
                         

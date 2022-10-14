@@ -23,7 +23,7 @@ class friendOperationVC: UIViewController{
     //list of the Friends..
     var listFriendsArr : [AllFrind_Data] = []
     
-    private var addItemsView: btnAddItem?
+    private var addItemsView: emptyView?
     var ViewModel : FriendListVM?
     init(OperationType : String) {
         ViewModel = FriendListVM(OperationType: OperationType)
@@ -74,13 +74,13 @@ class friendOperationVC: UIViewController{
     
     func initializedControls(){
         view.backgroundColor = UIColor.white
-    addItemsView = btnAddItem(title: "No Friends Available")
+    addItemsView = emptyView(title: "No Friends Available")
         topHeaderView = {
-            let view = UIView(backgroundColor: AppColors.primaryColor)
+            let view = UIView(backgroundColor: .white)
             
-            let title = UILabel(title: operationType ?? "Friends", fontColor: AppColors.secondaryColor, alignment: .center, font: UIFont.font(.Poppins, type: .Regular, size: 14))
+            let title = UILabel(title: operationType ?? "Friends", fontColor: AppColors.BlackColor, alignment: .center, font: UIFont.font(.Roboto, type: .Medium, size: 14))
             
-            let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.secondaryColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
+            let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.BlackColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
                 print("Back")
                 self.dismiss(animated: true, completion: nil)
                 self.pop(animated: true)
@@ -208,35 +208,3 @@ extension friendOperationVC: UITableViewDelegate, UITableViewDataSource{
 
 
 
-class btnAddItem: UIView{
-    
-    var btnAddItem : UILabel?
-    var title: String
-    
-    var lblTitle: UILabel?
-    
-    init(title: String,  frame: CGRect = .zero) {
-        self.title = title
-        
-        super.init(frame: frame)
-        configureUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configureUI(){
-        setTitle()
-     
-    }
-    
-    func setTitle(){
-        btnAddItem = UILabel(title: title, fontColor: AppColors.primaryColor, alignment: .center, numberOfLines: 1, font: UIFont.font(.Poppins, type: .Regular, size: 26), underLine: false)
-        
-        addSubview(btnAddItem!)
-        btnAddItem?.centerSuperView()
-        
-    }
-    
-}

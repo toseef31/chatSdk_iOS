@@ -45,11 +45,11 @@ class settingVC: UIViewController{
         view.backgroundColor = UIColor.white
         
         topHeaderView = {
-            let view = UIView(backgroundColor: AppColors.primaryColor)
+            let view = UIView(backgroundColor: .white)
             
-            let title = UILabel(title: "Setting", fontColor: AppColors.secondaryColor, alignment: .center, font: UIFont.font(.Poppins, type: .Regular, size: 14))
+            let title = UILabel(title: "Setting", fontColor: AppColors.BlackColor, alignment: .center, font: UIFont.font(.PottaOne, type: .Medium, size: 14))
             
-            let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.secondaryColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
+            let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.BlackColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
                 print("Back")
 //                self.dismiss(animated: true, completion: nil)
                 self.pop(animated: true)

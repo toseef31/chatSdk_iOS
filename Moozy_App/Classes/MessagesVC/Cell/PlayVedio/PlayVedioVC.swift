@@ -28,7 +28,6 @@ class videoPlayers : UIViewController, AVPlayerViewControllerDelegate {
     var avPlayerViewController: AVPlayerViewController!
     
     init(vedioUrl: String){
-         
            self.videoURL = URL(string: vedioUrl)
            super.init(nibName: nil, bundle: nil)
        }

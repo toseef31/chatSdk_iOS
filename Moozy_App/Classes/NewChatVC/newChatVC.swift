@@ -27,6 +27,7 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
     var btnForward : MoozyActionButton?
     var viewModel: AllFriendsVM?
     var selecteMessage : [chat_data]? = []
+    var addItemsView = emptyView(title: "No Friends Available")
     init(selectedMessages: [chat_data]? = []) {
         viewModel = AllFriendsVM()
         selecteMessage = selectedMessages
@@ -66,7 +67,7 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
         topHeaderView = {
             let view = UIView(backgroundColor: AppColors.secondaryColor)
             
-            btnForward = MoozyActionButton(title: "Forward", font: UIFont.font(.Poppins, type: .Regular, size: 12), foregroundColor: AppColors.primaryColor, backgroundColor: .clear ) { [self] in
+            btnForward = MoozyActionButton(title: "Forward", font: UIFont.font(.Roboto, type: .Medium, size: 12), foregroundColor: AppColors.BlackColor, backgroundColor: .clear ) { [self] in
                 print("Forward click")
                 if viewModel?.selecteFriends.count ?? 0 >= 1 {
                     viewModel?.sendMessage(message: selecteMessage ?? [])
@@ -74,7 +75,7 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
                 self.pop(animated: true)
             }
             
-            let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.primaryColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
+            let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.BlackColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
                 print("Back")
                 
                 self.pop(animated: true)
@@ -88,7 +89,7 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
                 Tittleis = "Select Friends"
                 btnForward?.isHidden = false
             }
-            let lblTitle = UILabel(title: Tittleis , fontColor: AppColors.primaryColor, alignment: .center, font: UIFont.font(.Poppins, type: .Regular, size: 16))
+            let lblTitle = UILabel(title: Tittleis , fontColor: AppColors.BlackColor, alignment: .center, font: UIFont.font(.PottaOne, type: .Medium, size: 16))
             
             view.addMultipleSubViews(views: btnBack, lblTitle,btnForward!)
             
@@ -104,11 +105,12 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
         searchBar = UISearchBar()
         self.searchBar?.delegate = self
         searchBar?.backgroundColor = UIColor.clear
-        searchBar?.searchTextField.textColor = UIColor.white
+        searchBar?.searchTextField.textColor = UIColor.black
         searchBar?.searchBarStyle = UISearchBar.Style.minimal
         searchBar?.placeholder = "Search"
-        searchBar?.searchTextField.backgroundColor = AppColors.primaryColor.withAlphaComponent(0.5)
+       // searchBar?.searchTextField.backgroundColor = AppColors.primaryColor.withAlphaComponent(0.5)
         searchBar?.searchTextField.tintColor = #colorLiteral(red: 0.9529411765, green: 0.9647058824, blue: 1, alpha: 1)
+        searchBar?.searchTextField.backgroundColor = #colorLiteral(red: 0.9529411765, green: 0.9647058824, blue: 1, alpha: 1)
         searchBar?.setSearchFieldBackgroundImage(UIImage(), for: .normal)
         searchBar?.searchTextField.layer.cornerRadius = 35/2
         
@@ -120,8 +122,8 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
     func configureUI(){
         initializedControls()
         
-        view.addMultipleSubViews(views: topHeaderView!, searchBar!, lblAllFrinds!, tblChatList!)
-        
+        view.addMultipleSubViews(views: topHeaderView!, searchBar!, lblAllFrinds!, tblChatList!,addItemsView)
+        addItemsView.fillSuperView()
         topHeaderView?.anchor(top: self.view.topAnchor, leading: self.view.leadingAnchor, bottom: nil, trailing: self.view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: view.frame.width/4.8))
         
         searchBar?.anchor(top: topHeaderView?.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 12, left: 10, bottom: 0, right: 10), size: .init(width: 0, height: 55))
@@ -145,6 +147,18 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
         
         //tblChatList?.reloadData()
     }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.showsCancelButton = false
+        var array = viewModel?.Allusers //dbHelper.shareInstance.getFriendsData()
+        array = (true ? array : array?.filter { $0.name?.range(of: "", options: .caseInsensitive) != nil })
+        array?.forEach { data in
+            viewModel?.userInfo.append(Friend_DataModel(isSelected: false, FrienList: data))
+        }
+        
+        viewModel?.sorting()
+        
+       }
     
     //MARK: ---Configure Tableview
     func configureTableView(){
@@ -169,9 +183,13 @@ extension NewChatVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+      
         return userSection.count
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if userSection.count == 0 {
+            return 0
+        }
         return 15
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -184,9 +202,10 @@ extension NewChatVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
+  
         let userKey = userSection[section]
         tblChatList?.isHidden = false
+        addItemsView.isHidden = true
         if isSearching{
             return 1
         }else{
@@ -198,6 +217,7 @@ extension NewChatVC: UITableViewDelegate, UITableViewDataSource{
             return users.count
         }
         tblChatList?.isHidden = true
+        addItemsView.isHidden = false
         return 0
     }
     
@@ -247,7 +267,7 @@ extension NewChatVC: UITableViewDelegate, UITableViewDataSource{
                 inputFriend.onlineStatus  = receiverData.FrienList?.onlineStatus ?? 0
                 inputFriend.ismute  = 1
                
-                pushTo(viewController: MessageVcCopy(receiverData: inputFriend))
+                pushTo(viewController: MessageVcCopy(receiverData: inputFriend, ChatMessages: []))
                 
             }
         }

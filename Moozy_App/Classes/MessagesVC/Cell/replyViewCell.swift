@@ -51,7 +51,8 @@ class ReplyViewCell: SwipyCell {
           
          //   lblReplyMessage?.text = "\(dataSet?.commentId.message ?? "\(commentSms ?? "")")"
             lblmessage?.text = "\(dataSet?.message ?? "")"
-            print(dataSet?.repliedTo.messageType ?? 0)
+            if dataSet?.repliedTo != nil {
+                
             switch dataSet?.repliedTo.messageType ?? 0 {
              case 0 :
                 lblReplyMessage?.text = "\(dataSet?.repliedTo.message ?? "\(commentSms ?? "")")"
@@ -72,7 +73,7 @@ class ReplyViewCell: SwipyCell {
                  break
              }
             
-           
+            }
             
             if dataSet?.receipt_status == 1 {
                 statusView?.image = UIImage(systemName: "clock")
@@ -100,7 +101,7 @@ class ReplyViewCell: SwipyCell {
                 
                 stackLeadingConstraint.isActive = true
                 stackTrailingConstraint.isActive = false
-                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 12, clipToBonds: true)
+                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 17, clipToBonds: true)
                 statusView?.isHidden = true
                 
                 
@@ -129,7 +130,7 @@ class ReplyViewCell: SwipyCell {
                 stackLeadingConstraint.isActive = false
                 stackTrailingConstraint.isActive = true
                 
-                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomLeft], radius: 12, clipToBonds: true)
+                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomLeft], radius: 17, clipToBonds: true)
                 statusView?.isHidden = false
                
                 if isdelForward! {
@@ -194,7 +195,8 @@ class ReplyViewCell: SwipyCell {
         lblDatetTimeDay = UILabel(title: "date??", fontColor: UIColor.gray, alignment: .left, font: UIFont.font(.Poppins, type: .Regular, size: 12))
         
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
-        stack = UIStackView(views: [lblDatetTimeDay! , statusView! ], axis: .horizontal, spacing: 5, distribution: .fill)
+        stack = UIStackView(views: [lblDatetTimeDay!], axis: .horizontal, spacing: 5, distribution: .fill)
+//        stack = UIStackView(views: [lblDatetTimeDay! , statusView! ], axis: .horizontal, spacing: 5, distribution: .fill)
         
         mainView?.translatesAutoresizingMaskIntoConstraints = false
         lblmessage?.translatesAutoresizingMaskIntoConstraints = false
@@ -208,20 +210,20 @@ class ReplyViewCell: SwipyCell {
         mainView?.addSubview(lblmessage!)
         contentView.addMultipleSubViews(views: stack!,ImgRecivedSlected,imgSendSlected)
         
-        heightBackView =   mainView?.widthAnchor.constraint(lessThanOrEqualToConstant: 250)
+        heightBackView =   mainView?.widthAnchor.constraint(lessThanOrEqualToConstant: 190)
         heightBackView.priority = UILayoutPriority.init(999)
         heightBackView.isActive = true
         
         ImgRecivedSlected.isHidden = true
         imgSendSlected.isHidden = true
         
-        mainView?.anchor(top: contentView.topAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: nil, padding: .init(top: 16, left: 0, bottom: 22, right: 0), size: .init(width: 250, height: 0))
+        mainView?.anchor(top: contentView.topAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: nil, padding: .init(top: 16, left: 0, bottom: 22, right: 0), size: .init(width: 190, height: 0))
         
         replyView?.anchor(top: mainView?.topAnchor, leading: mainView?.leadingAnchor, bottom: nil, trailing: mainView?.trailingAnchor, padding: .init(top: 8, left: 8, bottom: 0, right: 8), size: .init(width: 0, height: 60))
         
         lblmessage?.anchor(top: replyView?.bottomAnchor, leading: mainView?.leadingAnchor, bottom: mainView?.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 8, left: 12, bottom: 8, right: 8))
         
-        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor , padding: .init(top: 8, left: 0, bottom: 0, right: 0))
+        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor , padding: .init(top: 5, left: 0, bottom: 3, right: 0))
         
         
         ImgRecivedSlected.anchor(top: nil, leading: contentView.leadingAnchor, bottom: nil, trailing: nil ,padding: .init(top: 0, left: 16 , bottom: 0, right: 0))

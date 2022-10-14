@@ -80,7 +80,7 @@ class LocationVC: UIViewController{
         navBarView = {
             let view = UIView(backgroundColor: AppColors.primaryColor)
             
-            let title = UILabel(title: "Location", fontColor: AppColors.secondaryColor, alignment: .center, font: UIFont.font(.Poppins, type: .Regular, size: 14))
+            let title = UILabel(title: "Location", fontColor: AppColors.secondaryColor, alignment: .center, font: UIFont.font(.PottaOne, type: .Medium, size: 15))
             
             let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.secondaryColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
                 print("Back")

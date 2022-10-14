@@ -77,13 +77,13 @@ class friendOperationCell : UITableViewCell{
         
        // imgTitle = ProfileView(statusColor: UIColor.green, BGcolor: AppColors.primaryColor, titleFontColor: UIColor.white, showStatus: false, size: .init(width: 50, height: 50))
         
-        lblName = UILabel(fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Muli, type: .Bold, size: 12))
+        lblName = UILabel(fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Roboto, type: .Medium, size: 12))
     }
     
     func configureUI(){
         initializedControls()
         
-        btnPerformAction =  MoozyActionButton(title: "", font: UIFont.font(.Poppins, type: .Medium, size: 12), foregroundColor: AppColors.primaryColor , backgroundColor: .white) { [self] in
+        btnPerformAction =  MoozyActionButton(title: "", font: UIFont.font(.Poppins, type: .Medium, size: 12), foregroundColor: AppColors.BlackColor , backgroundColor: .white) { [self] in
             //self.present(settingVC(), animated: true, completion: nil)
             self.onbtnActionTap?(btnPerformAction?.title ?? "")
            }

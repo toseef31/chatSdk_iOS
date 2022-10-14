@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
+import CryptoSwift
 
 class PopUpAttachmentView: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate{
     
@@ -16,7 +17,8 @@ class PopUpAttachmentView: UIViewController, UIImagePickerControllerDelegate & U
     var tblAttachment: UITableView?
     var btnClose: MoozyActionButton?
     var imagePicker: UIImagePickerController!
-    
+    let seperatorLine = UIView(backgroundColor: #colorLiteral(red: 0.8588235294, green: 0.8588235294, blue: 0.8588235294, alpha: 1))
+    let TOPseperatorLine = UIView(backgroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
     let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
     var blurEffectView = UIVisualEffectView()
     
@@ -32,28 +34,31 @@ class PopUpAttachmentView: UIViewController, UIImagePickerControllerDelegate & U
         configureTableView()
         popView = UIView(backgroundColor: UIColor.white, cornerRadius: 15)
         
-        lblTitle = UILabel(title: "Attach", fontColor: AppColors.primaryColor, alignment: .center, font: UIFont.font(.Poppins, type: .Regular, size: 16))
+        lblTitle = UILabel(title: "Attach", fontColor: AppColors.BlackColor, alignment: .left, font: UIFont.font(.Roboto, type: .Regular, size: 18))
         
         btnClose = MoozyActionButton(image: UIImage(systemName: "xmark"), backgroundColor: UIColor.white, cornerRadius: 60/2, imageSize: .init(width: 20, height: 20)) {
             self.dismiss(animated: true, completion: nil)
         }
-        btnClose?.tint = #colorLiteral(red: 0.6980392157, green: 0.6980392157, blue: 0.6980392157, alpha: 1)
+        btnClose?.tint = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     }
     
     func configureUI(){
         initializedControls()
         
-        view.addMultipleSubViews(views: blurEffectView, btnClose!, popView!)
-        popView?.addMultipleSubViews(views: lblTitle!, btnClose!, tblAttachment!)
+        view.addMultipleSubViews(views: blurEffectView, btnClose!, popView!,TOPseperatorLine)
+        popView?.addMultipleSubViews(views: lblTitle!, btnClose!, seperatorLine ,tblAttachment!)
         
+        TOPseperatorLine.anchor(top: nil, leading: nil, bottom: popView?.topAnchor, trailing: nil, padding: .init(top: 5, left: 0, bottom: 18, right: 5), size: .init(width: view.frame.width/2.5, height: 8))
+        TOPseperatorLine.horizontalCenterWith(withView: view)
+        TOPseperatorLine.roundCorners(corners: .allCorners, radius: 4, clipToBonds: true)
         popView?.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 340))
         
         btnClose?.anchor(top: popView?.topAnchor, leading: nil, bottom: nil, trailing: popView?.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 8), size: .init(width: 50, height: 50))
-        
-        lblTitle?.horizontalCenterWith(withView: popView!)
+        lblTitle?.anchor(top: nil, leading: popView?.leadingAnchor, bottom: nil, trailing: popView?.trailingAnchor,padding: .init(top: 10, left: 15, bottom: 0, right: 0))
+//        lblTitle?.horizontalCenterWith(withView: popView!)
         lblTitle?.verticalCenterWith(withView: btnClose!)
-        
-        tblAttachment?.anchor(top: btnClose?.bottomAnchor, leading: popView?.leadingAnchor, bottom: popView?.bottomAnchor, trailing: popView?.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
+        seperatorLine.anchor(top: btnClose?.bottomAnchor, leading: popView?.leadingAnchor, bottom: nil, trailing: popView?.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 1))
+        tblAttachment?.anchor(top: seperatorLine.bottomAnchor, leading: popView?.leadingAnchor, bottom: popView?.bottomAnchor, trailing: popView?.trailingAnchor, padding: .init(top: 2, left: 0, bottom: 0, right: 0))
         
     }
     
@@ -77,6 +82,7 @@ extension PopUpAttachmentView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! AttachmentCell
         cell.dataSet = ConstantStrings.attacments.attacmentsname[indexPath.row]
+        cell.selectionStyle = .none
         return cell
     }
     

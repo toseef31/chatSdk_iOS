@@ -31,7 +31,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
     var audiotime: UILabel?
     var lblDatetTimeDay: UILabel?
     var audioslider: UISlider?
-    var downloadbtn = UIImageView(image: #imageLiteral(resourceName: "play-circleDownload"), contentModel: .scaleAspectFit)
+    var downloadbtn = UIImageView(image: #imageLiteral(resourceName: "download"), contentModel: .scaleAspectFit)
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
    
    
@@ -86,7 +86,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
             let AudioUrl = APIServices.shared.searchFileExist(fileName: chatData?.message ?? "", fileType: 6)
           print(AudioUrl ?? "not fount")
             if AudioUrl == nil {
-                downloadbtn.image = UIImage(named: "icon-download3")
+                downloadbtn.image = UIImage(named: "download")
                 
                 if  isdownloading == true {
                     downloadbtn.isHidden = true
@@ -113,7 +113,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
                }
                 //activityIndicator.stopAnimating()
                 
-                downloadbtn.image = UIImage(named: "play-circle-1")
+                downloadbtn.image = UIImage(named: "play_circle")
                  
                 var audioduration:Float? = 0
                 var audiotimestring:String? = ""
@@ -130,12 +130,18 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
             mainView?.backgroundColor =
             chatData?.receiverId == AppUtils.shared.senderID ? AppColors.incomingMsgColor : AppColors.outgoingMsgColor
             
+            audioslider?.maximumTrackTintColor =  chatData?.receiverId == AppUtils.shared.senderID ? #colorLiteral(red: 1, green: 0.7803921569, blue: 0.7882352941, alpha: 1) : #colorLiteral(red: 0.9215686275, green: 0.6901960784, blue: 0.2666666667, alpha: 0.5)
+            
             lblDatetTimeDay?.text = getMsgDate(date: chatData?.createdAt ?? "")
             
             if chatData?.receipt_status == 1   {
                 statusView?.image = UIImage(systemName: "clock")
                 activityIndicator.startAnimating()
                  downloadbtn.isHidden = true
+                if chatData?.receiverId == AppUtils.shared.senderID && isdownloading != true {
+                    activityIndicator.stopAnimating()
+                    downloadbtn.isHidden = false
+                }
             }else{
                 if chatData?.seen == 0 && chatData?.receipt_status == 1 {
                     statusView?.image = UIImage(systemName: "checkmark")
@@ -161,7 +167,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
                 trailingConstraint.isActive = false
                 stackLeadingConstraint.isActive = true
                 stackTrailingConstraint.isActive = false
-                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 12, clipToBonds: true)
+                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 20, clipToBonds: true)
                 statusView?.isHidden = true
                 
                 if isdelForward! {
@@ -177,7 +183,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
                 
                 stackLeadingConstraint.isActive = false
                 stackTrailingConstraint.isActive = true
-                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomLeft], radius: 12, clipToBonds: true)
+                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomLeft], radius: 20, clipToBonds: true)
                 statusView?.isHidden = false
                 if isdelForward! {
                 imgRecivedSlected.isHidden = false
@@ -204,7 +210,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
     
     func initializedControls(){
         
-        sliderimage = UIImageView(image: UIImage(named: "sliderTint")!.imageWithColor(color1: AppColors.primaryColor))
+        sliderimage = UIImageView(image: UIImage(named: "sliderTint")!.imageWithColor(color1: .clear))
         
         audiotime = UILabel(title: "0.0", fontColor: AppColors.primaryColor, alignment: .left, numberOfLines: 1, font: UIFont.font(.Poppins, type: .Regular, size: 7))
         
@@ -213,6 +219,8 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
         audioslider = UISlider()
         audioslider?.setThumbImage(sliderimage?.image, for: .normal)
         audioslider?.setThumbImage(sliderimage?.image, for: .highlighted)
+        
+        audioslider?.maximumTrackTintColor =  chatData?.receiverId == AppUtils.shared.senderID ? #colorLiteral(red: 1, green: 0.7803921569, blue: 0.7882352941, alpha: 1) : #colorLiteral(red: 0.9215686275, green: 0.6901960784, blue: 0.2666666667, alpha: 0.5)
         
         //UIImageView(image: UIImage(named: "sliderTint")!.imageWithColor(color1: recvColor))
         
@@ -236,7 +244,8 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
         mainView?.layer.shadowOpacity = 0.23
         mainView?.layer.shadowRadius = 4
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
-        stack = UIStackView(views: [lblDatetTimeDay!,statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
+        stack = UIStackView(views: [lblDatetTimeDay!], axis: .horizontal, spacing: 5, distribution: .fill)
+//        stack = UIStackView(views: [lblDatetTimeDay!,statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
     }
 
     
@@ -245,7 +254,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
         
         imgSendSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
         imgRecivedSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
-        mainView?.constraintsWidhHeight(size: .init(width: 250, height: 240))
+        mainView?.constraintsWidhHeight(size: .init(width: 230, height: 240))
      
          stackeContent = UIStackView(views: [imgSendSlected,mainView!,imgRecivedSlected], axis: .horizontal, spacing: 3, distribution: .fill)
         imgRecivedSlected.isHidden = true
@@ -255,9 +264,9 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
         
         mainView?.addMultipleSubViews(views: downloadbtn, audioslider! , audiotime! ,activityIndicator)
         
-        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 280, height: 45))
+        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 230, height: 45))
         
-        downloadbtn.anchor(top: nil, leading: mainView?.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 4, bottom: 0, right: 0), size: .init(width: 25, height: 25))
+        downloadbtn.anchor(top: nil, leading: mainView?.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 7, bottom: 0, right: 0), size: .init(width: 25, height: 25))
         audiotime?.anchor(top: downloadbtn.bottomAnchor, leading: audioslider?.leadingAnchor, bottom: mainView?.bottomAnchor, trailing: nil,padding: .init(top: 2, left: 2, bottom: 2, right: 2),size: .init(width: 85, height: 0))
         
         downloadbtn.verticalCenterWith(withView: mainView!)
@@ -271,7 +280,7 @@ class AudioMsgCell: SwipyCell, AVAudioPlayerDelegate, AVAudioRecorderDelegate  {
         audioslider?.verticalCenterWith(withView: mainView!)
         
          
-        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: nil, padding: .init(top: 4, left: 0, bottom: 8, right: 0))
+        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: nil, padding: .init(top: 6, left: 0, bottom: 6, right: 0))
         
         leadingConstraint = stackeContent!.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         leadingConstraint.isActive = false

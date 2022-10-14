@@ -14,7 +14,8 @@ typealias onChangedValue<T> = ((T) -> ())
 
 let utilityQueue = DispatchQueue.global(qos: .utility)
 
-public enum UserDefaultsKey : String{
+public enum UserDefaultsKey : String {
+    case Userids = "Userids"
     
     case fcmToken = "fcmToken"
     case registerNotification = "registerNotification"

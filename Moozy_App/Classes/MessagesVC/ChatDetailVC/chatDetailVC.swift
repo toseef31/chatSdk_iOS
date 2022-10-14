@@ -58,7 +58,7 @@ class ChatDetailVC: UIViewController{
     
     func registerNotification() {
       
-    NotificationCenter.default.addObserver(self, selector: #selector(handleNotificationFuncName), name: NSNotification.Name(rawValue: "aNotificationName"), object: nil)
+//    NotificationCenter.default.addObserver(self, selector: #selector(handleNotificationFuncName), name: NSNotification.Name(rawValue: "aNotificationName"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleHideFriend), name: NSNotification.Name(rawValue: "hideNotificationName"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(handlemutenotification), name: NSNotification.Name(rawValue: "muteNotificationName"), object: nil)
@@ -97,7 +97,7 @@ class ChatDetailVC: UIViewController{
                 self.pop(animated: true)
             }
             
-            profileView = ProfileView(title: "\(receiverData?.name.checkNameLetter() ?? "")", font: UIFont.font(.Poppins, type: .SemiBold, size: 26), BGcolor: AppColors.primaryColor, titleFontColor: AppColors.secondaryColor, borderColor: AppColors.secondaryColor.cgColor, borderWidth: 2, size: .init(width: 100, height: 100))
+            profileView = ProfileView(title: "\(receiverData?.name.checkNameLetter() ?? "")", font: UIFont.font(.Roboto, type: .Medium, size: 26), BGcolor: AppColors.primaryColor, titleFontColor: AppColors.secondaryColor, borderColor: AppColors.secondaryColor.cgColor, borderWidth: 2, size: .init(width: 100, height: 100))
             profileView?.isBound = true
             
             let image = receiverData?.profile_image ?? nil
@@ -109,16 +109,7 @@ class ChatDetailVC: UIViewController{
                    } else {
                     profileView?.profileImage = UIImage(named: "profile3")
                 }
-                
-               
-              
-//                lblProfileTitle?.isHidden = true
-//                imgTitle?.isHidden = false
             }
-            
-//            if receiverData?.friend.user_image != nil && receiverData?.friend.user_image != ""{
-//                profileView?.profileImage = UIImage(named: "profile1")
-//            }
             else{
                 profileView?.titleProfile = "\(receiverData?.name.checkNameLetter() ?? "")"
             }

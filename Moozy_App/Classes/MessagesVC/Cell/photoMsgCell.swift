@@ -39,7 +39,7 @@ class PhotoMsgCell: SwipyCell {
     var stackTrailingConstraint: NSLayoutConstraint!
     
     var delegates: imagesViewDelegate?
-    var imgdownloadFile = UIImageView(image: #imageLiteral(resourceName: "play-circleDownload"), contentModel: .scaleAspectFit)
+    var imgdownloadFile = UIImageView(image: #imageLiteral(resourceName: "download"), contentModel: .scaleAspectFit)
    
     var isSet =  false
     var nowSending = false
@@ -113,17 +113,18 @@ class PhotoMsgCell: SwipyCell {
                 }
             
             lblDatetTimeDay?.text = getMsgDate(date: chatData?.createdAt ?? "")
-            
             if chatData?.receipt_status == 1   {
                 activityIndicator.startAnimating()
                 statusView?.image = UIImage(systemName: "clock")
-               
                 if chatData?.receiverId == AppUtils.shared.senderID && isdownloading != true {
                     activityIndicator.stopAnimating()
                 }
                  
             }else{
-                activityIndicator.stopAnimating()
+                if chatData?.receiverId == AppUtils.shared.senderID && isdownloading != true {
+                    activityIndicator.stopAnimating()
+                }
+               // activityIndicator.stopAnimating()
                 if chatData?.seen == 0 && chatData?.receipt_status == 1 {
                     statusView?.image = UIImage(systemName: "checkmark")
                 }else{
@@ -296,8 +297,9 @@ class PhotoMsgCell: SwipyCell {
         
         blurView?.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.2813699959)
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
-       
-        stack = UIStackView(views: [lblDatetTimeDay! , statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
+//        stack = UIStackView(views: [lblDatetTimeDay! , statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
+  
+        stack = UIStackView(views: [lblDatetTimeDay! ], axis: .horizontal, spacing: 5, distribution: .fill)
     }
     
     //ConfigureUI
@@ -306,7 +308,7 @@ class PhotoMsgCell: SwipyCell {
         
         imgSendSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
         ImgRecivedSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
-        mainView?.constraintsWidhHeight(size: .init(width: 250, height: 220))
+        mainView?.constraintsWidhHeight(size: .init(width: 160, height: 160))
      
          stackeContent = UIStackView(views: [imgSendSlected,mainView!,ImgRecivedSlected], axis: .horizontal, spacing: 3, distribution: .fill)
         imgSendSlected.isHidden = true
@@ -332,13 +334,13 @@ class PhotoMsgCell: SwipyCell {
         
         videoView?.addMultipleSubViews(views: blurView!, progressview!)
         
-        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 5, left: 0, bottom: 0, right: 0), size: .init(width: 280, height: 220))
+        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 5, left: 0, bottom: 0, right: 0), size: .init(width: 190, height: 160))
         
-        videoView?.fillSuperView(padding: .init(top: 5, left: 5, bottom: 5, right: 5))
+        videoView?.fillSuperView(padding: .init(top: 0, left: 0, bottom: 0, right: 0))
         
         blurView?.fillSuperView()
         
-        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 4, left: 0, bottom: 8, right: 0))
+        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 5, left: 0, bottom: 7, right: 0))
         
         leadingConstraint = stackeContent?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         leadingConstraint.isActive = false

@@ -43,9 +43,9 @@ class ReplyView: UIView{
     
     func initializedControls(){
         self.backgroundColor = BGColor
-        self.layer.cornerRadius = 10
+        self.layer.cornerRadius = 0
         //FCAE00
-        lineView = UIView(backgroundColor: AppColors.replyLineColor, cornerRadius: 2)
+        lineView = UIView(backgroundColor: AppColors.replyLineColor, cornerRadius: 0)
         
         if let image = image {
             imageMsg = UIImageView(image: image, contentModel: .scaleAspectFit)
@@ -56,7 +56,7 @@ class ReplyView: UIView{
         
         lblMessage = UILabel(title: message!, fontColor: messageColor!, alignment: .left, font: font!)
         
-        btnClose = MoozyActionButton(image: UIImage(systemName: "xmark"), foregroundColor: UIColor.gray, backgroundColor: UIColor.clear, imageSize: .init(width: 20, height: 20)){ [self] in
+        btnClose = MoozyActionButton(image: UIImage(named: "close-1"), foregroundColor: #colorLiteral(red: 1, green: 0.3529411765, blue: 0.3764705882, alpha: 1), backgroundColor: UIColor.clear, imageSize: .init(width: 12, height: 12)){ [self] in
             NotificationCenter.default.post(name: .close, object: nil, userInfo: ["close": true])
             action()
         }
@@ -65,10 +65,10 @@ class ReplyView: UIView{
         initializedControls()
         addMultipleSubViews(views: lineView!, btnClose!)
         
-        lineView?.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: nil, padding: .init(top: 9, left: 12, bottom: 9, right: 0), size: .init(width: 3, height: 0))
+        lineView?.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 3, height: 0))
         
-        btnClose?.anchor(top: nil, leading: nil, bottom: nil, trailing: self.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 8), size: .init(width: 20, height: 20))
-        btnClose?.verticalCenterWith(withView: self)
+        btnClose?.anchor(top:  self.topAnchor, leading: nil, bottom: nil, trailing: self.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 8), size: .init(width: 20, height: 20))
+        //btnClose?.verticalCenterWith(withView: self)
         
         if image != nil{
             let stack1 = UIStackView(views: [imageMsg!, lblMessage!], axis: .horizontal, spacing: 8)

@@ -36,12 +36,16 @@ extension UIFont{
         case Medium = "Medium"
         case Regular = "Regular"
         case SemiBold = "SemiBold"
+        case Light = "Light"
+       // case potta = "potta_one_regular.ttf"
         case none = ""
     }
     
     public enum FontName: String {
         case Poppins
         case Muli
+        case PottaOne
+        case Roboto
     }
 }
 

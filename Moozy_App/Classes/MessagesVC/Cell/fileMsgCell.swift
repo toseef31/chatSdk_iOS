@@ -35,7 +35,7 @@ class FileMsgCell:  SwipyCell {
     var stackLeadingConstraint: NSLayoutConstraint!
     var stackTrailingConstraint: NSLayoutConstraint!
     
-    var imgdownloadFile = UIImageView(image: #imageLiteral(resourceName: "icon-download3"), contentModel: .scaleAspectFit)
+    var imgdownloadFile = UIImageView(image: #imageLiteral(resourceName: "download"), contentModel: .scaleAspectFit)
    
     var isSet =  false
     var nowSending = false
@@ -77,7 +77,7 @@ class FileMsgCell:  SwipyCell {
             lblDatetTimeDay?.text = getMsgDate(date: chatData?.createdAt ?? "")
             
             if chatData?.seen == 0 || chatData?.receipt_status == 1 {
-                    statusView?.image = UIImage(systemName: "checkmark")
+                    statusView?.image = UIImage(systemName: "seen_double_check")
                 }else{
                     statusView?.image = UIImage(named: "seen_double_check")
                     statusView?.setImageColor(color: AppColors.primaryColor)
@@ -180,7 +180,9 @@ class FileMsgCell:  SwipyCell {
         mainView?.translatesAutoresizingMaskIntoConstraints = false
         
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
-        stack = UIStackView(views: [lblDatetTimeDay! , statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
+//        stack = UIStackView(views: [lblDatetTimeDay! , statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
+
+        stack = UIStackView(views: [lblDatetTimeDay! ], axis: .horizontal, spacing: 5, distribution: .fill)
     }
     
     //ConfigureUI
@@ -189,7 +191,7 @@ class FileMsgCell:  SwipyCell {
         
         imgSendSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
         imgRecivedSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
-        mainView?.constraintsWidhHeight(size: .init(width: 250, height: 220))
+        mainView?.constraintsWidhHeight(size: .init(width: 160, height: 140))
      
          stackeContent = UIStackView(views: [imgSendSlected,mainView!,imgRecivedSlected], axis: .horizontal, spacing: 5, distribution: .fill)
         imgRecivedSlected.isHidden = true
@@ -201,7 +203,7 @@ class FileMsgCell:  SwipyCell {
         mainView?.addMultipleSubViews(views: imgFolder!,messageLabel,imgdownloadFile)
         
         
-        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 16, left: 0, bottom: 0, right: 0), size: .init(width: 280, height: 45))
+        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 16, left: 0, bottom: 0, right: 0), size: .init(width: 190, height: 45))
         
         imgFolder?.anchor(top: nil, leading: mainView?.leadingAnchor, bottom: nil, trailing: nil,padding: .init(top: 0, left: 8, bottom: 0, right: 0),size: .init(width: 25, height: 25))
         imgFolder?.verticalCenterWith(withView: mainView!)
@@ -213,7 +215,7 @@ class FileMsgCell:  SwipyCell {
 //        progressview?.constraintsWidhHeight(size: .init(width: 50, height: 50))
 //        progressview?.centerSuperView()
         
-        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 4, left: 0, bottom: 16, right: 0))
+        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 6, left: 0, bottom: 14, right: 0))
         
         leadingConstraint = stackeContent!.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         leadingConstraint.isActive = false

@@ -57,7 +57,7 @@ class ChatListVM{
                                   
                     inputFriend.message = da.message
                     inputFriend.messageType  = da.messageType
-                    inputFriend.receipt_status  = da.receipt_status
+                    inputFriend.receipt_status  = da.unread
                     inputFriend.createdAt = da.createdAt
                     inputFriend.messageCounter  = da.messageCounter
                     inputFriend.friendId = da.friendId
@@ -67,7 +67,6 @@ class ChatListVM{
                     inputFriend.ismute  = da.ismute
                     inputFreindsInfo(inputFriend: inputFriend)
                     
-                    print(da.ismute)
                 })
                 
                 self.listOfFriends.value  =   db.getFriends()
@@ -78,6 +77,15 @@ class ChatListVM{
         }
     }
     
+    func logOutUser(){
+        APIServices.shared.logOutUser() { (response, errorMessage) in
+            if response != nil{
+               print("true")
+            }else{
+               print("false")
+            }
+        }
+    }
     
     func readAllChat(receiverId: String, onCompletion: @escaping onCompletion<Bool>){
         APIServices.shared.readAllChat(receiverId: receiverId) { (response, errorMessage) in
@@ -100,7 +108,7 @@ class ChatListVM{
     }
     
     func deleteAllChat(receiverId: String, onCompletion: @escaping onCompletion<Bool>){
-        APIServices.shared.deleteAllChat(receiverId: receiverId) { (response, errorMessage) in
+        APIServices.shared.deleteFriend(receiverId: receiverId) { (response, errorMessage) in
             if response != nil{
                 onCompletion(true, nil)
             }else{

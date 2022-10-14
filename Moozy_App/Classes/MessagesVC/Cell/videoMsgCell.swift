@@ -53,7 +53,7 @@ class VideoMsgCell: SwipyCell {
    
     
     
-    var imgdownloadFile = MoozyActionButton(image: UIImage(named: "play-circleDownload"), foregroundColor: .white, backgroundColor: AppColors.backColorColor, imageSize: .init(width: 35, height: 35)){
+    var imgdownloadFile = MoozyActionButton(image: #imageLiteral(resourceName: "download"), foregroundColor: .white, backgroundColor: AppColors.backColorColor, imageSize: .init(width: 35, height: 35)){
     }
     
     var imgSendSlected = UIImageView(image: #imageLiteral(resourceName: "Oval3x"), contentModel: .scaleAspectFit)
@@ -279,8 +279,8 @@ class VideoMsgCell: SwipyCell {
         statusView?.setImageColor(color: AppColors.primaryColor)
         
         lblDatetTimeDay = UILabel(title: "12:50", fontColor: UIColor.gray, alignment: .left, font: UIFont.systemFont(ofSize: 12))
-    
-        btnVideoPlay = MoozyActionButton(image: UIImage(named: "play-circle2x"), foregroundColor: AppColors.primaryColor, backgroundColor: UIColor.clear, imageSize: .init(width: 50, height: 50)){
+        
+        btnVideoPlay = MoozyActionButton(image: #imageLiteral(resourceName: "play_circle"), foregroundColor: AppColors.primaryColor, backgroundColor: UIColor.clear, imageSize: .init(width: 50, height: 50)){
             print("Play Vide0")
                 var newindex = 0
                 LightboxConfig.handleVideo = { from, videoURL in
@@ -306,8 +306,9 @@ class VideoMsgCell: SwipyCell {
         
         blurView?.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.2813699959)
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
+//               stack = UIStackView(views: [lblDatetTimeDay!, statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
         
-        stack = UIStackView(views: [lblDatetTimeDay!, statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
+        stack = UIStackView(views: [lblDatetTimeDay!], axis: .horizontal, spacing: 5, distribution: .fill)
     }
     
     //ConfigureUI
@@ -315,7 +316,7 @@ class VideoMsgCell: SwipyCell {
         initializedControls()
         imgSendSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
         imgRecivedSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
-        mainView?.constraintsWidhHeight(size: .init(width: 250, height: 220))
+        mainView?.constraintsWidhHeight(size: .init(width: 160, height: 160))
         stackeContent = UIStackView(views: [imgSendSlected,mainView!,imgRecivedSlected], axis: .horizontal, spacing: 3, distribution: .fill)
         imgRecivedSlected.isHidden = true
             imgSendSlected.isHidden = true
@@ -337,7 +338,7 @@ class VideoMsgCell: SwipyCell {
         imgdownloadFile.centerSuperView()
         imgdownloadFile.isHidden = true
       
-        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 5, left: 0, bottom: 0, right: 0), size: .init(width: 280, height: 220))
+        stackeContent?.anchor(top: contentView.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 5, left: 0, bottom: 0, right: 0), size: .init(width: 190, height: 160))
         
 //        mainView?.anchor(top: contentView.topAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: nil, padding: .init(top: 8, left: 0, bottom: 8, right: 0), size: .init(width: 250, height: 220))
         //viewdioContent.fillSuperView(padding: .init(top: 8, left: 8, bottom: 8, right: 8))
@@ -349,7 +350,7 @@ class VideoMsgCell: SwipyCell {
         
 //        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: nil, trailing: mainView?.trailingAnchor, padding: .init(top: 5, left: 0, bottom: 25, right: 8))
        
-        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 4, left: 0, bottom: 10, right: 0))
+        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 6, left: 0, bottom: 8, right: 0))
         
         leadingConstraint = stackeContent!.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         leadingConstraint.isActive = false

@@ -140,7 +140,7 @@ class AttachmentCell: UITableViewCell {
     var lblName: UILabel?
     var stack: UIStackView?
     
-    let seperatorLine = UIView(backgroundColor: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1))
+    let seperatorLine = UIView(backgroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
     
     var dataSet: attacmentArr? = nil{
         didSet{
@@ -165,7 +165,7 @@ class AttachmentCell: UITableViewCell {
         img?.image = img?.image?.withRenderingMode(.alwaysTemplate)
         img?.tintColor = AppColors.primaryColor
         
-        lblName = UILabel(title: "Title Name", fontColor: #colorLiteral(red: 0.1843137255, green: 0.1803921569, blue: 0.1803921569, alpha: 1), alignment: .left, font: UIFont.font(.Poppins, type: .Regular, size: 16))
+        lblName = UILabel(title: "Title Name", fontColor: #colorLiteral(red: 0.1843137255, green: 0.1803921569, blue: 0.1803921569, alpha: 1), alignment: .left, font: UIFont.font(.Roboto, type: .Regular, size: 16))
     }
     
     func configureUI(){
@@ -174,7 +174,7 @@ class AttachmentCell: UITableViewCell {
         contentView.addSubview(containerView!)
         containerView?.addMultipleSubViews(views: img!, lblName!, seperatorLine)
         
-        containerView?.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 4, left: 4, bottom: 4, right: 4), size: .init(width: 0, height: 45))
+        containerView?.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 4, left: 4, bottom: 4, right: 4), size: .init(width: 0, height: 40))
         
         img?.anchor(top: nil, leading: containerView?.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 16, bottom: 0, right: 0), size: .init(width: 20, height: 20))
         

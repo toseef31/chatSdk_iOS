@@ -10,7 +10,7 @@ import UIKit
 import SocketIO
 
 class SocketIOManager : NSObject{
-    
+    var Isconnected = false
     static let sharedInstance = SocketIOManager()
     static let sharedMainInstance = SocketIOManager()
     static let sharedCallInstance = SocketIOManager()
@@ -20,22 +20,18 @@ class SocketIOManager : NSObject{
     private override init(){
         super.init()
         socket = manager.defaultSocket
-        //socket(forNamespace: "/simplechat")
-        socket.connect();
-        socket.on("user_connected") { [self] data, ack in
-            print("socket is connected");
-            
-        }
-      
+        addHandlers()
     }
     
     func addHandlers(){
-        
         socket.on(clientEvent: .connect) {data, ack in
             print("Socket connected By Class1 ")
             print(data)
+           
+            self.ConnectSocket()
         }
         socket.on(clientEvent: .disconnect) {data, ack in
+            self.Isconnected = false
             print("\n Socket disconnected By\n")
         }
         socket.on(clientEvent: .error) {data, ack in
@@ -45,6 +41,7 @@ class SocketIOManager : NSObject{
         socket.on(clientEvent: .statusChange) {data, ack in
             print("\nStatus change: By \(data)\n")
         }
+        self.establishConnection()
     }
     
     func establishConnection(){
@@ -56,7 +53,17 @@ class SocketIOManager : NSObject{
     }
     func sendMessage(message: Any) {
         print(message)
-        socket.emit("o2o", with: [message])
+        if  Isconnected == false {
+            ConnectSocket()
+            socket.emit("o2o", with: [message]) }
+        else {
+            socket.emit("o2o", with: [message])
+        }
+    }
+    
+    func Unreadsms(message: Any) {
+        print(message)
+        socket.emit("o2oUpdateReadMsg", with: [message])
     }
   
     func deleteMessage(message: Any) {
@@ -64,7 +71,7 @@ class SocketIOManager : NSObject{
     }
     
     func updateDeletedMessage(message: Any) {
-        socket.emit("sendid", with: [message])
+        socket.emit(SocketHelper.emitsendid, with: [message])
     }
     
     func recvDeleteMsg(completionHandler: @escaping ( _ messageInfo: Any) -> Void) {
@@ -73,17 +80,18 @@ class SocketIOManager : NSObject{
         }
     }
     
-    func getChatMessage(completionHandler: @escaping ( _ messageInfo: Any) -> Void) {
+    func getChatMessage(completionHandler: @escaping ( _ messageInfo: Any , _ selectusL : String) -> Void) {
        // sending to a specific room in a specific namespace, including sender
          socket.on("_o2o") { (dataArray, socketAck) -> Void in
             print(dataArray)
-             completionHandler(dataArray)
+             print(selectdfrind)
+             completionHandler(dataArray,selectdfrind)
          
         }
     }
     func onlinestatus (completionHandler: @escaping ( _ messageInfo: Any) -> Void) {
        // sending to a specific room in a specific namespace, including sender
-         socket.on("front_user_status") { (dataArray, socketAck) -> Void in
+         socket.on("onlineStatus") { (dataArray, socketAck) -> Void in
             print(dataArray)
              completionHandler(dataArray)
          
@@ -91,13 +99,12 @@ class SocketIOManager : NSObject{
     }
     
     
-    func getChatdumy () {
+    func getChatdumy (completionHandler: @escaping ( _ messageInfo: Any) -> Void) {
         // print("socket")
     
-        socket.on("dumy") { (data, socketAck) -> Void in
-            print(data)
-          
-         
+        socket.on("dummy") { (data, socketAck) -> Void in
+            completionHandler(data)
+           
         }
     }
     
@@ -111,14 +118,14 @@ class SocketIOManager : NSObject{
     
     func StartTypingFriend(completionHandler: @escaping ( _ messageInfo: Any) -> Void) {
         //msgtyping
-        socket.on("_o2oTyping") { (dataArray, socketAck) -> Void in
+        socket.on(SocketHelper.onTyping) { (dataArray, socketAck) -> Void in
             completionHandler(dataArray)
         }
     }
     
     
     func StopTypingFriend(completionHandler: @escaping ( _ messageInfo: Any) -> Void) {
-        socket.on("_o2oStopTyping") { (dataArray, socketAck) -> Void in
+        socket.on(SocketHelper.onStopTyping) { (dataArray, socketAck) -> Void in
             completionHandler(dataArray)
         }
     }
@@ -135,21 +142,21 @@ class SocketIOManager : NSObject{
     func StartTyping(receiver_id: String? = "") {
         // create class
         let userinfo = [
-            "sender_id" : "\(AppUtils.shared.senderID)",
+            "senderId" : "\(AppUtils.shared.senderID)",
             "name" : "\(AppUtils.shared.user?.name ?? "")",
-            "receiver_id" : receiver_id ?? ""
+            "receiverId" : receiver_id ?? ""
         ]
         if AppUtils.shared.getTypingStatus == 1 {
-            socket.emit("o2oTyping", with: [userinfo]) }
+            socket.emit(SocketHelper.emitIsTyping, with: [userinfo]) }
     }
 //message: Any
     func StopTyping(receiver_id: String? = "") {
         let userinfo = [
-            "sender_id" : "\(AppUtils.shared.senderID)",
+            "senderId" : "\(AppUtils.shared.senderID)",
             "name" : "\(AppUtils.shared.user?.name ?? "")",
-            "receiver_id" : receiver_id ?? ""
+            "receiverId" : receiver_id ?? ""
         ]
-        socket.emit("o2oStopTyping", with: [userinfo])
+        socket.emit(SocketHelper.emitStopTyping, with: [userinfo])
     }
     //Show Login Status
     func login(message: Any) {
@@ -203,6 +210,8 @@ class SocketIOManager : NSObject{
     }
     
     func ConnectSocket() {
+        // self.socket.emit("user_connected", with: [ AppUtils.shared.user?._id ?? ""])
+        Isconnected = true
         self.socket.emit("user_connected", with: [ AppUtils.shared.user?._id ?? ""])
     }
     func updateGroupRecvMsg(completionHandler: @escaping ( _ messageInfo: Any) -> Void) {
@@ -269,7 +278,6 @@ class SocketIOManager : NSObject{
     
     //MARK: Socket Group Call Disconnect
     func receiveupdatedsms (completionHandler: @escaping ( _ messageInfo: Any) -> Void){
-        //
         socket.on("_o2oUpdateMsg"){(dataArray, socketAck) -> Void in
             completionHandler(dataArray)
         }

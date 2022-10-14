@@ -82,8 +82,8 @@ class DateHeaderLabel: UILabel {
     
     override init(frame: CGRect = .zero){
         super.init(frame: frame)
-        backgroundColor = AppColors.incomingMsgColor
-        textColor = AppColors.primaryColor
+        backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1)
+        textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         textAlignment = .center
         translatesAutoresizingMaskIntoConstraints = false // enables auto layout
         font = UIFont.boldSystemFont(ofSize: 14)
@@ -217,34 +217,55 @@ func getAttributedString(arrayUnderlinecolor : [UIColor]?,arrayText:[String]?) -
 
 
 
-func createImage(txt:String,img:UIImage,size:CGFloat)->UIImage {
+func createImage(txt:String,img:UIImage,size:CGFloat,isRound:Bool,corners: String)->UIImage {
+//    let myView = UIView(frame: CGRect(x: 0, y: 0, width: size - 25, height: size - 5))
+    let myVieww = UIView(frame: CGRect(x: -50, y: 0, width: size , height: size + 30))
+    myVieww.backgroundColor = .white
+    let myView = UIView(frame: CGRect(x: 0, y: 0, width: size , height: size + 30))
+    myView.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1) //#colorLiteral(red: 0.9137254902, green: 0.9254901961, blue: 0.937254902, alpha: 1)
     
-    let myView = UIView(frame: CGRect(x: 0, y: 0, width: size - 25, height: size - 5))
-    myView.backgroundColor = #colorLiteral(red: 0.9803921569, green: 0.9803921569, blue: 0.9803921569, alpha: 1)
-    let myImgView = UIImageView(frame: CGRect(x: 0, y: 15, width: myView.frame.width, height: myView.frame.height/2.5))
+    if isRound == true {
+        
+        if corners == "Left" {
+           // myView.roundCorners(corners: [.topLeft,.bottomLeft] , radius: 20, borderColor: .black, borderWidth: 2, clipToBonds: true)
+                myView.roundCorners(corners: [.topLeft,.bottomLeft], radius: 20)
+        } else {
+            myView.roundCorners(corners: [.topRight,.bottomRight], radius: 20)
+        }
+      
+    }
+    else {
+        myView.roundCorners(corners: .allCorners, radius: 0)
+        }
+    var Xaxix = 3
+    if txt == "Delete" {
+        Xaxix = -5
+    }
+  
+    let myImgView = UIImageView(frame: CGRect(x: CGFloat(Xaxix), y: 20, width: myView.frame.width, height: myView.frame.height/4))
     myImgView.contentMode = .scaleAspectFit
     myImgView.image = img
     myImgView.backgroundColor = .clear
-    let myText = UILabel(frame: CGRect(x: 0, y: myView.bounds.height - 15, width: myView.bounds.size.width, height: 20))
+    let myText = UILabel(frame: CGRect(x: CGFloat(Xaxix), y: myView.bounds.height - 40, width: myView.bounds.size.width, height: 20))
     myText.textAlignment = .center
     myText.text = txt
-    myText.font = UIFont.font(.Poppins, type: .Regular, size: 10)
-    myText.textColor = #colorLiteral(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
+    myText.font = UIFont.font(.Roboto, type: .Medium, size: 12)
+    myText.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     myText.minimumScaleFactor = 0.1    //you need
     myText.adjustsFontSizeToFitWidth = true
     myText.lineBreakMode = .byClipping
     myText.numberOfLines = 0
     
     if txt.contains(find: "Read") || txt.contains(find: "Unread"){
-        if appTheme == .white{
-            //            myImgView.setImageColor(color: hexStringToUIColor("25A8E0"))
-        }else{
-            myImgView.setImageColor(color: appTheme.whiteColor)
-        }
+       
+            myImgView.setImageColor(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
+        
     }
     myView.addSubview(myImgView)
     myView.addSubview(myText)
-    return myView.image()!
+    myVieww.addSubview(myView)
+    myView.fillSuperView()
+    return myVieww.image()!
 }
 
 extension UIView{

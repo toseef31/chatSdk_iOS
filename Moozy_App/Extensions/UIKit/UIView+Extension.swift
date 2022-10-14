@@ -449,3 +449,55 @@ extension UIView{
         return gradient
     }
 }
+
+
+
+class emptyView: UIView{
+    
+    var btnAddItem : UILabel?
+    var backGroundImage : UIImageView?
+    var backGroundImage2 : UIImageView?
+    var title: String
+    var image: UIImage?
+    var lblTitle: UILabel?
+    
+    init(title: String = "", image: UIImage? = nil ,   frame: CGRect = .zero) {
+        self.title = title
+        self.image = image
+        
+        super.init(frame: frame)
+        configureUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func configureUI(){
+        btnAddItem = UILabel(title: title, fontColor: AppColors.BlackColor, alignment: .center, numberOfLines: 1, font: UIFont.font(.Roboto, type: .Medium, size: 26), underLine: false)
+        backGroundImage = UIImageView(image: UIImage(named: "Chat_BG")!, contentModel: .scaleAspectFit)
+        backGroundImage2 = UIImageView(image: UIImage(named: "Group")!, contentModel: .scaleAspectFit)
+        
+        if image != nil{
+            
+            backGroundImage?.image = image
+            addMultipleSubViews(views: backGroundImage2!, backGroundImage!)
+            addSubview(backGroundImage!)
+            
+            backGroundImage?.constraintsWidhHeight(size: .init(width:  350, height:  350))
+            
+            backGroundImage?.centerSuperView()
+            backGroundImage2?.constraintsWidhHeight(size: .init(width:  200, height:  20))
+            
+            backGroundImage2?.centerSuperView()
+        }
+        else {
+            addSubview(btnAddItem!)
+            btnAddItem?.centerSuperView()
+        }
+       
+        
+    }
+    
+}

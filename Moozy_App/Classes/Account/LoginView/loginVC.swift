@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 class LoginVC: UIViewController, UITextFieldDelegate{
     
@@ -28,6 +29,18 @@ class LoginVC: UIViewController, UITextFieldDelegate{
         configureUI()
         dataBinding()
         self.hideNavigationBar(value: true)
+        
+        switch AVAudioSession.sharedInstance().recordPermission {
+        case AVAudioSession.RecordPermission.granted:
+        print("Permission granted")
+        case AVAudioSession.RecordPermission.denied:
+        print("Pemission denied")
+        case AVAudioSession.RecordPermission.undetermined:
+        print("Request permission here")
+        AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
+            // Handle granted
+        })
+        }
     }
     
     //Initialized Controls

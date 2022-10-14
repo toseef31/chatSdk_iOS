@@ -44,7 +44,9 @@ struct CustomSplash {
 }
 struct profileUrl {
     static let  Url = "https://chat.chatto.jp:20000/profile/"
+    static let  ThemeUrl = "https://chat.chatto.jp:20000/themes/"
     
+
 }
 
 struct ConstantStrings {
@@ -168,17 +170,19 @@ struct ServiceURL {
     static let setOnlineStatus = "setOnlineStatus"
    // static let login = "business/login"
     static let login = "settings/login-user"
-    static let getFriends = "friends/myFriends/"
+    static let getFriends = "friends/chatUserList/"
     static let getusers = "friends/allFriends/"
     static let getChat = "meeting/getChat"
     static let deleteSingleChat = "deleteMsg"
     
     static let unreadAllChat = "unreadAllChat"
     static let readAllChat = "readAllChat"
-//    static let deleteAllChat = "deleteAllChat"
+    static let logoutUser = "profile/logout"
     static let deleteAllChat = "meeting/clearChat"
     static let loggedUser = "business/getloggeduser"
     static let hideUser = "friends/hideFriend"
+    
+    static let deleteFriend = "friends/deleteFriend"
   
 }
 
@@ -194,32 +198,48 @@ let totalWidth = UIScreen.main.bounds.width
 let backButtonSize: CGSize = .init(width: 30, height: 25)
 
 struct AppColors {
-    static let primaryColor : UIColor = #colorLiteral(red: 1, green: 0.3450980392, blue: 0.3607843137, alpha: 1)
+    static let primaryColor : UIColor = #colorLiteral(red: 0.9215686275, green: 0.1333333333, blue: 0.1568627451, alpha: 1)
     
     static let btnBackColor : UIColor = #colorLiteral(red: 0.7137254902, green: 0.2470588235, blue: 0.2549019608, alpha: 1)
     static let backColorColor : UIColor = #colorLiteral(red: 0.6862745098, green: 0.4470588235, blue: 0.4156862745, alpha: 0.750080235)
     static let secondaryColor : UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-   
+    static let BlackColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     
     static let primaryFontColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     static let secondaryFontColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     
-    static let incomingMsgColor : UIColor = #colorLiteral(red: 1, green: 0.9803921569, blue: 0.937254902, alpha: 1)
-    static let outgoingMsgColor : UIColor = #colorLiteral(red: 0.9843137255, green: 0.9843137255, blue: 0.9843137255, alpha: 1)
+    static let incomingMsgColor : UIColor = #colorLiteral(red: 1, green: 0.3529411765, blue: 0.3764705882, alpha: 0.18)
+    static let outgoingMsgColor : UIColor = #colorLiteral(red: 0.9215686275, green: 0.6901960784, blue: 0.2666666667, alpha: 0.23)
+    static let ReplyMsgColor : UIColor = #colorLiteral(red: 1, green: 0.968627451, blue: 0.968627451, alpha: 1)
     
-    static let replyLineColor : UIColor = #colorLiteral(red: 0.9882352941, green: 0.6823529412, blue: 0, alpha: 1)
+    
+    static let replyLineColor : UIColor = #colorLiteral(red: 1, green: 0.3529411765, blue: 0.3764705882, alpha: 1)
     static let headerMsgColor : UIColor = #colorLiteral(red: 0.8470588235, green: 0.8470588235, blue: 0.8470588235, alpha: 1)
-   
     
 }
 
 struct AppGradentColors {
-    static let colorLeft : UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.4883234767)
-    static let colorRight : UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01708643242)
+    static let colorRight : UIColor =  #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01708643242)
+    static let colorLeft: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01708643242)
+}
+struct AppGradentColor {
+    static let colorRight : UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
+    static let colorLeft: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01708643242)
 }
 
 struct AppImages{
     static let back: UIImage = #imageLiteral(resourceName: "Arrow-left-1")
+}
+struct SocketHelper{
+    
+    static let emitStopTyping: String = "stopTyping"
+    static let emitIsTyping: String = "isTyping"
+    
+    static let onStopTyping: String = "stopTyping"
+    static let onTyping: String = "isTyping"
+    static let emitsendid: String = "sendid"
+    
+    
 }
 
 

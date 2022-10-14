@@ -94,6 +94,9 @@
 		6A339BC728A658380051F774 /* NewChatVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A339BC628A658380051F774 /* NewChatVM.swift */; };
 		6A49B4AF28B8F8630092311B /* RecMessage.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6A49B4AE28B8F8630092311B /* RecMessage.wav */; };
 		6A49B4B128B8F8750092311B /* SendMessage.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6A49B4B028B8F8750092311B /* SendMessage.wav */; };
+		6A4B669828ED6EC3000FA2A3 /* potta_one_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A4B669728ED6EC2000FA2A3 /* potta_one_regular.ttf */; };
+		6A4B669A28ED924F000FA2A3 /* roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A4B669928ED924F000FA2A3 /* roboto_medium.ttf */; };
+		6A4B669C28EE999D000FA2A3 /* newchat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4B669B28EE999B000FA2A3 /* newchat.swift */; };
 		6A4E2ACA2862F4B4001FA367 /* vedioTrimVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4E2AC92862F4B4001FA367 /* vedioTrimVC.swift */; };
 		6A4E2ACC2862F580001FA367 /* VideoTrim_ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A4E2ACB2862F580001FA367 /* VideoTrim_ViewController.xib */; };
 		6A4E2ACE2862FA1D001FA367 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4E2ACD2862FA1D001FA367 /* RangeSlider.swift */; };
@@ -217,6 +220,9 @@
 		6A339BC628A658380051F774 /* NewChatVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatVM.swift; sourceTree = "<group>"; };
 		6A49B4AE28B8F8630092311B /* RecMessage.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = RecMessage.wav; path = "../../../../RingyIOS/Ringy/SupportingFiles/New Group2/RecMessage.wav"; sourceTree = "<group>"; };
 		6A49B4B028B8F8750092311B /* SendMessage.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = SendMessage.wav; path = "../../../../RingyIOS/Ringy/SupportingFiles/New Group2/SendMessage.wav"; sourceTree = "<group>"; };
+		6A4B669728ED6EC2000FA2A3 /* potta_one_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = potta_one_regular.ttf; sourceTree = "<group>"; };
+		6A4B669928ED924F000FA2A3 /* roboto_medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = roboto_medium.ttf; sourceTree = "<group>"; };
+		6A4B669B28EE999B000FA2A3 /* newchat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newchat.swift; sourceTree = "<group>"; };
 		6A4E2AC92862F4B4001FA367 /* vedioTrimVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vedioTrimVC.swift; sourceTree = "<group>"; };
 		6A4E2ACB2862F580001FA367 /* VideoTrim_ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoTrim_ViewController.xib; sourceTree = "<group>"; };
 		6A4E2ACD2862FA1D001FA367 /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
@@ -520,6 +526,8 @@
 		1D789A3C28167A4F005B93A3 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				6A4B669928ED924F000FA2A3 /* roboto_medium.ttf */,
+				6A4B669728ED6EC2000FA2A3 /* potta_one_regular.ttf */,
 				1D789A3F28167AC7005B93A3 /* Muli-Bold.ttf */,
 				1D789A4128167AC7005B93A3 /* Muli-Light.ttf */,
 				1D789A4528167AC7005B93A3 /* Muli-SemiBold.ttf */,
@@ -577,6 +585,7 @@
 				1DEC57A8281A62D7009C1E6C /* ChatDetailVC */,
 				1D8175C72840A144009CA05A /* MapVC */,
 				1DD15B072845031B00EC529C /* ImageViewVC */,
+				6A4B669B28EE999B000FA2A3 /* newchat.swift */,
 			);
 			path = MessagesVC;
 			sourceTree = "<group>";
@@ -835,6 +844,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D789A4E28167AC8005B93A3 /* Muli-SemiBold.ttf in Resources */,
+				6A4B669828ED6EC3000FA2A3 /* potta_one_regular.ttf in Resources */,
 				1D789A4828167AC8005B93A3 /* Muli-Bold.ttf in Resources */,
 				6AB177E228D885E000FAB140 /* MoozyDB.db in Resources */,
 				1D789A4928167AC8005B93A3 /* Poppins-Thin.ttf in Resources */,
@@ -849,6 +859,7 @@
 				6AD1B72E28E45DC700D395B6 /* GoogleService-Info.plist in Resources */,
 				1D789A4C28167AC8005B93A3 /* Poppins-Bold.ttf in Resources */,
 				1D789A4A28167AC8005B93A3 /* Muli-Light.ttf in Resources */,
+				6A4B669A28ED924F000FA2A3 /* roboto_medium.ttf in Resources */,
 				1D789A4628167AC8005B93A3 /* Muli.ttf in Resources */,
 				6A49B4B128B8F8750092311B /* SendMessage.wav in Resources */,
 			);
@@ -988,6 +999,7 @@
 				1D1267082817B5F000634A2D /* chatListCell.swift in Sources */,
 				6A620F3E289BDB5900C6B367 /* FriendListOperationVC.swift in Sources */,
 				6A620F29289A5ADB00C6B367 /* moozy_db.xcdatamodeld in Sources */,
+				6A4B669C28EE999D000FA2A3 /* newchat.swift in Sources */,
 				6AB177DF28D8579500FAB140 /* FriendModel.swift in Sources */,
 				6AB177ED28E2E41E00FAB140 /* FriendListVM.swift in Sources */,
 				1D789A1928166AD2005B93A3 /* UIImageView+Extension.swift in Sources */,
@@ -1175,7 +1187,7 @@
 				INFOPLIST_KEY_NSContactsUsageDescription = "This Application wants to access your contacts list.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Please allow location service to share location.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow location service to share location.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires to access your microphone to record video with your voice send via chat";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = Moozy;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Please allow access to save photo in your photo library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app requires to access your photo library to show image on profile and send via chat";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1216,7 +1228,7 @@
 				INFOPLIST_KEY_NSContactsUsageDescription = "This Application wants to access your contacts list.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Please allow location service to share location.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow location service to share location.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires to access your microphone to record video with your voice send via chat";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = Moozy;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Please allow access to save photo in your photo library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app requires to access your photo library to show image on profile and send via chat";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

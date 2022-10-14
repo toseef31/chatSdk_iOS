@@ -55,7 +55,7 @@ class PopupAlertView: UIViewController {
         imgView = UIView(backgroundColor: UIColor.white, cornerRadius: 80/2, borderColor: UIColor.black.cgColor, borderWidth: 2, maskToBounds: true)
         
         titleImge = UIImageView(image: imageName!, contentModel: .scaleAspectFit)
-        titleImge?.setImageColor(color: AppColors.primaryColor)
+        titleImge?.setImageColor(color: AppColors.BlackColor)
         
         lblTitle = UILabel(title: titles!, fontColor: AppColors.primaryColor, alignment: .center, numberOfLines: 1, font: UIFont.font(.Poppins, type: .Bold, size: 12))
         
@@ -104,8 +104,7 @@ class PopupAlertView: UIViewController {
             case 3:
                 APIServices.shared.deleteAllChat(receiverId: reciverId) { Response, Error in
                     UserDefaults.removeSpecificKeys(key: "\(AppUtils.shared.user?._id ?? "")\(reciverId)")
-                  
-                    NotificationCenter.default.post(name: Notification.Name("hideNotificationName"), object: nil,userInfo: nil)
+                    NotificationCenter.default.post(name: Notification.Name("aNotificationName"), object: nil,userInfo: nil)
                 }
                 
             default:

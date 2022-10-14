@@ -67,8 +67,11 @@ class TextMsgCell:  SwipyCell {
                 if chatData?.seen == 0 && chatData?.receipt_status == 1 {
                     statusView?.image = UIImage(systemName: "checkmark")
                 }else{
-                    statusView?.image = UIImage(named: "seen_double_check")
-                    statusView?.setImageColor(color: AppColors.primaryColor)
+                    statusView?.image = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.2, execute: { [self] in
+                        statusView?.image = UIImage(named: "seen_double_check")
+                        statusView?.setImageColor(color: AppColors.primaryColor)
+                   })
                 }
             }
 
@@ -86,7 +89,7 @@ class TextMsgCell:  SwipyCell {
                 trailingConstraint.isActive = false
                 stackLeadingConstraint.isActive = true
                 stackTrailingConstraint.isActive = false
-                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 12, clipToBonds: true)
+                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 16, clipToBonds: true)
                 statusView?.isHidden = true
                 
                 leadingConstraint.isActive = false
@@ -113,7 +116,7 @@ class TextMsgCell:  SwipyCell {
                 
                 stackLeadingConstraint.isActive = false
                 stackTrailingConstraint.isActive = true
-                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomLeft], radius: 12, clipToBonds: true)
+                mainView?.roundCorners(corners: [.topLeft, .topRight, .bottomLeft], radius: 16, clipToBonds: true)
                 statusView?.isHidden = false
                 
                 trailingConstraint.isActive = false
@@ -157,8 +160,9 @@ class TextMsgCell:  SwipyCell {
         lblDatetTimeDay = UILabel(title: "date??", fontColor: UIColor.gray, alignment: .left, font: UIFont.font(.Poppins, type: .Regular, size: 12))
         
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
-        stack = UIStackView(views: [lblDatetTimeDay!, statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
-        
+//        stack = UIStackView(views: [lblDatetTimeDay!, statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
+        stack = UIStackView(views: [lblDatetTimeDay!], axis: .horizontal, spacing: 5, distribution: .fill)
+      
         mainView?.translatesAutoresizingMaskIntoConstraints = false
         lblmessage?.translatesAutoresizingMaskIntoConstraints = false
         lblmessage?.numberOfLines = 0
@@ -174,12 +178,12 @@ class TextMsgCell:  SwipyCell {
         ImgRecivedSlected.isHidden = true
         imgSendSlected.isHidden = true
         
-        heightBackView =   mainView?.widthAnchor.constraint(lessThanOrEqualToConstant: 250)
+        heightBackView =   mainView?.widthAnchor.constraint(lessThanOrEqualToConstant: 190)
         heightBackView.priority = UILayoutPriority.init(999)
         heightBackView.isActive = true
         
        
-        mainView?.anchor(top: contentView.topAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: nil, padding: .init(top: 8, left: 0, bottom: 22, right: 0), size: .init(width: 0, height: 0))
+        mainView?.anchor(top: contentView.topAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: nil, padding: .init(top: 8, left: 0, bottom: 32, right: 0), size: .init(width: 0, height: 0))
       
         ImgRecivedSlected.anchor(top: nil, leading: contentView.leadingAnchor, bottom: nil, trailing: nil ,padding: .init(top: 0, left: 16 , bottom: 0, right: 0))
         ImgRecivedSlected.verticalCenterWith(withView: mainView!)
@@ -190,9 +194,9 @@ class TextMsgCell:  SwipyCell {
         imgSendSlected.constraintsWidhHeight(size: .init(width: 15, height: 15))
       
           
-     lblmessage?.anchor(top:  mainView?.topAnchor, leading: mainView?.leadingAnchor, bottom: mainView?.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 8, left: 12, bottom: 8, right: 8))
+     lblmessage?.anchor(top:  mainView?.topAnchor, leading: mainView?.leadingAnchor, bottom: mainView?.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 8, left: 15, bottom: 8, right: 15))
         
-        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0))
+        stack?.anchor(top: mainView?.bottomAnchor, leading: nil, bottom: contentView.bottomAnchor, trailing: mainView?.trailingAnchor, padding: .init(top: 9, left: 0, bottom: 8, right: 0))
         
         leadingConstraint = mainView?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
         leadingConstraint.isActive = false

@@ -82,7 +82,7 @@ class APIServices{
             "regToken" : AppUtils.shared.getFCMToken(),
             "deviceType" : "iOS"
         ]
-        
+        print(param)
         NetworkController.shared.serviceResponseObject(method: .post, parameter: param, serviceName: ServiceURL.login, onComplition: { response, error in
             
             if let result = response {
@@ -178,7 +178,7 @@ class APIServices{
     func readReciptFriends(friendId: String,onCompletion: @escaping onCompletion<Bool>){
         let param = [
             "userId":  AppUtils.shared.user?._id ?? "",
-            "friendId": friendId,
+            "receiverId": friendId,
             
         ]
         print(param)
@@ -274,6 +274,180 @@ class APIServices{
     
     
     func sendMessage(receiver_Id: String, message: String, messageType: Int, chatType: Int, comment_Id: String? = "" , commentData : [chat_data]? = [] , createdAt: String, selectedUserData: String, onCompletion: @escaping onCompletion<chat_data>)   {
+        //isForwardByMe = true
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy h:mm a"
+        let date = dateFormatter.string(from: today)
+        let finalDate = date.localToUTC(incomingFormat: "MMM d, yyyy h:mm a", outGoingFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        
+        let senderIds = [
+            "_id" : "\(AppUtils.shared.senderID)",
+            "name" : "",
+            "user_image" : "",
+            
+        ]
+       
+        let RepliedTo = [
+            
+            "_id" : "\(comment_Id ?? "")" ,
+            "message" : commentData?.first?.message ,
+            "messageType" : commentData?.first?.messageType  ,
+            "chatType" : commentData?.first?.chatType,
+            "status" : 0 ,
+            "seen" : 0,
+            "receipt_status" : 0,
+            "isread" : 0,
+            "senderId" : senderIds,
+            "receiverId" : "\(receiver_Id)",
+            "projectId" : AppUtils.shared.projectID,
+            "createdAt" : "\(finalDate)",
+            "updatedAt" : "\(finalDate)",
+            "__v" : 0 ,
+            "isProgress" :  false ,
+            
+        ] as [String : Any]
+        
+      
+        
+    var mydata2 = [
+        "_id" : "msgIDLocal" ,
+        "message" : "\(message)" ,
+        "messageType" : messageType ,
+        "chatType" : chatType,
+        "status" : 0 ,
+        "seen" : 0,
+        "receipt_status" : 1,
+        "isread" : 0,
+        "senderId" : senderIds,
+        "receiverId" : "\(receiver_Id)",
+        "projectId" : AppUtils.shared.projectID,
+        "repliedTo" : RepliedTo,
+        "createdAt" : "\(finalDate)",
+        "updatedAt" : "\(finalDate)",
+        "__v" : 0 ,
+        "isProgress" :  false ,
+        ] as [String : Any]
+        
+        
+        
+        let dummyparameter = [
+            "selectedUserData" : "\(selectedUserData)",
+            "userId" : AppUtils.shared.senderID,
+            "msgData" : mydata2,
+        ] as [String : Any]
+       ///local store here..
+        ///
+        AppUtils.shared.getChatMessages(key: "\(AppUtils.shared.senderID)\(receiver_Id)") { [self] (response, errorMessage) in
+        if response != nil{
+            var ary = response
+//            ary?.append(chat_data)
+//            ary?.append(mydata2)
+        }
+            
+        }
+       self.sendDelegate?.sendTextMessage(messageData: dummyparameter)
+        
+        SocketIOManager.sharedInstance.sendMessage(message: dummyparameter)
+        print(message)
+        self.utilityQueue.async {
+            let key = AppUtils.shared.senderID
+            var  ivStr = AppUtils.shared.senderID
+            let halfLength = 16 //receiverId.count / 2
+            let index = ivStr.index(ivStr.startIndex, offsetBy: halfLength)
+            ivStr.insert("-", at: index)
+            let result = ivStr.split(separator: "-")
+            let iv = String(result[0])
+            let s = message
+            var encMessage = ""
+            do{
+                encMessage = try s.aesEncrypt(key: key, iv: iv)
+            }catch( let error as NSError ){
+                print(error)
+            }
+            
+            let today = Date()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM d, yyyy h:mm a"
+            let date = dateFormatter.string(from: today)
+            let finalDate = date.localToUTC(incomingFormat: "MMM d, yyyy h:mm a", outGoingFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+            
+            let msgData = [
+                "chatType" : chatType,
+                "messageType" : messageType,
+                "commentId" : comment_Id!,
+                "isGroup" : 0,
+                "senderId" : "\(AppUtils.shared.senderID)",
+                "receiptStatus" : 1,
+                "senderImage" : "",
+                "receiverImage" : "",
+                "bookmarkedChat" : "",
+                "receiverId" : "\(receiver_Id)",
+                "senderName" : "",
+                "message" : "\(message)",
+                "createdAt" : "\(finalDate)"
+            ] as [String : Any]
+            
+            var param = [
+                "messageType" : messageType ,
+                "message" : "\(message)" ,
+                "chatType" : chatType,
+                "isGroup" : 0 ,
+                "projectId" : "\(AppUtils.shared.projectID)",
+                "receiverId" : "\(receiver_Id)",
+                "senderId" : "\(AppUtils.shared.senderID)"
+            ] as [String : Any]
+            print(param)
+            print(commentData?.first?.message)
+            if chatType == 1 {
+                param.updateValue(commentData?.first?._id ?? "", forKey: "selectedMsgId")
+                
+            }
+            print(param)
+            
+            NetworkController.shared.serviceResponseObject(method: .post, parameter: param, serviceName: "meeting/sendChat") { response, errorMessage in
+                if let data = response {
+                     print(data)
+                    
+                    let dataa = chat_data.init(fromJson: data)
+                    
+                    let userDataJsons = data["data"]
+                    var data : [chat_data] = []
+                    if  userDataJsons != JSON.null {
+                    for msg in userDataJsons.arrayValue{
+                        data.append(chat_data(fromJson: msg))
+                    }
+                    }
+                    mydata2["_id"] = "\(data.first?._id ?? "")"
+                    
+//                    var  senderId : String!
+//                     var createdAT : String!
+//                     var receiver_id : String!
+//                     var message : String!
+//                     var messageId : String!
+                    
+                    let dummyparameters = [
+                        "receiver_id" : "\(selectedUserData)",
+                        "createdAT" : "\(data.first?.createdAt ?? "")",
+                        "messageId" : "\(data.first?._id ?? "")",
+                        "senderId" : AppUtils.shared.user?._id ,
+                        "message" : "\(data.first?.message ?? "")"
+                    ] as [String : Any]
+                    print(dummyparameters)
+                      onCompletion(dataa, nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) {
+                        SocketIOManager.sharedInstance.updateMsg(message: dummyparameters)
+                       // SocketIOManager.sharedInstance.sendMessage(message: dummyparameters)
+                    }
+                }else{
+                    onCompletion(nil, "Error")
+                }
+            }
+        }
+    }
+    
+    
+    func forwardsendMessage(receiver_Id: String, message: String, messageType: Int, chatType: Int, comment_Id: String? = "" , commentData : [chat_data]? = [] , createdAt: String, selectedUserData: String, onCompletion: @escaping onCompletion<chat_data>)   {
         
         let today = Date()
         let dateFormatter = DateFormatter()
@@ -337,7 +511,7 @@ class APIServices{
             "msgData" : mydata2,
         ] as [String : Any]
        
-       self.sendDelegate?.sendTextMessage(messageData: dummyparameter)
+       //self.sendDelegate?.sendTextMessage(messageData: dummyparameter)
         
         print(message)
         self.utilityQueue.async {
@@ -409,14 +583,20 @@ class APIServices{
                     }
                     }
                     mydata2["_id"] = "\(data.first?._id ?? "")"
-                
-                     
+//                    if isForwardByMe == true {
+//                        mydata2["__v"] = 0
+//
+//                    }
+//                    else {
+//                        mydata2["__v"] = "-1" }
+//
                     let dummyparameters = [
                        // "selectedUserData" : "\(selectedUserData)",
 //                        "userId" : AppUtils.shared.senderID,
                         "msgData" : mydata2
 //                        "selectFrienddata" : "\(data.first?._id ?? "")",
                     ] as [String : Any]
+                    print(dummyparameters)
                       onCompletion(dataa, nil)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) {
                         SocketIOManager.sharedInstance.sendMessage(message: dummyparameters)
@@ -1267,6 +1447,23 @@ func sendFile(receiverId: String ,document: UIDocument?,docName:String,filesurl:
     }
     
     
+    func logOutUser( onCompletion: @escaping onCompletion<Bool>){
+        
+        let param = [
+            "userId" :AppUtils.shared.user?._id ?? "",
+            "regToken" : AppUtils.shared.getFCMToken()
+        ]
+        print(param)
+        NetworkController.shared.serviceResponseObject(method: .get, parameter: param, serviceName: ServiceURL.logoutUser) { (response, errorMessage) in
+            if let data = response {
+                onCompletion(true, nil)
+            }else{
+                onCompletion(false, "Error")
+            }
+        }
+    }
+    
+    
     //Read_AllChat
     func readAllChat(receiverId: String, onCompletion: @escaping onCompletion<Bool>){
         
@@ -1306,7 +1503,25 @@ func sendFile(receiverId: String ,document: UIDocument?,docName:String,filesurl:
             }
         }
     }
+    func deleteFriend(receiverId: String, onCompletion: @escaping onCompletion<Bool>){
+        
+        let param = [
+            "userId" : AppUtils.shared.senderID,
+            "friendId" : receiverId
+        ]
+        print(param)
+        NetworkController.shared.serviceResponseObject(method: .delete, parameter: param, serviceName: ServiceURL.deleteFriend) { (response, errorMessage) in
+            
+            if let data = response {
+                print(data)
+                onCompletion(true, nil)
+            }else{
+                onCompletion(false, "Error")
+            }
+        }
+    }
     
+//
     //Hide Chat
     func hideChat(userRingID: String, friendRingID: String, onCompletion: @escaping onCompletion<Bool>){
         

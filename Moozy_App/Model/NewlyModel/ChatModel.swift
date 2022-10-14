@@ -102,9 +102,64 @@ class chat_data: NSObject, Codable {
 
 
 
+//class ChatMessagesModel3 :  Codable {
+//    var isSelected: Bool!
+//    var date : String!
+//    var messagesData : [ChatMessageModelselection3] = []
+////    init(fromJson json: JSON!){
+////        if json == nil{
+////            return
+////        }
+////
+////        isSelected = json["isSelected"].boolValue
+////        date = json["date"].stringValue
+////
+////
+////
+////        let userDataJson = json["messagesData"]
+////
+////        if userDataJson != JSON.null{
+////
+////            for msg in userDataJson.arrayValue{
+////                messagesData.append(ChatMessageModelselection3(fromJson: msg))
+////            }
+////
+////        }
+////
+////        //messagesData = json["messagesData"].arrayObject!
+////    }
+//
+//
+//}
 
-
-
+//class ChatMessageModelselection3 :  Codable {
+//
+//    var isSelected: Bool!
+//    var isSending: Bool!
+//    var isDownloading: Bool!
+//    var messages : [chat_data] = []
+//
+//    
+////    init(fromJson json: JSON!){
+////        if json == nil{
+////            return
+////        }
+////
+////        isSelected = json["isSelected"].boolValue
+////        isSending = json["isSending"].boolValue
+////         isDownloading =  json["isDownloading"].boolValue
+////
+////        let userDataJson = json["messages"]
+////        if userDataJson != JSON.null{
+////
+////            for msg in userDataJson.arrayValue{
+////                messages.append(chat_data(fromJson: msg))
+////            }
+////
+////        }
+////    }
+//
+//}
 
 
 

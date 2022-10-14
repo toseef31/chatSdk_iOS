@@ -42,7 +42,7 @@ class Frind_Data :  NSObject, Codable  {
     
     var message : String!
     var messageType : Int!
-    var receipt_status : Int!
+    var unread : Int!
     var createdAt : String!
     var messageCounter : Int!
     var friendId : String!
@@ -59,7 +59,7 @@ class Frind_Data :  NSObject, Codable  {
         
         message = json["message"].stringValue
         messageType = json["messageType"].intValue
-        receipt_status = json["receipt_status"].intValue
+        unread = json["unread"].intValue
         createdAt = json["createdAt"].stringValue
         messageCounter = json["messageCounter"].intValue
         friendId = json["friendId"].stringValue
@@ -67,7 +67,6 @@ class Frind_Data :  NSObject, Codable  {
         profile_image = json["profile_image"].stringValue
         onlineStatus = json["onlineStatus"].intValue
         ismute = json["ismute"].intValue
-        
-
+      
 }
 }

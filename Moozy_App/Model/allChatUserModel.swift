@@ -397,9 +397,9 @@ struct MessageResponseData: Decodable{
 //    var selectFrienddata:String!
 }
 struct MessageRe: Decodable{
-   var  sender_id : String!
+   var  senderId : String!
     var name : String!
-    var receiver_id : String!
+    var receiverId : String!
 }
 struct userOnlineStatus : Decodable{
     var status : Int!

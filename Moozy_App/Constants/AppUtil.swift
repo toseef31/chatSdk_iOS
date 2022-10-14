@@ -135,6 +135,20 @@ class AppUtils{
         }
     }
     
+    func getLocalChatMessages(key: String, onCompletion: @escaping onCompletion<[ChatMessagesModel]>){
+        if UserDefaults.containsChatKey(key: key){
+            if let data : Data = UserDefaults.Get_ChatMessage(key: key){
+                if let chat = try? decoder.decode(Array<ChatMessagesModel>.self, from: data){
+                    onCompletion(chat, "no Data")
+                }
+            }
+        }
+        else {
+            onCompletion([], "no Data")
+        }
+    }
+    
+    
     func saveImageCache( obj : [NSURL:UIImage]) {
         do {
             let data = try NSKeyedArchiver.archivedData(withRootObject: obj, requiringSecureCoding: false)
@@ -166,6 +180,15 @@ class AppUtils{
             UserDefaults.Save_ChatMessage(value: encodedData, key: key)
         }
     }
+    
+    //Chatto Save Chat
+    func saveChatMessa(chat: Data, key: String ){
+      
+        if let encodedData = try? encoder.encode(chat){
+            UserDefaults.Save_ChatMessage(value: chat, key: key)
+        }
+    }
+    
     
     //Chatto Save Chat
 //    func saveChatMessag (chat: [ChatMessagesModel]?, key: String ){

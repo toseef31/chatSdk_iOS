@@ -69,6 +69,29 @@ class AppShadowCellView: UIView {
 }
 
 extension UIView {
+
+    func applyGradient(isVertical: Bool, colorArray: [UIColor]) {
+        layer.sublayers?.filter({ $0 is CAGradientLayer }).forEach({ $0.removeFromSuperlayer() })
+         
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colorArray.map({ $0.cgColor })
+        if isVertical {
+            //top to bottom
+            gradientLayer.locations = [0.0, 1.0]
+        } else {
+            //left to right
+            gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+            gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        }
+        
+        backgroundColor = .clear
+        gradientLayer.frame = bounds
+        layer.insertSublayer(gradientLayer, at: 0)
+    }
+
+}
+
+extension UIView {
     
     var width:CGFloat {
         return self.frame.size.width
@@ -158,11 +181,29 @@ extension UIView {
         self.layer.shadowRadius = 3
         self.layer.shadowOpacity = 0.1
     }
+    func applyContainerShadow() {
+        self.layer.masksToBounds = false
+        self.layer.shadowOffset = CGSize(width: 0, height: 1)
+        self.layer.shadowRadius = 8
+        self.layer.shadowOpacity = 0.1
+    }
+    func applyProfileShadow() {
+        self.layer.masksToBounds = false
+        self.layer.shadowOffset = CGSize(width: 0, height: 1)
+        self.layer.shadowRadius = 5
+        self.layer.shadowOpacity = 0.1
+    }
     func applyBottomShadow() {
         self.layer.masksToBounds = false
         self.layer.shadowOffset = CGSize(width: 0, height: 2)
         self.layer.shadowRadius = 2
         self.layer.shadowOpacity = 0.1
+    }
+    func FriendsBottomShadow() {
+        self.layer.masksToBounds = false
+        self.layer.shadowOffset = CGSize(width: 0, height: 12)
+        self.layer.shadowRadius = 1
+        self.layer.shadowOpacity = 0.02
     }
     
     func applyGradient(colours: [UIColor], locations: [NSNumber]?) -> Void {
@@ -198,12 +239,13 @@ extension UIView {
     func setGradientBackground(frame : CGRect, colorLeft: UIColor ,colorRight : UIColor) {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colorLeft.cgColor, colorRight.cgColor]
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.20)
-        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.locations = [0.0, 1.0]
         gradientLayer.frame = frame
         layer.insertSublayer(gradientLayer, at: 0)
     }
+    
     
     func roundCorners(corners:UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
