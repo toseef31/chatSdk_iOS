@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 import SwiftUI
 
-class NewChatVC: UIViewController, UISearchBarDelegate{
+class NewChatVC: UIViewController, UISearchBarDelegate {
     
     var topHeaderView: UIView?
     var tblChatList: UITableView?
-    var searchBar: UISearchBar?
+   public var searchBar: UISearchBar?
     
     var lblAllFrinds: UILabel?
     var sortedContacts :[Friend_DataModel]!
@@ -45,7 +45,7 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
         configureUI()
         
         dataBinding()
-        
+       searchBar?.delegate = self
         
     }
     func dataBinding() {
@@ -53,6 +53,7 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
             
             userDictionary = data.value!
             tblChatList?.reloadData()
+          
         })
         
         viewModel?.userSections.bind(observer: { [self] observable,_ in
@@ -102,18 +103,17 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
             return view
         }()
         
+        
         searchBar = UISearchBar()
         self.searchBar?.delegate = self
-        searchBar?.backgroundColor = UIColor.clear
+        searchBar?.backgroundColor = AppColors.secondaryColor
         searchBar?.searchTextField.textColor = UIColor.black
         searchBar?.searchBarStyle = UISearchBar.Style.minimal
         searchBar?.placeholder = "Search"
-       // searchBar?.searchTextField.backgroundColor = AppColors.primaryColor.withAlphaComponent(0.5)
-        searchBar?.searchTextField.tintColor = #colorLiteral(red: 0.9529411765, green: 0.9647058824, blue: 1, alpha: 1)
         searchBar?.searchTextField.backgroundColor = #colorLiteral(red: 0.9529411765, green: 0.9647058824, blue: 1, alpha: 1)
+        searchBar?.searchTextField.tintColor = AppColors.primaryColor
         searchBar?.setSearchFieldBackgroundImage(UIImage(), for: .normal)
         searchBar?.searchTextField.layer.cornerRadius = 35/2
-        
         
         
         lblAllFrinds = UILabel(title: "All Friends", fontColor: UIColor.gray, alignment: .left, font: UIFont.font(.Poppins, type: .Bold, size: 16))
@@ -122,13 +122,12 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
     func configureUI(){
         initializedControls()
         
-        view.addMultipleSubViews(views: topHeaderView!, searchBar!, lblAllFrinds!, tblChatList!,addItemsView)
-        addItemsView.fillSuperView()
+        view.addMultipleSubViews(views: topHeaderView!, searchBar!, lblAllFrinds!, tblChatList!)
+       
         topHeaderView?.anchor(top: self.view.topAnchor, leading: self.view.leadingAnchor, bottom: nil, trailing: self.view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: view.frame.width/4.8))
         
         searchBar?.anchor(top: topHeaderView?.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 12, left: 10, bottom: 0, right: 10), size: .init(width: 0, height: 55))
-        
-        lblAllFrinds?.anchor(top: searchBar?.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 12, left: 12, bottom: 0, right: 12))
+       lblAllFrinds?.anchor(top: searchBar?.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 12, left: 12, bottom: 0, right: 12))
         
         tblChatList?.anchor(top: lblAllFrinds?.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 12, left: 0, bottom: 0, right: 0))
         
@@ -141,24 +140,10 @@ class NewChatVC: UIViewController, UISearchBarDelegate{
         array?.forEach { data in
             viewModel?.userInfo.append(Friend_DataModel(isSelected: false, FrienList: data))
         }
-        
+
         viewModel?.sorting()
-       // viewModel?.getFriendList()
-        
-        //tblChatList?.reloadData()
+        tblChatList?.reloadData()
     }
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchBar.showsCancelButton = false
-        var array = viewModel?.Allusers //dbHelper.shareInstance.getFriendsData()
-        array = (true ? array : array?.filter { $0.name?.range(of: "", options: .caseInsensitive) != nil })
-        array?.forEach { data in
-            viewModel?.userInfo.append(Friend_DataModel(isSelected: false, FrienList: data))
-        }
-        
-        viewModel?.sorting()
-        
-       }
     
     //MARK: ---Configure Tableview
     func configureTableView(){
@@ -183,10 +168,18 @@ extension NewChatVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-      
+      print(userSection.count)
+        if userSection.count == 0 {
+            tblChatList?.backgroundView = addItemsView
+            return userSection.count
+        }
+        tblChatList?.backgroundView = nil
+        
+       
         return userSection.count
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
         if userSection.count == 0 {
             return 0
         }
@@ -204,9 +197,8 @@ extension NewChatVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
   
         let userKey = userSection[section]
-        tblChatList?.isHidden = false
-        addItemsView.isHidden = true
-        if isSearching{
+        tblChatList?.backgroundView = nil
+       if isSearching{
             return 1
         }else{
             if let users = userDictionary[userKey] {
@@ -216,9 +208,8 @@ extension NewChatVC: UITableViewDelegate, UITableViewDataSource{
         if let users = userDictionary[userKey] {
             return users.count
         }
-        tblChatList?.isHidden = true
-        addItemsView.isHidden = false
-        return 0
+       return 0
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -79,8 +79,12 @@ class AllFriendsVM {
             }
             self.userSection = [String](self.userDictionary.keys).sorted()
         }
-       
-        userSections.value = userSection
+        print(userDictionary.count)
+        if userDictionary.count == 0 {
+            userSection.removeAll()
+            userSections.value = userSection
+        } else {
+            userSections.value = userSection }
         allFriendList.value = userDictionary
        
     }
