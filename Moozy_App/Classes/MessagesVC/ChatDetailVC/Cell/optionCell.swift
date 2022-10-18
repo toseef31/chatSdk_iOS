@@ -12,9 +12,7 @@ struct chatOptionsModel {
     var image: UIImage?
     var title: String?
    
-   
 }
-
 
 class OptionCallCell: UITableViewCell{
     
@@ -30,7 +28,6 @@ class OptionCallCell: UITableViewCell{
     var setData: chatOptionsModel? = nil{
         didSet{
             if setData?.title ?? "" == "Mute Friend" {
-                let ary = AppUtils.shared.MuteUsere ?? []
                 if ismute == 1 {
                     image.image = UIImage(systemName: "speaker.slash") ?? nil
                     lnlName.text = "UnMuteFriend"
@@ -44,9 +41,6 @@ class OptionCallCell: UITableViewCell{
                 
             }
             else if setData?.title ?? "" ==  "Block Friend" {
-                let ary = AppUtils.shared.blockUserUsere ?? []
-
-              
                     image.image = setData?.image ?? nil
                     lnlName.text = setData?.title ?? ""
                    print("not found")

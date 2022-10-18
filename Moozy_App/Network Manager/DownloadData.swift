@@ -30,8 +30,6 @@ class DownloadData: NSObject {
                 newUrl = documentsUrl.appendingPathComponent("Audios")
 
             try FileManager.default.createDirectory(atPath: newUrl!.path, withIntermediateDirectories: true, attributes: nil)
-           // let namesplit = name.split(separator: "-")
-           // var finalname =  String(namesplit.last!)
             let destinationFileUrl = newUrl?.appendingPathComponent(name)
             let fileURL = url
             let sessionConfig = URLSessionConfiguration.default
@@ -55,8 +53,6 @@ class DownloadData: NSObject {
                             let result = ivStr.split(separator: "-")
                             let iv = String(result[0])
                             //New Added
-                            //let key =  "2eXJiSSZ5uIAeZVs"  // Get_Ring_ID()
-                            //let iv = "7Hh3tLJKW3PeWO9d"
                             decAudio = try data.aesDecryptData(key: key, iv: iv) as! Data
                             let fileSize = Double(decAudio.count / 1048576)
                             print("Audio File size1 in MB Audio Decrypt: ", fileSize , decAudio.count)
@@ -160,14 +156,8 @@ class DownloadData: NSObject {
                             print(error.localizedDescription)
                             print("error")
                         }
-//
-//                        }catch(let error as Error){
-//                            print(error.localizedDescription)
-//                        }
                         DispatchQueue.main.async {
                             completion("Downloaded",true)
-                           // self.viewController?.view.makeToast("Image Downloaded")
-//>>>>>>> dcc69756d8f29f85e5d127348b35279f7657013a
                         }
                     }
                     do {
@@ -214,9 +204,6 @@ class DownloadData: NSObject {
                 let result = ivStr.split(separator: "-")
                 let iv = String(result[0])
                 //New Added
-                
-//                let key =  "2eXJiSSZ5uIAeZVs"  // Get_Ring_ID()
-//                var iv = "7Hh3tLJKW3PeWO9d"
                 var encImage = UIImage()
                 self.utilityQueue.async {
                 do{
@@ -254,9 +241,7 @@ class DownloadData: NSObject {
                     switch result {
                     case .success(_):
                         DispatchQueue.main.async {
-                           // UIApplication.topViewController()?.view.makeToast("Video Saved Sucessfully")
-                            //self.viewController?.view.makeToast("Video Saved Sucessfully")
-                        }
+                         }
                         break
                     case .failure( _):
                         print("Saved")
@@ -288,9 +273,6 @@ class DownloadData: NSObject {
     // MARK: Check File Exist
     func searchFileExist(fileName:String,fileType:Int) -> String?{
         var fileextension = ""
-//        if fileType == 1 {
-//            fileextension = "Images"
-//        }
         if fileType == 5
         {
             fileextension = "Videos"

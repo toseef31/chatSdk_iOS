@@ -50,15 +50,9 @@ class ChatDetailVC: UIViewController{
         configureUI()
        
     }
-    override func viewDidAppear(_ animated: Bool) {
-       
-//        registerNotification()
-//        configureUI()
-    }
     
     func registerNotification() {
       
-//    NotificationCenter.default.addObserver(self, selector: #selector(handleNotificationFuncName), name: NSNotification.Name(rawValue: "aNotificationName"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleHideFriend), name: NSNotification.Name(rawValue: "hideNotificationName"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(handlemutenotification), name: NSNotification.Name(rawValue: "muteNotificationName"), object: nil)
@@ -71,8 +65,6 @@ class ChatDetailVC: UIViewController{
               navigationController?.popToViewController(viewController, animated: false)
         }
         
-       // let viewControllers: [UIViewController] = self.navigationController!.viewControllers as [UIViewController]
-     // self.navigationController!.popToViewController(viewControllers[viewControllers.count - 3], animated: true)
     }
    
     @objc func handleNotificationFuncName(_ notification: Notification) {
@@ -159,8 +151,6 @@ class ChatDetailVC: UIViewController{
         topHeaderView?.addMultipleSubViews(views: btnBack!, profileView!, lblUserName!)
         
         topHeaderView?.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: view.frame.width/1.5))
-        
-//        callView?.anchor(top: topHeaderView?.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: view.frame.width/3.5))
         
         optionView?.anchor(top: topHeaderView?.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
         
@@ -256,21 +246,6 @@ extension ChatDetailVC: UITableViewDelegate, UITableViewDataSource{
             break
         case 2:
             
-            let ary = AppUtils.shared.blockUserUsere ?? []
-            if ary.contains(receiverData?.friendId  ?? "") {
-                 name = "UnBlock Friend"
-            }
-            else{
-                name = value![0]
-               print("not found")
-            }
-            if ary.contains(receiverData?.friendId  ?? "") {
-                 name = "UnBlock Friend"
-            }
-            else{
-                name = value![0]
-               print("not found")
-            }
             
             ShowPopUp(PopView: PopupAlertView(imageName: data.image, title: name, subTitle: "Do you really want to \(name)?", cases: 2 , muteId: receiverData?.friendId  ?? ""))
             break
@@ -289,18 +264,4 @@ extension ChatDetailVC: UITableViewDelegate, UITableViewDataSource{
             break
         }
     }
-}
-
-extension ChatDetailVC{
-    
-//    perform(#selector(MapVC), with: nil, afterDelay: 0)
-//
-//    @objc func MapVC(){
-//        let vc = LocationVC()
-//        vc.delegate = self
-//        vc.modalPresentationStyle = .fullScreen
-//        vc.modalTransitionStyle = .coverVertical
-//        self.present(vc, animated: true, completion: nil)
-//    }
-    
 }

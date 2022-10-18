@@ -28,19 +28,8 @@ class ChatDataVM {
     
     var allChat: Observable<[chat_data]> = Observable([])
     var isAllChat: Observable<Bool> = Observable(false)
-    var allChatMessage: Observable<[ChatMessageModel]> = Observable()
     
     var receiverID: Observable<String> = Observable("")
-    
-    var allMessages = [ChatMessageModel]()
-    var allChatMessages = [[ChatMessageModel]]()
-    
-    var AllChatMessage: Observable<[NewChatMessages]> = Observable()
-    
-    var chatMessagesArr = [NewChatMessages]()
-    
-    var chatLocalMessages: Observable<[chatModel]?> = Observable([])
-    
     //new Updated
     var ChatMessagesArray = [ChatMessagesModel]()
     var AllChatMsg: Observable<[ChatMessagesModel]> = Observable()
@@ -70,10 +59,6 @@ class ChatDataVM {
         APIServices.shared.getChat(receiverId: receiverID.value!, limit: 0, chatHideStat: false) { [self] (response, errorMessage) in
             if response != nil{
                 isSelecting = false
-               
-//                UserDefaults.removeSpecificKeys(key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
-//                AppUtils.shared.saveChatMessages(chat: response, key: "\(AppUtils.shared.user?._id ?? "")\(receiverID.value!)")
-                
                  DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
                     allChat.value = response
                 })
@@ -93,8 +78,7 @@ class ChatDataVM {
             if response != nil{
                 print("Send Message")
                 isSelecting = false
-                print(chatMessagesArr.count)
-                print(chatMessagesArr)
+              
             }else{}
         }
         
@@ -104,26 +88,15 @@ class ChatDataVM {
     func UpdateMessage(Messages: [ChatMessagesModel], message_Id : IndexPath ,message: String, chatType: Int, messageType: Int, commentId: String? = "", selectedUserData: String? = ""){
         isForwardByMe = true
         
-        var arrayOfMessages = Messages
-       
-        var data = arrayOfMessages
+        let data = Messages
+       // let data = arrayOfMessages
 
         data[message_Id.section].messagesData?[message_Id.row].messages?.message = message
         
-        print(data[message_Id.section].messagesData?[message_Id.row].messages?.message ?? "")
-        
         AllChatMsg.value = data
         
-        APIServices.shared.updateMessage(message_Id: AllChatMsg.value![message_Id.section].messagesData?[message_Id.row].messages?._id ?? "" ,receiver_Id: receiverID.value!, message: message, messageType: messageType, chatType: chatType, comment_Id: commentId!, createdAt: AllChatMsg.value![message_Id.section].messagesData?[message_Id.row].messages?.createdAt.getActualDate() ?? "", selectedUserData: selectedUserData ?? "") { [self] (response, errorMessage) in
-            if response != nil{
-               
-                
-            }else{}
-        }
+        APIServices.shared.updateMessage(message_Id: AllChatMsg.value![message_Id.section].messagesData?[message_Id.row].messages?._id ?? "" ,receiver_Id: receiverID.value!, message: message, messageType: messageType, chatType: chatType, comment_Id: commentId!, createdAt: AllChatMsg.value![message_Id.section].messagesData?[message_Id.row].messages?.createdAt.getActualDate() ?? "", selectedUserData: selectedUserData ?? "")
     }
-    
-    
-    
     
     
     func getChatMessageLocal(){
@@ -132,7 +105,6 @@ class ChatDataVM {
         print("\(senderId)\(receiverID.value!)")
         AppUtils.shared.getLocalChatMessages(key: "\(senderId)\(receiverID.value!)") { [self] (response, errorMessage) in
             if response != nil{
-                print(response?.count)
                 isSelecting = false
                 DispatchQueue.main.asyncAfter(deadline: .now()+0.2, execute: {
                     AllChatMsg.value = response
@@ -150,75 +122,20 @@ class ChatDataVM {
         isForwardByMe = true
         APIServices.shared.sendMessage(receiver_Id: receiverID.value!, message: message, messageType: messageType, chatType: chatType, comment_Id: commentId!, commentData: commentData, createdAt: "", selectedUserData: "") { [self] (response, errorMessage) in
             if response != nil{
-                print(response)
                 isSelecting = false
-                print("Send Message")
-                //                Reachability.isConnectedToNetwork { isConnected in
-                //                    if isConnected{
                 getChat()
-                //                    }else{
-                //                        getChatMessageLocal()
-                //                    }
-                //                }
+                
             }else{
                 
             }
         }
     }
     
-    //MARK: Split Messages by each day (Sections)..
-    let chatMessages = ChatMessageModel(user_id: "", frind_id: "", message: "", message_Type: 0, status: nil, isSeen: nil, receiptStatus: nil, createdDate: "", hide: nil, sender_id: "", sender_name: "", sender_image: "", receiver_id: "", receiver_name: "", receiver_image: "")
-    
-    
-    func createMessageSection(from messagesArray:[chatModel]?) {
-        chatMessagesArr.removeAll()
-//        chatMessagesArr.insert(NewChatMessages(isDowloading: false, date: chatMessages.createdDate!, messages: []), at: 0)
-        
-        for messagesIndex in 0..<messagesArray!.count {
-            
-            var actualDate = ""
-            if messagesArray![messagesIndex].createdAt != "" {
-                actualDate = (messagesArray![messagesIndex].createdAt?.getActualDate())!
-            }
-            if chatMessagesArr.count >= 1 {
-                
-                if let filteredIndex = chatMessagesArr.firstIndex(where: {$0.date == actualDate}) {
-                    chatMessagesArr[filteredIndex].messages.append(contentsOf: [messagesArray![messagesIndex]])
-                }else {
-                    chatMessagesArr.append(NewChatMessages(isDowloading: false, date: actualDate, messages: [messagesArray![messagesIndex]]))
-                }
-            }
-        }
-        
-        
-        //chatMessagesArr.append(NewChatMessages(isDowloading: false, date: chatMessages.createdDate!, messages: []))
-        
-        
-        AllChatMessage.value = chatMessagesArr
-        
-        isAllChat.value = true
-        
-    }
-    
-    
+   
     func dataBinding(){
         
         allChat.bind { [self] (data, _) in
             ChatMessagesArray.removeAll()
-//            if data.value?.count != 0 {
-//
-//            // ChatMessagesArray.insert(ChatMessagesModel(isSelected: false, date: "sdfsd", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: data.value![0])]), at: 0)
-//
-//            } else {
-//                var messages: [chat_data] = []
-//
-//                if let data = constatntChatModel.data(using: .utf8) {
-//                    let login = try? JSONDecoder().decode(chat_data.self, from: data)
-//                    // messages.append(login!)
-//                    ChatMessagesArray.append(ChatMessagesModel(isSelected: false, date: "no", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: login!)]))
-//                }
-//            }
-            
             for msgIndex in 0..<data.value!.count {
                 var actualDate = ""
                 
@@ -247,11 +164,8 @@ class ChatDataVM {
         let status = (!((arrayOfMessages[location.section].messagesData?[location.row].isSelected)!))
         arrayOfMessages[location.section].messagesData?[location.row].isSelected = status
         isSelecting = true
-      //  AllChatMsg.value = arrayOfMessages
-        
         if (arrayOfMessages[location.section].messagesData?[location.row].isSelected!) == true{
             selectedMessage.append((Messages[location.section].messagesData?[location.row].messages)!)
-            
         }else{
             selectedMessage = selectedMessage.filter{$0._id != (Messages[location.section].messagesData?[location.row].messages?._id)!}
         }
@@ -266,19 +180,16 @@ class ChatDataVM {
         
         var arrayOfMessages = Messages
         isSelecting = true
-        arrayOfMessages[location.section].messagesData?[location.row].isDownloading = true //(!((arrayOfMessages[location.section].messagesData?[location.row].isDownloading)!))
-        //        arrayOfMessages[location.section].messagesData?[location.row].isDownloading = status
-        print( arrayOfMessages[location.section].messagesData?[location.row].isDownloading)
-        AllChatMsg.value = arrayOfMessages
+        arrayOfMessages[location.section].messagesData?[location.row].isDownloading = true
+       AllChatMsg.value = arrayOfMessages
         
     }
     
     
     
     func CancelSelectionMessages( ){
-        
+      
         var arrayOfMessages = AllChatMsg.value
-        
         var actualDate = ""
         
         selectedMessage.forEach { data in

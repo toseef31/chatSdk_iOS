@@ -308,26 +308,28 @@ enum Theme: Int {
 
 
 
+
+
 class ThemeManager {
     
     static func currentTheme() -> Theme {
-        let storedTheme = UserDefaults.standard.value(forKey: app_theme) as? String
+        let storedTheme = UserDefaults.standard.value(forKey: ThemeConstant.app_theme) as? String
         
-        if storedTheme == Blue{
+        if storedTheme == ThemeConstant.Blue{
             return .blue
-        }else if storedTheme == Pink{
+        }else if storedTheme == ThemeConstant.Pink{
             return .pink
-        }else if storedTheme == Green{
+        }else if storedTheme == ThemeConstant.Green{
             return .green
-        }else if storedTheme == Orange{
+        }else if storedTheme == ThemeConstant.Orange{
             return .orange
-        }else if storedTheme == Yellow{
+        }else if storedTheme == ThemeConstant.Yellow{
             return .yellow
-        }else if storedTheme == Purple{
+        }else if storedTheme == ThemeConstant.Purple{
             return .purple
-        }else if storedTheme == Red{
+        }else if storedTheme == ThemeConstant.Red{
             return .red
-        }else if storedTheme == Gray{
+        }else if storedTheme == ThemeConstant.Gray{
             return .gray
         }else{
             return .white
@@ -335,51 +337,51 @@ class ThemeManager {
     }
 
     static func currentThemeName() -> String {
-        let storedTheme = UserDefaults.standard.value(forKey: app_theme) as? String
+        let storedTheme = UserDefaults.standard.value(forKey: ThemeConstant.app_theme) as? String
         
-        if storedTheme == Blue{
-            return Blue
-        }else if storedTheme == Pink{
-            return Pink
-        }else if storedTheme == Green{
-            return Green
-        }else if storedTheme == Orange{
-            return Orange
-        }else if storedTheme == Yellow{
-            return Yellow
-        }else if storedTheme == Purple{
-            return Purple
-        }else if storedTheme == Red{
-            return Red
-        }else if storedTheme == Gray{
-            return Gray
+        if storedTheme == ThemeConstant.Blue{
+            return ThemeConstant.Blue
+        }else if storedTheme == ThemeConstant.Pink{
+            return ThemeConstant.Pink
+        }else if storedTheme == ThemeConstant.Green{
+            return ThemeConstant.Green
+        }else if storedTheme == ThemeConstant.Orange{
+            return ThemeConstant.Orange
+        }else if storedTheme == ThemeConstant.Yellow{
+            return ThemeConstant.Yellow
+        }else if storedTheme == ThemeConstant.Purple{
+            return ThemeConstant.Purple
+        }else if storedTheme == ThemeConstant.Red{
+            return ThemeConstant.Red
+        }else if storedTheme == ThemeConstant.Gray{
+            return ThemeConstant.Gray
         }else{
-            return White
+            return ThemeConstant.White
         }
     }
     
     static func applyTheme(theme: Theme) {
         
         if theme == .blue{
-            UserDefaults.standard.setValue(Blue, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Blue, forKey: ThemeConstant.app_theme)
         }else if theme == .pink{
-            UserDefaults.standard.setValue(Pink, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Pink, forKey: ThemeConstant.app_theme)
         }else if theme == .green{
-            UserDefaults.standard.setValue(Green, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Green, forKey: ThemeConstant.app_theme)
         }else if theme == .orange{
-            UserDefaults.standard.setValue(Orange, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Orange, forKey: ThemeConstant.app_theme)
         }else if theme == .yellow{
-            UserDefaults.standard.setValue(Yellow, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Yellow, forKey: ThemeConstant.app_theme)
         }else if theme == .purple{
-            UserDefaults.standard.setValue(Purple, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Purple, forKey: ThemeConstant.app_theme)
         }else if theme == .red{
-            UserDefaults.standard.setValue(Red, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Red, forKey: ThemeConstant.app_theme)
         }else if theme == .gray{
-            UserDefaults.standard.setValue(Gray, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Gray, forKey: ThemeConstant.app_theme)
         }else if theme == .yellow{
-            UserDefaults.standard.setValue(Yellow, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.Yellow, forKey: ThemeConstant.app_theme)
         }else{
-            UserDefaults.standard.setValue(White, forKey: app_theme)
+            UserDefaults.standard.setValue(ThemeConstant.White, forKey: ThemeConstant.app_theme)
         }
         UserDefaults.standard.synchronize()
     }

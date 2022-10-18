@@ -109,13 +109,13 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
     var imageDictionary = [NSURL: UIImage]()
 
 
-    var chatMessagesArr = [NewChatMessages]()
+//    var chatMessagesArr = [NewChatMessages]()
     let HeadercontainerView = UIView()
     var OpenfileUrl :NSURL?
     var statusOnlineStack : UIStackView?
     private var sourceType: SourceType!
 
-    let chatMessages = ChatMessageModel(user_id: "", frind_id: "", message: "", message_Type: 0, status: nil, isSeen: nil, receiptStatus: nil, createdDate: "", hide: nil, sender_id: "", sender_name: "", sender_image: "", receiver_id: "", receiver_name: "", receiver_image: "")
+    //let chatMessages = ChatMessageModel(user_id: "", frind_id: "", message: "", message_Type: 0, status: nil, isSeen: nil, receiptStatus: nil, createdDate: "", hide: nil, sender_id: "", sender_name: "", sender_image: "", receiver_id: "", receiver_name: "", receiver_image: "")
 
     //Buttom Constraint of Tableview.
     var tblCHatBottomConstraint: NSLayoutConstraint?
@@ -150,7 +150,6 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
    //Initilization..
     init(receiverData: friendInfoModel? = nil, ChatMessages: [ChatMessagesModel] ) {
          if let receiver = receiverData {
-            chatMessagesArr.removeAll()
             self.receiverData = receiver
             self.receiverID = receiver.friendId ?? ""
         }
@@ -171,7 +170,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         APIServices.shared.sendDelegate = self
         isdelForward = false
        
-
+        print(view.frame.width)
     }
     func resettablesize(isOpen : Bool? = false){
         
@@ -195,7 +194,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
             }
             
             ProfileTopConstraint?.isActive = false
-            ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: -105)
+            ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: -120)
             ProfileTopConstraint?.isActive = true
             return
         }
@@ -317,7 +316,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         profileDataView?.horizontalCenterWith(withView: view)
         
         ProfileTopConstraint?.isActive = false
-        ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: -105)
+        ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: -120)
         ProfileTopConstraint?.isActive = true
         
         viewUserName?.isHidden = true
@@ -368,7 +367,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
       
         
         btnScrollToBottom?.isHidden = true
-        replayImage = createImage(txt: "", img: UIImage(named: "reply")!, size: 55.0, isRound: false, corners: "")
+        replayImage = createImage(text: "", img: UIImage(named: "reply")!, size: 55.0, isRound: false, corners: "")
         addTapGesture()
     }
 
@@ -439,7 +438,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
 
             statusColor = receiverData?.onlineStatus == 1 ? .green : .red
             online = UIView(backgroundColor: statusColor!, cornerRadius: 4)
-            let statusOnline = receiverData?.onlineStatus == 0 ?  "\(getMsgDate(date: receiverData?.createdAt ?? ""))" : "online"
+            let statusOnline = receiverData?.onlineStatus == 0 ?  "offline" : "online"
             lblOnline = UILabel(title: "\(statusOnline)", fontColor: AppColors.BlackColor, alignment: .left, font: UIFont.font(.Roboto, type: .Medium, size: 9))
             online?.constraintsWidhHeight(size: .init(width: 9, height: 9))
             let stackss = UIStackView(views: [online!, lblOnline!], axis: .horizontal, spacing: 2,distribution: .fill)
@@ -741,8 +740,8 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
             btnSend?.centerSuperView()
 
             txtMessage?.anchor(top: view.topAnchor, leading: btnAttachment.trailingAnchor, bottom: view.bottomAnchor, trailing: btnView.leadingAnchor, padding: .init(top: 8, left: 8, bottom: 8, right: 8))
-
-            recordView?.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: btnView.leadingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 4))
+          
+            recordView?.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0),size: .init(width: 187.5, height: 0))
 
             btnSend?.isHidden = true
             recordView?.isHidden = true
@@ -858,11 +857,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
 
     func dataBinding(){
 
-        //ActivityController.shared.showActivityIndicator(uiView: view)
-//        viewModel?.getChatMessageLocal()
-        
         viewModel?.AllChatMsg.bind(observer: { [self] (chat, _ )in
-            print(viewModel?.selectedMessage.count)
             lblCountSelected?.text =  "\((viewModel?.selectedMessage.count ?? 0))"
             chatMsgArr = chat.value ?? []
             viewModel?.updatalocalChat(data: chatMsgArr ?? [] )
@@ -872,7 +867,6 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
                 tblChat?.reloadData()
                 
                 //if chatMsgArr?.first?.messagesData!.count ?? 0 >= 0 &&  chatMsgArr?.first?.messagesData?.count ?? 0 <= 3 {
-                    print(tblChat?.contentSize.height ?? 0)
                     let k = self.containerView!.bounds.height
                     print(k)
                 if k - 70  >= (tblChat?.contentSize.height ?? 0) {
@@ -883,16 +877,14 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
                     tblCHatHeightConstraint?.isActive = false
                     tblCHatHeightConstraint = self.tblChat?.heightAnchor.constraint(equalToConstant: (tblChat?.contentSize.height ?? 0))
                     tblCHatHeightConstraint?.isActive = true
-                    
-//                    tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -343)
-//                    tblCHatBottomConstraint?.isActive = true
-                   
+                  
                 }
                 else {
-                    tblCHatBottomConstraint?.isActive = false
+                  
                     tblCHatHeightConstraint?.isActive = false
                     tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
                     tblCHatBottomConstraint?.isActive = true
+                    tblCHatBottomConstraint?.isActive = false
                 }
                 
                 if chatMsgArr?.count ?? 0 > 1 {
@@ -1619,7 +1611,7 @@ extension MessageVcCopy {
         }
         
         ProfileTopConstraint?.isActive = false
-        ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: CGFloat(-105))
+        ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: CGFloat(-120))
             ProfileTopConstraint?.isActive = true
         viewUserName?.isHidden = true
         profileView?.isHidden = false
@@ -1699,7 +1691,7 @@ extension MessageVcCopy{
                 let  usersObject = jsonData[0]
                 statusColor = usersObject.status ?? 0 == 0 ?  .red : .green
                 online?.backgroundColor = statusColor
-                self.lblOnline?.text = usersObject.status ?? 0 == 0 ? "\(getMsgDate(date: receiverData?.createdAt ?? ""))" : "online"
+                self.lblOnline?.text = usersObject.status ?? 0 == 0 ? "offline" : "online"
             } catch let error as NSError{
                 print(error)}
 
@@ -2394,10 +2386,6 @@ extension MessageVcCopy : UIContextMenuInteractionDelegate {
         print(indexPath.row)
         print(indexPath.section)
 
-        //        print(chatMessagesArr[indexPath.section].messages[indexPath.row].messageType)
-
-        //        if chatMessagesArr[indexPath.section].messages[indexPath.row].messageType == 0//
-
 
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [self] _ -> UIMenu? in
 //                smsStatus is used to indicate that sms send or recived.
@@ -2505,7 +2493,7 @@ extension MessageVcCopy: RecordViewDelegate{
         btnRecoard?.tintColor = .clear// #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
        // self.btnView.backgroundColor = AppColors.primaryColor
         recordView?.backgroundColor = #colorLiteral(red: 0.937254902, green: 0.937254902, blue: 0.937254902, alpha: 1)
-      
+        recordView?.bringSubviewToFront(btnRecoard!)
         self.startRecording()
     }
 

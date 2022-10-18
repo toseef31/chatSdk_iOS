@@ -134,7 +134,7 @@ class NewChatVC: UIViewController, UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        var array = viewModel?.Allusers //dbHelper.shareInstance.getFriendsData()
+        var array = viewModel?.Allusers 
         viewModel?.userInfo.removeAll()
         array = (searchText.isEmpty ? array : array?.filter { $0.name?.range(of: searchText, options: .caseInsensitive) != nil })
         array?.forEach { data in

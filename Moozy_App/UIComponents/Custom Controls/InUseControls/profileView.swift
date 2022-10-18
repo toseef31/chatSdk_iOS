@@ -108,7 +108,7 @@ class ProfileView: UIView{
         mainView.addSubview(view)
         self.addSubview(statusView!)
         
-        view.setGradientBackground(frame: CGRect(x: 0, y: 0, width: size.width, height: size.height), colorLeft: AppGradentColors.colorLeft, colorRight: AppGradentColors.colorRight)
+        view.setGradientBackground(frame: CGRect(x: 0, y: 0, width: size.width, height: size.height), colorLeft: AppGradentColor.colorLeft, colorRight: AppGradentColor.colorRight)
         
         statusView?.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 2.5, bottom: 0, right: 0), size: .init(width: 8, height: 8))
         

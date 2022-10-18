@@ -10,8 +10,6 @@ import SimpleTwoWayBinding
 
 class ChatListVM{
     
-    var listChatView: Observable<[FrindsModel]> = Observable([])
-                                    
     var isLoader: Observable<Bool> = Observable(false)
     var isReLoad: Observable<Bool> = Observable(false)
     var isUpdate: Observable<Bool> = Observable(false)
@@ -30,8 +28,7 @@ class ChatListVM{
     }
     func updateReciptStuts(FriendId: String,reciptStatus: Int ){
        let res =  db.friendRecipt(FriendId: FriendId, reciptStatus: reciptStatus)
-        print(res)
-        getLocalFrind()
+       getLocalFrind()
         APIServices.shared.readReciptFriends(friendId: FriendId) { data, error in
             print(data)
         }

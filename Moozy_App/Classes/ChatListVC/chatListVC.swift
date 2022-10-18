@@ -35,7 +35,6 @@ public class ChatListVC: UIViewController, UISearchBarDelegate {
     private var listChatView: [friendInfoModel] = []
     private var SearchlistChatView: [friendInfoModel] = []
     private var viewModel: ChatListVM?
-    var frien = [Friend_Data]()
     
     var isLeading = true
     
@@ -190,10 +189,10 @@ public class ChatListVC: UIViewController, UISearchBarDelegate {
         // Configure Refresh Control
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: .valueChanged)
 //
-        deleteImage = createImage(txt: "Delete", img: UIImage(named: "delete-4")!, size: 55.0, isRound: true, corners: "Right")
-        hideImage = createImage(txt: "Hide", img: UIImage(named: "visibility_off")!, size: 55.0, isRound: false, corners: "Left")
-        unreadImage = createImage(txt: "Unread", img: UIImage(named: "mark_unread_chat_alt")!, size: 55.0, isRound: true, corners: "Left")
-        readImage = createImage(txt: "Read", img: UIImage(named: "Read")!, size: 55.0, isRound: true, corners: "Left")
+        deleteImage = createImage(text: "Delete", img: UIImage(named: "delete-4")!, size: 55.0, isRound: true, corners: "Right")
+        hideImage = createImage(text: "Hide", img: UIImage(named: "visibility_off")!, size: 55.0, isRound: false, corners: "Left")
+        unreadImage = createImage(text: "Unread", img: UIImage(named: "mark_unread_chat_alt")!, size: 55.0, isRound: true, corners: "Left")
+        readImage = createImage(text: "Read", img: UIImage(named: "Read")!, size: 55.0, isRound: true, corners: "Left")
     }
     
     @objc private func refreshWeatherData(_ sender: Any) {
@@ -511,10 +510,6 @@ extension ChatListVC{
         SocketIOManager.sharedInstance.ConnectSocket()
         
         
-        SocketIOManager.sharedInstance.getChatdumy{ (data) in
-            print(data)
-        
-        }
         
         SocketIOManager.sharedInstance.getChatMessage { ( messageInfo ,data) in
             self.parseSocketMsg(messag: messageInfo)

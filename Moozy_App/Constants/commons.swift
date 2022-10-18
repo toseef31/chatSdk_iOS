@@ -12,37 +12,6 @@ import AVFAudio
 import AVFoundation
 
 
-func getDate(date:String) -> String{
-    
-    let today = Date()
-    let finalDate = date.UTCToLocal(incomingFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", outGoingFormat: "MMM d, yyyy h:mm a")
-    
-    let dateFormatter2 = DateFormatter()
-    dateFormatter2.dateFormat = "dd-MMM"
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MMM d, yyyy h:mm a"
-    let msgDate = dateFormatter.date(from: finalDate)
-    dateFormatter.dateFormat = "M/d/yy"
-    let dateString1 = dateFormatter.string(from: msgDate!)
-    dateFormatter.dateFormat = "HH:mm"
-    dateFormatter.dateFormat = "d MMM"
-    let dateString11 = dateFormatter.string(from: msgDate!)
-    
-    let timeString = dateFormatter.string(from: msgDate!)
-    let diff = today.interval(ofComponent: .day, fromDate: msgDate!)
-    if diff == 0{
-        return timeString
-    }else if diff == 1 {
-        return  "Yesterday"
-//        return  timeString + " " + "Yesterday"
-    }else if diff < 7 {
-        let day = String(describing: (msgDate?.dayOfWeek()?.prefix(3) ?? ""))
-//        print(day)
-        return timeString  + " (" +  day + ")"
-    }
-    return timeString
-}
-
 func getMsgDate(date:String) -> String {
     let today = Date()
     let finalDate = date.UTCToLocal(incomingFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", outGoingFormat: "MMM d, yyyy h:mm a")
@@ -58,26 +27,21 @@ func getMsgDate(date:String) -> String {
     let strTime = dateFormatter.string(from: msgDate!)
     let timeStr = dateFormatter.string(from: msgDate!)
     dateFormatter.dateFormat = "MM/dd"
-    let dateString11 = dateFormatter.string(from: msgDate!)
-    let timeString = dateFormatter.string(from: msgDate!)
+    _ = dateFormatter.string(from: msgDate!)
+    _ = dateFormatter.string(from: msgDate!)
     let diff = today.interval(ofComponent: .day, fromDate: msgDate!)
     if diff == 0{
         return timeStr
     }else if diff == 1 {
         return  timeStr
-//        return  timeStr + " " + "Yesterday"
     }else if diff < 7{
         let day = String(describing: (msgDate?.dayOfWeek()?.prefix(3) ?? ""))
-        
-        print(day)
-//        return timeStr  + " (" +  day + ")"
         return timeStr
     }
-    //return strTime  + " " + dateString1
     return strTime
 }
 
-
+//In Chat The section Used To Display Date Details.
 class DateHeaderLabel: UILabel {
     
     override init(frame: CGRect = .zero){
@@ -104,21 +68,18 @@ class DateHeaderLabel: UILabel {
 
 //Globel Initialized
 var audioPlayerSound: AVAudioPlayer?
+//Mesage Send OR Recive Sound Stop...
 func stopSound(){
-    print("Stopped Sound")
     if let audioPlayer = audioPlayerSound, audioPlayer.isPlaying {
         audioPlayer.stop()
-        
-        print("Sound Stopped")
-    }
+       }
     audioPlayerSound = nil
 }
 
-//Mesage Sound Play...
+//Mesage Send OR Recive Sound Play...
 func playSound(sound:String, isRepeat:Bool) {
     if let audioPlayer = audioPlayerSound, audioPlayer.isPlaying { audioPlayer.stop() }
     guard let soundURL = Bundle.main.url(forResource: sound, withExtension: "wav") else {
-        print("Sound not found")
         return
     }
     do{
@@ -138,15 +99,8 @@ func playSound(sound:String, isRepeat:Bool) {
     }
 }
 
-func currentDate()-> String{
-    let date = Date()
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
-    let createdAt = formatter.string(from: date)
-    return createdAt
-}
 
-
+//Get the Audio Length Time.
 func checkaudiotime(audiourl:URL) -> (audioduration:Float?, audiotimelabel:String?) {
     var audioPLayers = AVAudioPlayer()
     do {
@@ -165,90 +119,38 @@ func checkaudiotime(audiourl:URL) -> (audioduration:Float?, audiotimelabel:Strin
 }
 
 
-//Get the string of data and convert into the spesific format.
-func getDates(date:String) -> String {
-    let today = Date()
-    let finalDate = date.UTCToLocal(incomingFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", outGoingFormat: "MMM d, yyyy h:mm a")
-    
-    let dateFormatter2 = DateFormatter()
-    dateFormatter2.dateFormat = "dd-MMM"
-    
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MMM d, yyyy h:mm a"
-    let msgDate = dateFormatter.date(from: finalDate)
-    dateFormatter.dateFormat = "M/d/yy"
-    let dateString1 = dateFormatter.string(from: msgDate!)
-    dateFormatter.dateFormat = "HH:mm"
-    dateFormatter.dateFormat = "MM/dd"
-    
-    let dateString11 = dateFormatter.string(from: msgDate!)
-    let timeString = dateFormatter.string(from: msgDate!)
-    let diff = today.interval(ofComponent: .day, fromDate: msgDate!)
-   
-    let day = String(describing: (msgDate?.dayOfWeek()?.prefix(3) ?? ""))
-    
-    return timeString  + " (" +  day + ")"
-    return dateString1
-}
 
 
-
-//MARK: -- getAttributedString
-func getAttributedString(arrayUnderlinecolor : [UIColor]?,arrayText:[String]?) -> NSMutableAttributedString {
-    
-    let finalAttributedString = NSMutableAttributedString()
-    let font =  UIFont.font(.Poppins, type: .Regular, size: 15)
-    for i in 0 ..< (arrayText?.count)! {
-        let attributes = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue,NSAttributedString.Key.underlineColor: arrayUnderlinecolor?[i] as Any
-                          ,NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: font! ] as [NSAttributedString.Key : Any]
-        
-        let attributedStr = (NSAttributedString.init(string: arrayText?[i] ?? "", attributes: attributes as [NSAttributedString.Key : Any]))
-        
-        if i != 0 {
-            
-            finalAttributedString.append(NSAttributedString.init(string: " "))
-        }
-        
-        finalAttributedString.append(attributedStr)
-    }
-    
-    return finalAttributedString
-}
-
-
-
-func createImage(txt:String,img:UIImage,size:CGFloat,isRound:Bool,corners: String)->UIImage {
-//    let myView = UIView(frame: CGRect(x: 0, y: 0, width: size - 25, height: size - 5))
-    let myVieww = UIView(frame: CGRect(x: -50, y: 0, width: size , height: size + 30))
-    myVieww.backgroundColor = .white
-    let myView = UIView(frame: CGRect(x: 0, y: 0, width: size , height: size + 30))
-    myView.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1) //#colorLiteral(red: 0.9137254902, green: 0.9254901961, blue: 0.937254902, alpha: 1)
+func createImage(text:String,img:UIImage,size:CGFloat,isRound:Bool,corners: String)->UIImage {
+    let containerView = UIView(frame: CGRect(x: -50, y: 0, width: size , height: size + 30))
+    containerView.backgroundColor = .white
+    let ContentView = UIView(frame: CGRect(x: 0, y: 0, width: size , height: size + 30))
+    ContentView.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1) 
     
     if isRound == true {
         
         if corners == "Left" {
-           // myView.roundCorners(corners: [.topLeft,.bottomLeft] , radius: 20, borderColor: .black, borderWidth: 2, clipToBonds: true)
-                myView.roundCorners(corners: [.topLeft,.bottomLeft], radius: 20)
+                ContentView.roundCorners(corners: [.topLeft,.bottomLeft], radius: 20)
         } else {
-            myView.roundCorners(corners: [.topRight,.bottomRight], radius: 20)
+            ContentView.roundCorners(corners: [.topRight,.bottomRight], radius: 20)
         }
       
     }
     else {
-        myView.roundCorners(corners: .allCorners, radius: 0)
+        ContentView.roundCorners(corners: .allCorners, radius: 0)
         }
-    var Xaxix = 3
-    if txt == "Delete" {
-        Xaxix = -5
+    var xAxis = 3
+    if text == "Delete" {
+        xAxis = -5
     }
   
-    let myImgView = UIImageView(frame: CGRect(x: CGFloat(Xaxix), y: 20, width: myView.frame.width, height: myView.frame.height/4))
+    let myImgView = UIImageView(frame: CGRect(x: CGFloat(xAxis), y: 20, width: ContentView.frame.width, height: ContentView.frame.height/4))
     myImgView.contentMode = .scaleAspectFit
     myImgView.image = img
     myImgView.backgroundColor = .clear
-    let myText = UILabel(frame: CGRect(x: CGFloat(Xaxix), y: myView.bounds.height - 40, width: myView.bounds.size.width, height: 20))
+    let myText = UILabel(frame: CGRect(x: CGFloat(xAxis), y: ContentView.bounds.height - 40, width: ContentView.bounds.size.width, height: 20))
     myText.textAlignment = .center
-    myText.text = txt
+    myText.text = text
     myText.font = UIFont.font(.Roboto, type: .Medium, size: 12)
     myText.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     myText.minimumScaleFactor = 0.1    //you need
@@ -256,16 +158,14 @@ func createImage(txt:String,img:UIImage,size:CGFloat,isRound:Bool,corners: Strin
     myText.lineBreakMode = .byClipping
     myText.numberOfLines = 0
     
-    if txt.contains(find: "Read") || txt.contains(find: "Unread"){
-       
+    if text.contains(find: "Read") || text.contains(find: "Unread"){
             myImgView.setImageColor(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
-        
     }
-    myView.addSubview(myImgView)
-    myView.addSubview(myText)
-    myVieww.addSubview(myView)
-    myView.fillSuperView()
-    return myVieww.image()!
+    ContentView.addSubview(myImgView)
+    ContentView.addSubview(myText)
+    containerView.addSubview(ContentView)
+    ContentView.fillSuperView()
+    return containerView.image()!
 }
 
 extension UIView{

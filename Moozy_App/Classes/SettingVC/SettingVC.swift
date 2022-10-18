@@ -15,24 +15,11 @@ class settingVC: UIViewController{
      var optionView: UIView?
      //TopHeaderView
     var btnBack: MoozyActionButton?
-    
-   
     var seperatorView: UIView?
-    
-    //OptionView
+   //OptionView
     var tblOptionList: UITableView?
-    var receiverData: Friend_Data?
-    
     let listArray = ConstantStrings.chatSetting.options
     
-    init(receiverData: Friend_Data? = nil) {
-        self.receiverData = receiverData
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

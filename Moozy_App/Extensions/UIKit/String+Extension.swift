@@ -114,24 +114,7 @@ extension String{
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         let date = dateFormatter.date(from: self)
         if let date = date {
-            let today = Date()
-            let dateString11 = dateFormatter.string(from: date)
-            print("okok",dateString11)
-            
-            let timeString = dateFormatter.string(from: date)
-            let diff = today.interval(ofComponent: .day, fromDate: date)
-            
-            print(diff)
-//            if diff == 0{
-//                return  "today"
-//            }
-//            else if diff == 1 {
-//                return  "Yesterday"
-//            }
-           // else{
-                
                 let day = String(describing: (date.dayOfWeek()?.prefix(3) ?? ""))
-                print(day)
                 //"MM/dd"
                 return date.getFormattedDateS(format: "MM/dd", day: day)
           //  }

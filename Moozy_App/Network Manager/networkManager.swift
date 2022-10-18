@@ -13,14 +13,11 @@ import UIKit
 
 class NetworkController{
     static let shared = NetworkController()
-    
-    let baseURL = "https://chat.chatto.jp:20000/"
-
-    func serviceResponseObject(method: HTTPMethod = .get, parameter:[String:Any]? = nil, serviceName: String, header: [String:String] = ["projectid":"63183b5bb110c06cb4822451"], onComplition : @escaping (JSON?, Error?) -> Void) {
+  
+    func serviceResponseObject(method: HTTPMethod = .get, parameter:[String:Any]? = nil, serviceName: String, header: [String:String] = [ConstantStrings.projectid:ConstantStrings.ProjectId], onComplition : @escaping (JSON?, Error?) -> Void) {
         
-        let url = "\(baseURL)\(serviceName)"
+        let url = "\(ServiceURL.baseURL)\(serviceName)"
         print(url)
-        
         Alamofire.request(url, method: method, parameters: parameter, encoding: URLEncoding.httpBody, headers: header).responseJSON(){ response in
             
             switch response.result
@@ -39,7 +36,7 @@ class NetworkController{
     
     //Upload Imageseee
     func uploadImage(image: UIImage, imageName: String, parameters:[String:String]? = nil, serviceName: String, header: [String:String] = [:], onCom : @escaping (JSON?, Progress?, Error?) -> Void){
-        let url = "\(baseURL)\(serviceName)"
+        let url = "\(ServiceURL.baseURL)\(serviceName)"
         let imgData = image.jpegData(compressionQuality: 0.2)!
         
         Alamofire.upload(multipartFormData: { multipartFormData in

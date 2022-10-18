@@ -27,26 +27,13 @@ class LoginVM{
                 if result._id != "" {
                     print(result.name)
                     AppUtils.shared.saveUser(user: result) //Save User
-                    AppUtils.shared.saveLanguage(languageId: "en") //Save Language
                     AppUtils.shared.saveSenderID(senderID: result._id ?? "")//Save Sender ID
-                    self.onlineStatusUpdate(onlineStatus: 1)
                     isCreate.value = ""
                 }else{
                     isCreate.value = "error!"
                 }
             }else{
                 isCreate.value = "error!"
-            }
-        }
-    }
-//    AppUtils.shared.saveFCMToken(fcmToken: fcmToken ?? "")
-    
-    func onlineStatusUpdate(onlineStatus: Int){
-        APIServices.shared.setOnlineStatus(onlineStatus: onlineStatus) { (response, errorMesage) in
-            if response != nil{
-                print("after login online Status")
-            }else{
-                print("Error")
             }
         }
     }

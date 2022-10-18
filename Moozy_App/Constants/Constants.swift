@@ -53,7 +53,7 @@ struct ConstantStrings {
     
     static let cell = "Cell"
     static let ProjectId = "63183b5bb110c06cb4822451"
-    
+    static let projectid = "projectid"
     struct alertMessage{
         static let alert = "Exceeded Maximum Number Of Selection."
     }
@@ -113,7 +113,7 @@ struct ConstantStrings {
             chatOptionsModel(image: UIImage(systemName: "eye.slash"), title: "Hide Friend"),
             chatOptionsModel(image: UIImage(systemName: "smallcircle.filled.circle"), title: "Block Friend"),
 //            chatOptionsModel(image: UIImage(systemName: "arrow.triangle.2.circlepath"), title: "Change Ring"),
-            chatOptionsModel(image: UIImage(systemName: "trash"), title: "Delete Chat")
+            chatOptionsModel(image: UIImage(systemName: "trash"), title: "Clear Chat")
 //            chatOptionsModel(image: UIImage(systemName: "photo.on.rectangle"), title: "Chat Background")
         ]
     }
@@ -163,12 +163,17 @@ struct userImages {
 }
 
 struct ServiceURL {
-    static let SignUp = "settings/register-user"
-    
-    //old apis
     static let baseURL = "https://chat.chatto.jp:20000/"
+    static let setLiveStatus = "profile/changeStatus"
+    static let SignUp = "settings/register-user"
+    static let markUnread = "meeting/markUnread"
+    static let deleteSingleMsg = "meeting/deleteSingleMsg"
+    static let sendChat = "meeting/sendChat"
+    static let updateMsg = "meeting/updateMsg"
+    static let muteFriend = "friends/muteFriend"
+    static let blockFriend = "friends/blockFriend"
+    //old apis
     static let setOnlineStatus = "setOnlineStatus"
-   // static let login = "business/login"
     static let login = "settings/login-user"
     static let getFriends = "friends/chatUserList/"
     static let getusers = "friends/allFriends/"
@@ -218,26 +223,46 @@ struct AppColors {
     
 }
 
-struct AppGradentColors {
-    static let colorRight : UIColor =  #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01708643242)
-    static let colorLeft: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01708643242)
-}
 struct AppGradentColor {
     static let colorRight : UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
     static let colorLeft: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01708643242)
 }
 
+
 struct AppImages{
     static let back: UIImage = #imageLiteral(resourceName: "Arrow-left-1")
 }
+
+
+
+
 struct SocketHelper{
-    
     static let emitStopTyping: String = "stopTyping"
     static let emitIsTyping: String = "isTyping"
-    
     static let onStopTyping: String = "stopTyping"
     static let onTyping: String = "isTyping"
     static let emitsendid: String = "sendid"
+
+    static let o2oUpdateMsg : String =  "o2oUpdateMsg"
+    
+    static let _o2oUpdateMsg : String = "_o2oUpdateMsg"
+    static let user_connected : String = "user_connected"
+    static let changestatuslogout : String = "changestatuslogout"
+    static let logout : String = "logout"
+    static let statusOn : String = "statusOn"
+    static let login : String = "login"
+    static let receiveid : String = "receiveid"
+    static let onlineStatus : String = "onlineStatus"
+    static let _o2o : String = "_o2o"
+    static let reciverdeletemsg : String = "reciverdeletemsg"
+    static let senderdeletemsg : String = "senderdeletemsg"
+    static let o2oUpdateReadMsg : String = "o2oUpdateReadMsg"
+    static let o2o : String = "o2o"
+    static let receivemsg : String = "receivemsg"
+    static let receiverUserStatus : String = "receiverUserStatus"
+    static let starttyping : String = "starttyping"
+    static let stoptyping : String = "stoptyping"
+    static let _ringyHideOnlineStatus : String = "_ringyHideOnlineStatus"
     
     
 }
@@ -254,49 +279,23 @@ extension Notification.Name{
     static var dowloadVedio = Notification.Name("dowloadVedio")
 }
 
-let constatntChatModel = """
- {
-            "_id": "63286e5b003e18f9cad8c7bb",
-            "message": "replied_To_postmanmesage2",
-            "messageType": 1,
-            "chatType": 0,
-            "status": 1,
-            "seen": 0,
-            "deletedBy": [],
-            "bookmarked": [],
-            "receipt_status": 0,
-            "file_size": "",
-            "isread": 0,
-            "senderId": {
-                "_id": "6320835d7e9c3ce1572d01eb",
-                "profile_image": "63287aac37d5acfef58e1a571663597228968passcode.PNG",
-                "name": "tajamal1"
-            },
-            "receiverId": "632088181ef7ace35eff6ece",
-            "projectId": "63183b5bb110c06cb4822451",
-            "repliedTo": {
-                "_id": "63286cf3bee27af93d3692ef",
-                "message": "postmanmesage2",
-                "messageType": 0,
-                "senderId": {
-                    "_id": "6320835d7e9c3ce1572d01eb",
-                    "profile_image": "63287aac37d5acfef58e1a571663597228968passcode.PNG",
-                    "name": "tajamal1"
-                }
-            },
-            "createdAt": "2022-09-19T18:27:55.000Z",
-            "reaction": [],
-            "updatedAt": "2022-09-20T11:42:44.865Z",
-            "__v": 0
-        }
-"""
-
-
 protocol ChatItemSelection {
     func AudioSelected(cell: AudioMsgCell)
     func IMGorMapSelected(cell: PhotoMsgCell)
     func VideoSelected(cell: VideoMsgCell)
     func audioCellTap(cell: AudioMsgCell)
     func audioValueChange(cell: AudioMsgCell,valeSlider: Float)
- 
+}
+
+struct ThemeConstant {
+    static var app_theme = "app_theme"
+    static let Blue = "Blue"
+    static let Pink = "Pink"
+    static let Green = "Green"
+    static let Orange = "Orange"
+    static let Yellow = "Yellow"
+    static let Purple = "Purple"
+    static let Red = "Red"
+    static let Gray = "Grey"
+    static let White = "White"
 }

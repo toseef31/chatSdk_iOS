@@ -76,6 +76,7 @@ public class RecordView: UIView, CAAnimationDelegate {
     private var timerLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00"
+        label.textAlignment = .right
         label.textColor = #colorLiteral(red: 1, green: 0.3450980392, blue: 0.3607843137, alpha: 1)
         label.font = label.font.withSize(12)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -89,8 +90,10 @@ public class RecordView: UIView, CAAnimationDelegate {
         bucketImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
         bucketImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
-
-        timerStackView = UIStackView(arrangedSubviews: [timerLabel])
+        timerLabel.textAlignment = .right
+        let views = UIView()
+        bucketImageView.widthAnchor.constraint(equalToConstant: 320).isActive = true
+        timerStackView = UIStackView(arrangedSubviews: [views,timerLabel])
         timerStackView.translatesAutoresizingMaskIntoConstraints = false
         timerStackView.isHidden = true
         timerStackView.spacing = 5
@@ -112,8 +115,9 @@ public class RecordView: UIView, CAAnimationDelegate {
 //        slideToCancelStackVIew.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
 
 
-//        timerStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        timerStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        timerStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        timerStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+       // timerStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         timerStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
 
 
@@ -197,7 +201,7 @@ public class RecordView: UIView, CAAnimationDelegate {
     }
 
     fileprivate func animateRecordButtonToIdentity(_ recordButton: RecordButton) {
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .allowAnimatedContent, animations: {
             recordButton.transform = .identity
         })
     }
@@ -306,7 +310,7 @@ public class RecordView: UIView, CAAnimationDelegate {
 //                if slideToCancelStackVIew.frame.intersects(timerStackView.frame) {
 //                    onSwipe(recordButton: recordButton)
 //                }
-                if translation.x <= -26.0 {
+                if translation.x <= -110.0 {
                     onSwipe(recordButton: recordButton)
                 }
                 print(translation.x)

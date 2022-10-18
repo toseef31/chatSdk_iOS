@@ -68,7 +68,7 @@ class LoginVC: UIViewController, UITextFieldDelegate{
     
         btnSignUp = MoozyActionButton(title: ConstantStrings.Login.SignUp, font: UIFont.font(.Poppins, type: .SemiBold, size: 12), foregroundColor: UIColor.black){ [self] in
             print("SignUp....")
-            self.pushTo(viewController: signUpVC())
+          //  self.pushTo(viewController: signUpVC())
         }
        
         
