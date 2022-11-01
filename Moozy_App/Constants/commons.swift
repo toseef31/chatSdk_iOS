@@ -117,40 +117,38 @@ func checkaudiotime(audiourl:URL) -> (audioduration:Float?, audiotimelabel:Strin
     }
     return(nil,nil)
 }
-
-
-
-
-func createImage(text:String,img:UIImage,size:CGFloat,isRound:Bool,corners: String)->UIImage {
-    let containerView = UIView(frame: CGRect(x: -50, y: 0, width: size , height: size + 30))
-    containerView.backgroundColor = .white
-    let ContentView = UIView(frame: CGRect(x: 0, y: 0, width: size , height: size + 30))
-    ContentView.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1) 
+func createImage(txt:String,img:UIImage,size:CGFloat,isRound:Bool,corners: String)->UIImage {
+//    let myView = UIView(frame: CGRect(x: 0, y: 0, width: size - 25, height: size - 5))
+    let myVieww = UIView(frame: CGRect(x: -50, y: 0, width: size , height: size + 30))
+    myVieww.backgroundColor = .white
+    let myView = UIView(frame: CGRect(x: 0, y: 0, width: size , height: size + 30))
+    myView.backgroundColor = #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1) //#colorLiteral(red: 0.9137254902, green: 0.9254901961, blue: 0.937254902, alpha: 1)
     
     if isRound == true {
         
         if corners == "Left" {
-                ContentView.roundCorners(corners: [.topLeft,.bottomLeft], radius: 20)
+           // myView.roundCorners(corners: [.topLeft,.bottomLeft] , radius: 20, borderColor: .black, borderWidth: 2, clipToBonds: true)
+                myView.roundCorners(corners: [.topLeft,.bottomLeft], radius: 20)
         } else {
-            ContentView.roundCorners(corners: [.topRight,.bottomRight], radius: 20)
+            myView.roundCorners(corners: [.topRight,.bottomRight], radius: 20)
         }
       
     }
     else {
-        ContentView.roundCorners(corners: .allCorners, radius: 0)
+        myView.roundCorners(corners: .allCorners, radius: 0)
         }
-    var xAxis = 3
-    if text == "Delete" {
-        xAxis = -5
+    var Xaxix = 3
+    if txt == "Delete" {
+        Xaxix = -5
     }
   
-    let myImgView = UIImageView(frame: CGRect(x: CGFloat(xAxis), y: 20, width: ContentView.frame.width, height: ContentView.frame.height/4))
+    let myImgView = UIImageView(frame: CGRect(x: CGFloat(Xaxix), y: 20, width: myView.frame.width, height: myView.frame.height/4))
     myImgView.contentMode = .scaleAspectFit
     myImgView.image = img
     myImgView.backgroundColor = .clear
-    let myText = UILabel(frame: CGRect(x: CGFloat(xAxis), y: ContentView.bounds.height - 40, width: ContentView.bounds.size.width, height: 20))
+    let myText = UILabel(frame: CGRect(x: CGFloat(Xaxix), y: myView.bounds.height - 40, width: myView.bounds.size.width, height: 20))
     myText.textAlignment = .center
-    myText.text = text
+    myText.text = txt
     myText.font = UIFont.font(.Roboto, type: .Medium, size: 12)
     myText.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     myText.minimumScaleFactor = 0.1    //you need
@@ -158,14 +156,16 @@ func createImage(text:String,img:UIImage,size:CGFloat,isRound:Bool,corners: Stri
     myText.lineBreakMode = .byClipping
     myText.numberOfLines = 0
     
-    if text.contains(find: "Read") || text.contains(find: "Unread"){
+    if txt.contains(find: "Read") || txt.contains(find: "Unread"){
+       
             myImgView.setImageColor(color: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
+        
     }
-    ContentView.addSubview(myImgView)
-    ContentView.addSubview(myText)
-    containerView.addSubview(ContentView)
-    ContentView.fillSuperView()
-    return containerView.image()!
+    myView.addSubview(myImgView)
+    myView.addSubview(myText)
+    myVieww.addSubview(myView)
+    myView.fillSuperView()
+    return myVieww.image()!
 }
 
 extension UIView{

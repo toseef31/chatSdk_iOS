@@ -37,7 +37,6 @@ extension UIFont{
         case Regular = "Regular"
         case SemiBold = "SemiBold"
         case Light = "Light"
-       // case potta = "potta_one_regular.ttf"
         case none = ""
     }
     

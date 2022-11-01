@@ -27,10 +27,14 @@ class TextMsgCell:  SwipyCell {
     
     var heightBackView: NSLayoutConstraint!
     
+    let bookImage = UIImageView(image:  UIImage(systemName: "bookmark.fill")!.withTintColor(AppColors.primaryColor, renderingMode: .alwaysOriginal), contentModel: .scaleAspectFit)
+   
+  
     var imgSendSlected = UIImageView(image: #imageLiteral(resourceName: "Oval3x"), contentModel: .scaleAspectFit)
     var ImgRecivedSlected = UIImageView(image: #imageLiteral(resourceName: "Oval3x"), contentModel: .scaleAspectFit)
     var isdelForward : Bool? = false
      var isSmsSelected: Bool?  = false
+    var isBookMar = false
     var chatData: chat_data? = nil{
         didSet{
             
@@ -57,8 +61,15 @@ class TextMsgCell:  SwipyCell {
             print("DENCRYPT",decMessage)
             print("\(chatData?.message ?? "")")
             lblmessage?.text = "\(chatData?.message ?? "")"
-
-//            messageLabel.text = chatData?.message ?? ""
+          
+            if chatData?.bookmarked.count ?? 0 != 0 && isBookMar == false {
+               
+                if let firstSuchElement = chatData?.bookmarked.first(where: { $0 == (AppUtils.shared.user?._id) }) {
+                    bookImage.isHidden = false
+                }  else {
+                    
+                    bookImage.isHidden = true   }
+            } else {  bookImage.isHidden = true }
             lblDatetTimeDay?.text = getMsgDate(date: chatData?.createdAt ?? "")
             
             if chatData?.receipt_status == 1 {
@@ -83,8 +94,7 @@ class TextMsgCell:  SwipyCell {
                 ImgRecivedSlected.image = #imageLiteral(resourceName: "Oval3x")
                 
             }
-            
-            if chatData?.receiverId == AppUtils.shared.senderID {
+            if chatData?.receiverId == AppUtils.shared.senderID || isBookMar == true {
                 leadingConstraint.isActive = true
                 trailingConstraint.isActive = false
                 stackLeadingConstraint.isActive = true
@@ -159,9 +169,8 @@ class TextMsgCell:  SwipyCell {
         statusView?.setImageColor(color: AppColors.primaryColor)
         lblDatetTimeDay = UILabel(title: "date??", fontColor: UIColor.gray, alignment: .left, font: UIFont.font(.Poppins, type: .Regular, size: 12))
         
-        statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
-//        stack = UIStackView(views: [lblDatetTimeDay!, statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
-        stack = UIStackView(views: [lblDatetTimeDay!], axis: .horizontal, spacing: 5, distribution: .fill)
+        let view = UIView(backgroundColor: .clear, maskToBounds: true)
+        stack = UIStackView(views: [lblDatetTimeDay!,bookImage,view], axis: .horizontal, spacing: 0, distribution: .fill)
       
         mainView?.translatesAutoresizingMaskIntoConstraints = false
         lblmessage?.translatesAutoresizingMaskIntoConstraints = false

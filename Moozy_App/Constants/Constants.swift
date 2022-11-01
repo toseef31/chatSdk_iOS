@@ -45,9 +45,11 @@ struct CustomSplash {
 struct profileUrl {
     static let  Url = "https://chat.chatto.jp:20000/profile/"
     static let  ThemeUrl = "https://chat.chatto.jp:20000/themes/"
-    
-
 }
+struct SceenSize {
+    static var deviceWidth : CGFloat = 0.0
+}
+
 
 struct ConstantStrings {
     
@@ -57,7 +59,6 @@ struct ConstantStrings {
     struct alertMessage{
         static let alert = "Exceeded Maximum Number Of Selection."
     }
-    
     
     struct CustomSplash {
         static let title = "Error"
@@ -124,6 +125,7 @@ struct ConstantStrings {
             chatOptionsModel(image: UIImage(systemName: "eye.slash"), title: "Hidden Fiends"),
             chatOptionsModel(image: UIImage(systemName: "smallcircle.filled.circle"), title: "Blocked Friends"),
             chatOptionsModel(image: UIImage(systemName: "speaker"), title: "Muted Friend"),
+            chatOptionsModel(image: UIImage(systemName: "bookmark"), title: "BookMarks"),
             chatOptionsModel(image: UIImage(systemName: "circlebadge.fill"), title: "Online Status"),
             chatOptionsModel(image: UIImage(systemName: "pencil"), title: "Typing")
         ]
@@ -188,7 +190,13 @@ struct ServiceURL {
     static let hideUser = "friends/hideFriend"
     
     static let deleteFriend = "friends/deleteFriend"
-  
+    
+    static let muteFriends  = "friends/muteFriends/"
+    static let hideFriends  = "friends/hideFriends/"
+    static let blockFriends  = "friends/blockFriends/"
+    
+    static let getBookmarkChat  = "meeting/getBookmarkChat/"
+    static let bookmarkChat  = "meeting/bookmarkChat"
 }
 
 
@@ -204,6 +212,7 @@ let backButtonSize: CGSize = .init(width: 30, height: 25)
 
 struct AppColors {
     static let primaryColor : UIColor = #colorLiteral(red: 0.9215686275, green: 0.1333333333, blue: 0.1568627451, alpha: 1)
+    static let shadoColor : UIColor = #colorLiteral(red: 0.824, green: 0.824, blue: 0.824, alpha: 0.5)
     
     static let btnBackColor : UIColor = #colorLiteral(red: 0.7137254902, green: 0.2470588235, blue: 0.2549019608, alpha: 1)
     static let backColorColor : UIColor = #colorLiteral(red: 0.6862745098, green: 0.4470588235, blue: 0.4156862745, alpha: 0.750080235)
@@ -299,3 +308,34 @@ struct ThemeConstant {
     static let Gray = "Grey"
     static let White = "White"
 }
+
+let constatntChatModels = """
+ {
+                       "repliedTo": null,
+                       "message": "632088181ef7ace35eff6ece1666098574911Audio_1666098567232345.m4a",
+                       "messageType": 6,
+                       "chatType": 0,
+                       "status": 1,
+                       "seen": 0,
+                       "deletedBy": [],
+                       "bookmarked": [],
+                       "receipt_status": 0,
+                       "file_size": "37392",
+                       "isread": 0,
+                       "_id": "setLastCell",
+                       "senderId": {
+                           "profile_image": "",
+                           "_id": "632088181ef7ace35eff6ece",
+                           "name": "kamran"
+                       },
+                       "receiverId": "6320835d7e9c3ce1572d01eb",
+                       "projectId": "63183b5bb110c06cb4822451",
+                       "createdAt": "2022-10-18T13:09:34.912Z",
+                       "reaction": [],
+                       "updatedAt": "2022-10-18T13:09:34.912Z",
+                       "__v": 0,
+                       "isGroup": 0,
+                       "id": "setLastCell"
+        }
+"""
+

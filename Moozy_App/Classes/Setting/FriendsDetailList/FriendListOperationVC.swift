@@ -13,14 +13,12 @@ class friendOperationVC: UIViewController{
     
     var topHeaderView: UIView?
     var optionView: UIView?
-    //TopHeaderView
     var btnBack: MoozyActionButton?
     var seperatorView: UIView?
     
     //OptionView
     var tblFriendList: UITableView?
     var operationType: String?
-    //list of the Friends..
     var listFriendsArr : [AllFrind_Data] = []
     
     private var addItemsView: emptyView?
@@ -45,7 +43,6 @@ class friendOperationVC: UIViewController{
     
     func dataBinding() {
         //Loader terminate after the data response
-      
         ViewModel?.isLoader.bind { [self] (data, _) in
             if data.value == true {
                 ActivityController.shared.showActivityIndicator(uiView: view)
@@ -136,7 +133,7 @@ class friendOperationVC: UIViewController{
         tblFriendList?.showsVerticalScrollIndicator = false
         tblFriendList?.backgroundView = nil
         ///Register TableView Cell
-        tblFriendList?.register(friendOperationCell.self, forCellReuseIdentifier: "cell")
+        tblFriendList?.register(friendOperationCell.self, forCellReuseIdentifier: ConstantStrings.cell)
         
     }
 }
@@ -159,7 +156,7 @@ extension friendOperationVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! friendOperationCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConstantStrings.cell) as! friendOperationCell
         
         cell.selectionStyle = .none
         cell.dataSet = listFriendsArr[indexPath.row]
@@ -169,19 +166,18 @@ extension friendOperationVC: UITableViewDelegate, UITableViewDataSource{
             switch operationType
             {
             case "Muted Friend":
-                APIServices.shared.muteFriend(muteId: listFriendsArr[indexPath.row]._id ?? "", muteType: 0, muteStatus: 0) { response, data in
-                    print(response) }
-                //remover from userdefault array
+                ViewModel?.muteFriend(muteId: listFriendsArr[indexPath.row]._id ?? "")
+               //remover from userdefault array
                  break
                 
-            case "Hidden Fiends":
-                APIServices.shared.hideFriend(hideUserId: listFriendsArr[indexPath.row]._id ?? "", hideStatus: 0) { (response, errorMesage) in print("response")}
+            case "Hidden Fiends" :
+                ViewModel?.hideFriend(hideUserId: listFriendsArr[indexPath.row]._id ?? "")
+               
                 break
                 
             case "Blocked Friends":
-                    APIServices.shared.blockUser(blockStatus: 0, blockUserId: listFriendsArr[indexPath.row]._id ?? "") { response, data in
-                         }
-                
+                ViewModel?.blockUser(blockUserId: listFriendsArr[indexPath.row]._id ?? "")
+                    
                 break
             default:
                 break
@@ -195,15 +191,8 @@ extension friendOperationVC: UITableViewDelegate, UITableViewDataSource{
         }
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
-        print(listFriendsArr.count)
-        print(listFriendsArr[indexPath.row].name ?? "")
-        print(listFriendsArr[indexPath.row]._id ?? "")
-        
-    }
-    
+
+   
 }
 
 

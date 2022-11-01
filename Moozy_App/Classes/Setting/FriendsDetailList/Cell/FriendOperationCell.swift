@@ -10,12 +10,11 @@ import UIKit
 import SwiftUI
 
 class friendOperationCell : UITableViewCell{
-    var url = "https://chat.chatto.jp:21000/chatto_images/chat_images/"
-    var imageDictionary = [NSURL: UIImage]()
     
+    var imageDictionary = [NSURL: UIImage]()
     var lblProfileTitle: UILabel?
     var imgProfie = UIView(backgroundColor: AppColors.primaryColor , cornerRadius: 25, maskToBounds: true)
-    
+   
     var imgTitle :  UIImageView?
     var lblName: UILabel?
     var btnPerformAction : MoozyActionButton?
@@ -73,10 +72,6 @@ class friendOperationCell : UITableViewCell{
       
         lblProfileTitle = UILabel(fontColor: UIColor.white, alignment: .center, font: UIFont.font(.Poppins, type: .Medium, size: 22))
         imgTitle = UIImageView(image: UIImage(named: "profile3")!, contentModel: .scaleAspectFill)
-        
-        
-       // imgTitle = ProfileView(statusColor: UIColor.green, BGcolor: AppColors.primaryColor, titleFontColor: UIColor.white, showStatus: false, size: .init(width: 50, height: 50))
-        
         lblName = UILabel(fontColor: UIColor.black, alignment: .left, font: UIFont.font(.Roboto, type: .Medium, size: 12))
     }
     
@@ -84,7 +79,6 @@ class friendOperationCell : UITableViewCell{
         initializedControls()
         
         btnPerformAction =  MoozyActionButton(title: "", font: UIFont.font(.Poppins, type: .Medium, size: 12), foregroundColor: AppColors.BlackColor , backgroundColor: .white) { [self] in
-            //self.present(settingVC(), animated: true, completion: nil)
             self.onbtnActionTap?(btnPerformAction?.title ?? "")
            }
         let bottomBorder = UIView(backgroundColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.2878406853), maskToBounds: true)

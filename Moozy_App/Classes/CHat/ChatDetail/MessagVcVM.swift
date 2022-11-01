@@ -152,6 +152,14 @@ class ChatDataVM {
                     }
                 }
             }
+            
+            if let data = constatntChatModels.data(using: .utf8) {
+                let login = try? JSONDecoder().decode(chat_data.self, from: data)
+                // messages.append(login!)
+                ChatMessagesArray.append(ChatMessagesModel(isSelected: false, date: "no", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: login!)]))
+            }
+           
+            
             AllChatMsg.value = ChatMessagesArray
         }
     }
@@ -176,16 +184,39 @@ class ChatDataVM {
     }
     
     
-    func StartDownloading (Messages: [ChatMessagesModel], location: IndexPath){
+    func updateBookMark(Messages: [ChatMessagesModel], location: IndexPath, isRemovingMark: Bool? = false){
         
+        var arrayOfMessages = Messages
+        if isRemovingMark == false {
+            arrayOfMessages[location.section].messagesData?[location.row].messages?.bookmarked.append(AppUtils.shared.user?._id ?? "")
+       }
+        else {
+            let index = arrayOfMessages[location.section].messagesData?[location.row].messages?.bookmarked.firstIndex(where: {$0 == (AppUtils.shared.user?._id ?? "") })
+            arrayOfMessages[location.section].messagesData?[location.row].messages?.bookmarked.remove(at: index!)
+        }
+        AllChatMsg.value = arrayOfMessages
+       
+        
+    }
+    
+    func bookMark(messageId: String? = "",receiverId: String? = "", status: String? = "0"){
+        //0 unbokk
+        APIServices.shared.bookmarkChat(messageId: messageId, status: status, userId: AppUtils.shared.user?._id , receiverId: receiverId){  (response, errorMessage) in
+            if response != nil{
+               print(response)
+               }else{
+                print(response)
+            }
+        }
+    }
+    
+    func StartDownloading (Messages: [ChatMessagesModel], location: IndexPath){
         var arrayOfMessages = Messages
         isSelecting = true
         arrayOfMessages[location.section].messagesData?[location.row].isDownloading = true
        AllChatMsg.value = arrayOfMessages
         
     }
-    
-    
     
     func CancelSelectionMessages( ){
       

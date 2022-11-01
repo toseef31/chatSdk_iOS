@@ -47,7 +47,7 @@ public class ChatListVC: UIViewController, UISearchBarDelegate {
         addTapGesture()
         tblChatList?.reloadData()
         socketConnected()
-        
+        SceenSize.deviceWidth = view.frame.width
     }
     
    
@@ -189,10 +189,10 @@ public class ChatListVC: UIViewController, UISearchBarDelegate {
         // Configure Refresh Control
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: .valueChanged)
 //
-        deleteImage = createImage(text: "Delete", img: UIImage(named: "delete-4")!, size: 55.0, isRound: true, corners: "Right")
-        hideImage = createImage(text: "Hide", img: UIImage(named: "visibility_off")!, size: 55.0, isRound: false, corners: "Left")
-        unreadImage = createImage(text: "Unread", img: UIImage(named: "mark_unread_chat_alt")!, size: 55.0, isRound: true, corners: "Left")
-        readImage = createImage(text: "Read", img: UIImage(named: "Read")!, size: 55.0, isRound: true, corners: "Left")
+        deleteImage = createImage(txt: "Delete", img: UIImage(named: "delete-4")!, size: 55.0, isRound: true, corners: "Right")
+        hideImage = createImage(txt: "Hide", img: UIImage(named: "visibility_off")!, size: 55.0, isRound: false, corners: "Left")
+        unreadImage = createImage(txt: "Unread", img: UIImage(named: "mark_unread_chat_alt")!, size: 55.0, isRound: true, corners: "Left")
+        readImage = createImage(txt: "Read", img: UIImage(named: "Read")!, size: 55.0, isRound: true, corners: "Left")
     }
     
     @objc private func refreshWeatherData(_ sender: Any) {
@@ -213,7 +213,7 @@ public class ChatListVC: UIViewController, UISearchBarDelegate {
         
         tblChatList?.anchor(top: topHeaderView?.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 8, bottom: 0, right: 8))
         
-        btnAddChat?.anchor(top: nil, leading: nil, bottom: tblChatList?.bottomAnchor, trailing: tblChatList?.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 35, right: 25), size: .init(width: 60, height: 60))
+        btnAddChat?.anchor(top: nil, leading: nil, bottom: tblChatList?.bottomAnchor, trailing: tblChatList?.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 45, right: 25), size: .init(width: 60, height: 60))
         
         view.bringSubviewToFront(btnAddChat!)
         tblChatList?.bringSubviewToFront(btnAddChat!)
@@ -276,9 +276,9 @@ extension ChatListVC: UITableViewDelegate, UITableViewDataSource{
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
      let receiverData = listChatView[indexPath.row]
-        print("The user name is \(receiverData.name)")
        
         AppUtils.shared.getLocalChatMessages(key: "\(AppUtils.shared.senderID)\(receiverData.friendId ?? "")") { [self] (response, errorMessage) in
+            
             if response != nil{
                 print(response?.count)
                 pushTo(viewController: MessageVcCopy(receiverData: receiverData, ChatMessages: response ?? []))
@@ -289,8 +289,7 @@ extension ChatListVC: UITableViewDelegate, UITableViewDataSource{
             
         }
         
-        
-     }
+    }
     
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?{
         
@@ -406,11 +405,10 @@ extension ChatListVC: UITableViewDelegate, UITableViewDataSource{
         else{
             readAction.image = unreadImage
           }
-      
         readAction.backgroundColor = linearGradientColor2(
                 from: [.white, .gray],
                 locations: [0, 1],
-                size: CGSize(width: 100, height: 44)
+                size: CGSize(width: 150, height: 44)
             )
        
          let pinAction = UIContextualAction.init(style: UIContextualAction.Style.normal, title: ConstantStrings.chatString.pin, handler: { (action, view, completion) in
@@ -446,19 +444,22 @@ extension ChatListVC: UITableViewDelegate, UITableViewDataSource{
         if indexPath != nil {
             let dummycell = self.tblChatList?.cellForRow(at: indexPath!) as! ChatListCell
                 dummycell.mainView?.roundCorners(corners: .allCorners, radius: 15, borderColor: #colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1), borderWidth: 2, clipToBonds: true)
-            
-            
-        }
-        
+          }
     }
     
     func linearGradientColor2(from colors: [UIColor], locations: [CGFloat], size: CGSize) -> UIColor {
-       
+        print(view.frame.size.width)
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))
 
            let img = renderer.image { ctx in
                // awesome drawing code 112
-               let rectangle = CGRect(x: 60, y: 14, width: 80, height: 70)
+               var rectangle = CGRect(x: 60, y: 14, width: 80, height: 70)
+               if view.frame.size.width <= 400 {
+                    rectangle = CGRect(x: 60, y: 14, width: 80, height: 70)
+                  
+               }
+               else {
+                    rectangle = CGRect(x: 80, y: 14, width: 50, height: 70) }
                ctx.cgContext.setFillColor(#colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1))
                
                  //(UIColor.red.cgColor) 

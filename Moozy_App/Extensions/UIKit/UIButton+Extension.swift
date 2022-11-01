@@ -53,59 +53,9 @@ extension UIButton{
             self.titleLabel?.fillSuperView()
         }
         
-        if isShadow{
-//            applyShadow()
-        }
     }
 }
 
-extension UIButton {
-    
-    open override func awakeFromNib() {
-        super.awakeFromNib()
-        self.showsTouchWhenHighlighted = true
-    }
-    
-    func underlineButton(text: String, color:UIColor) {
-        let titleString = NSMutableAttributedString(string: text)
-        titleString.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: NSMakeRange(0, text.count))
-        titleString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSMakeRange(0, text.count))
-        self.setAttributedTitle(titleString, for: .normal)
-    }
-    
-    func setHyperLink() {
-        let text: String = self.currentTitle!;
-        let dictAttribute: [String: AnyObject] = [NSAttributedString.Key.underlineStyle.rawValue:NSUnderlineStyle.single.rawValue as AnyObject,
-                                                  NSAttributedString.Key.foregroundColor.rawValue:(self.titleLabel?.textColor)!]
-        self.titleLabel?.attributedText = NSAttributedString(string: text, attributes: dictAttribute as? [NSAttributedString.Key : Any])
-    }
-    
-    func setMultiLineText() {
-        self.titleLabel?.numberOfLines = 0
-        self.titleLabel?.textAlignment = NSTextAlignment.center
-    }
-    
-    func setShadow() {
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = CGSize(width: 6, height: 6)
-        self.layer.shadowOpacity = 0.6
-        self.layer.shadowRadius = 6.0
-//        self.layer.cornerRadius = self.height/2
-        self.clipsToBounds = false
-    }
-    
-    func setImageTintColor(_ color: UIColor) {
-        let tintedImage = self.imageView?.image?.withRenderingMode(.alwaysTemplate)
-        self.setImage(tintedImage, for: .normal)
-        self.tintColor = color
-    }
-    
-    func setImageBackgroundColor(_ color: UIColor) {
-        let tintedImage = self.currentBackgroundImage!.withRenderingMode(.alwaysTemplate)
-        self.setBackgroundImage(tintedImage, for: .normal)
-        self.tintColor = color
-    }
-}
 
 
 

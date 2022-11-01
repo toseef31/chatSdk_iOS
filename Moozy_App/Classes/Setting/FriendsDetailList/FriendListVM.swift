@@ -26,15 +26,15 @@ class FriendListVM {
         switch OperationType
         {
         case "Muted Friend":
-            serviceUrl = "friends/muteFriends/"
+            serviceUrl = ServiceURL.muteFriends
             break
             
         case "Hidden Fiends":
-            serviceUrl = "friends/hideFriends/"
+            serviceUrl = ServiceURL.hideFriends
             break
             
         case "Blocked Friends":
-            serviceUrl = "friends/blockFriends/"
+            serviceUrl = ServiceURL.blockFriends
             break
         default:
             break
@@ -53,6 +53,16 @@ class FriendListVM {
         }
     }
     
+    func muteFriend (muteId: String){
+    APIServices.shared.muteFriend(muteId: muteId, muteType: 0, muteStatus: 0) { response, data in print(response) }
+    }
+    func hideFriend (hideUserId: String){
+        APIServices.shared.hideFriend(hideUserId: hideUserId, hideStatus: 0) { (response, errorMesage) in print("response")} }
+    
+    func blockUser (blockUserId: String){
+        
+        APIServices.shared.blockUser(blockStatus: 0, blockUserId: blockUserId) { response, data in }
+    }
     
     }
     

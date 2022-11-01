@@ -37,8 +37,6 @@ class settingVC: UIViewController{
             let title = UILabel(title: "Setting", fontColor: AppColors.BlackColor, alignment: .center, font: UIFont.font(.PottaOne, type: .Medium, size: 14))
             
             let btnBack = MoozyActionButton(image: UIImage(systemName: "arrow.backward"), foregroundColor: AppColors.BlackColor, backgroundColor: UIColor.clear,imageSize: backButtonSize) {
-                print("Back")
-//                self.dismiss(animated: true, completion: nil)
                 self.pop(animated: true)
             }
             
@@ -53,13 +51,13 @@ class settingVC: UIViewController{
         }()
         
      
-        
         optionView = {
             let hView = UIView(backgroundColor: UIColor.white)
             configureTableView()
             return hView
         }()
     }
+    
     
     func configureUI(){
         initializedControls()
@@ -81,10 +79,11 @@ class settingVC: UIViewController{
         tblOptionList?.fillSuperView(padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
     
+    
     //Configure Tableview
     func configureTableView(){
         tblOptionList = UITableView()
-        tblOptionList?.register(SettingCell.self, forCellReuseIdentifier: "cell")
+        tblOptionList?.register(SettingCell.self, forCellReuseIdentifier:  ConstantStrings.cell)
         tblOptionList?.delegate = self
         tblOptionList?.dataSource = self
         tblOptionList?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -104,7 +103,7 @@ extension settingVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! SettingCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConstantStrings.cell) as! SettingCell
         cell.selectionStyle = .none
         cell.setData = listArray[indexPath.row]
         cell.selectionStyle = .none
@@ -128,7 +127,6 @@ extension settingVC: UITableViewDelegate, UITableViewDataSource{
             
             switch (indexPath.row) {
             case 3:
-                print("case3")
               
                 if _ticketID == "ON" {
                     APIServices.shared.userOnlineStatus(status: "1")
@@ -157,11 +155,16 @@ extension settingVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
-        if indexPath.row != 3 && indexPath.row != 4 {
+
+        
+        
+        
+        if indexPath.row != 3 && indexPath.row != 4 && indexPath.row != 5{
             self.pushTo(viewController: friendOperationVC(OperationType: listArray[indexPath.row].title ?? "")  )
         }
-       
+        if  indexPath.row == 3 {
+            self.pushTo(viewController: bookMarkVC())
+        }
         
     }
 }

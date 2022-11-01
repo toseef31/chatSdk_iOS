@@ -50,9 +50,10 @@ class VideoMsgCell: SwipyCell {
     
     var isSmsSelected: Bool?  = false
     var isdownloading : Bool?  = false
+    var isBookMar = false
+    
+    let bookImage = UIImageView(image:  UIImage(systemName: "bookmark.fill")!.withTintColor(AppColors.primaryColor, renderingMode: .alwaysOriginal), contentModel: .scaleAspectFit)
    
-    
-    
     var imgdownloadFile = MoozyActionButton(image: #imageLiteral(resourceName: "download"), foregroundColor: .white, backgroundColor: AppColors.backColorColor, imageSize: .init(width: 35, height: 35)){
     }
     
@@ -118,6 +119,12 @@ class VideoMsgCell: SwipyCell {
                 }
                 
           
+            if dataSet?.bookmarked.count ?? 0 != 0 && isBookMar == false {
+                if let firstSuchElement = dataSet?.bookmarked.first(where: { $0 == (AppUtils.shared.user?._id) }) {
+                    bookImage.isHidden = false   } else {
+                    bookImage.isHidden = true   }
+            } else {  bookImage.isHidden = true }
+            
             if  isSmsSelected == true {
                 imgSendSlected.image = #imageLiteral(resourceName: "select2x")
                 imgRecivedSlected.image = #imageLiteral(resourceName: "select2x")
@@ -129,7 +136,7 @@ class VideoMsgCell: SwipyCell {
             
             mainView?.backgroundColor =  #colorLiteral(red: 0.9725490196, green: 0.9803921569, blue: 1, alpha: 1)
             
-            if dataSet?.receiverId == AppUtils.shared.senderID {
+            if dataSet?.receiverId == AppUtils.shared.senderID || isBookMar == true {
            
                 leadingConstraint.isActive = true
                 trailingConstraint.isActive = false
@@ -307,8 +314,8 @@ class VideoMsgCell: SwipyCell {
         blurView?.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.2813699959)
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
 //               stack = UIStackView(views: [lblDatetTimeDay!, statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
-        
-        stack = UIStackView(views: [lblDatetTimeDay!], axis: .horizontal, spacing: 5, distribution: .fill)
+        let view = UIView(maskToBounds: true)
+        stack = UIStackView(views: [lblDatetTimeDay!,bookImage,view], axis: .horizontal, spacing: 0, distribution: .fill)
     }
     
     //ConfigureUI

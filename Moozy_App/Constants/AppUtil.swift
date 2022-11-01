@@ -79,6 +79,7 @@ class AppUtils{
     }
     //Get and Save chat Localy Stored for a Spesific User.
     func getLocalChatMessages(key: String, onCompletion: @escaping onCompletion<[ChatMessagesModel]>){
+        
         if UserDefaults.containsChatKey(key: key){
             if let data : Data = UserDefaults.Get_ChatMessage(key: key){
                 if let chat = try? decoder.decode(Array<ChatMessagesModel>.self, from: data){
@@ -89,6 +90,7 @@ class AppUtils{
         else {
             onCompletion([], "no Data")
         }
+        
     }
     
     func saveChatMessa(chat: Data, key: String ){

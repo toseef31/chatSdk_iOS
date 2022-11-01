@@ -45,7 +45,7 @@ class chat_data: NSObject, Codable {
     var status : Int!
     var seen : Int!
    // var deletedBy : [String]!
-//    var bookmarked : [String]!
+    var bookmarked : [String] = []
     var receipt_status : Int!
    // var file_size : String!
     var isread : Int!
@@ -73,6 +73,18 @@ class chat_data: NSObject, Codable {
         chatType = json["chatType"].intValue
         status = json["status"].intValue
         seen = json["seen"].intValue
+        
+        let bookmarkedChat = json["bookmarked"].arrayValue
+        for contactsJson in bookmarkedChat {
+            
+            if bookmarkedChat.count >= 1 {
+                bookmarked.append(contactsJson.rawValue as! String)
+            }
+            else {
+                
+            }
+        }
+        
         receipt_status = json["receipt_status"].intValue
         isread = json["isread"].intValue
         

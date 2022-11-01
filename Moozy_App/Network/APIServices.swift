@@ -58,8 +58,8 @@ class APIServices{
     //HideFriend
     func hideFriend (hideUserId: String,hideStatus : Int , onCompletion: @escaping onCompletion<Bool>) {
         let param = [
-            "senderId": AppUtils.shared.user?._id ?? "",
-             "receiverId" :  hideUserId,
+            "userId": AppUtils.shared.user?._id ?? "",
+             "friendId" :  hideUserId,
             "hideStatus" :  "\(Int(hideStatus))",
             
         ]
@@ -79,6 +79,7 @@ class APIServices{
          let url = "\(ServiceURL.getFriends)\(seletedUser)"
         NetworkController.shared.serviceResponseObject(method: .get, serviceName: url) { response, errorMessage in
             if let result = response {
+                print(result.first)
                  let dataa = Friend_Model.init(fromJson: result)
                 onCompletion(dataa.data, nil)
             }else{
@@ -144,6 +145,45 @@ class APIServices{
         }
     }
     
+    
+    
+    //MARK: GET BookMark Chat.
+    func getBookMarkList ( onCompletion: @escaping onCompletion<[chat_data]>){
+        let servieUrl = "\(ServiceURL.getBookmarkChat)\(AppUtils.shared.user?._id ?? "")"
+        print(servieUrl)
+        NetworkController.shared.serviceResponseObject(method: .get, serviceName: servieUrl ) { response, errorMessage in
+            if let result = response {
+                print(result)
+               let Chatdata = chat_Model.init(fromJson: result)
+                onCompletion(Chatdata.data, nil)
+                
+            }else{
+                onCompletion(nil, "\(errorMessage!)")
+            }
+        }
+    }
+    
+    
+    //MARK: Set BookMark Chat.
+    func bookmarkChat (messageId : String? = "" ,status : String? = "0",userId : String? = "" ,receiverId : String? = "" , onCompletion: @escaping onCompletion<Bool>){
+        let param = [
+            "status" : "\(status ?? "")",
+            "messageId" : "\(messageId ?? "")",
+            "userId":  AppUtils.shared.user?._id ?? "",
+            "isGroup" : "\("0" )" ,
+            "receiverId" :  "\(receiverId ?? "")"
+        ]
+        print(param)
+        NetworkController.shared.serviceResponseObject(method: .post, parameter: param, serviceName: ServiceURL.bookmarkChat ) { response, errorMessage in
+            if let result = response {
+                onCompletion(true, nil)
+            }else{
+                onCompletion(false, "\(errorMessage!)")
+            }
+        }
+    }
+    
+    
     //Get Chat Of sepesific User.
     func getChat(receiverId: String, limit: Int, chatHideStat: Bool = false, onCompletion: @escaping onCompletion<[chat_data]>){
         let param = [
@@ -151,6 +191,7 @@ class APIServices{
             "isGroup": "\(Int(0))",
             "receiverId" :  receiverId
         ]
+        print(param)
         NetworkController.shared.serviceResponseObject(method: .post, parameter: param, serviceName: ServiceURL.getChat) { (response, errorMessage) in
             if let result = response{
                 print(result)
@@ -221,7 +262,7 @@ class APIServices{
             
         ] as [String : Any]
         
-      
+        let bookmark : [String] = [] 
         
     var mydata2 = [
         "_id" : "msgIDLocal" ,
@@ -240,6 +281,7 @@ class APIServices{
         "updatedAt" : "\(finalDate)",
         "__v" : 0 ,
         "isProgress" :  false ,
+        "bookmarked" : bookmark,
         ] as [String : Any]
         
         
@@ -355,7 +397,7 @@ class APIServices{
             
         ] as [String : Any]
         
-      
+      let bookmark = [String]()
         
     var mydata2 = [
         "_id" : "msgIDLocal" ,
@@ -374,6 +416,7 @@ class APIServices{
         "updatedAt" : "\(finalDate)",
         "__v" : 0 ,
         "isProgress" :  false ,
+        "bookmarked" : bookmark,
         ] as [String : Any]
         
         self.utilityQueue.async {
@@ -406,7 +449,7 @@ class APIServices{
                 "isGroup" : 0 ,
                 "projectId" : "\(AppUtils.shared.projectID)",
                 "receiverId" : "\(receiver_Id)",
-                "senderId" : "\(AppUtils.shared.senderID)"
+                "userId" : "\(AppUtils.shared.senderID)"
             ] as [String : Any]
            
             if chatType == 1 {
@@ -415,7 +458,7 @@ class APIServices{
             }
             NetworkController.shared.serviceResponseObject(method: .post, parameter: param, serviceName: ServiceURL.sendChat) { response, errorMessage in
                 if let data = response {
-                    
+                    print(response)
                     let dataa = chat_data.init(fromJson: data)
                     
                     let userDataJsons = data["data"]
@@ -522,6 +565,7 @@ class APIServices{
             "user_image" : "",
             
         ]
+        let bookmark : [String] = []
         
         let RepliedTo = [
             
@@ -540,6 +584,7 @@ class APIServices{
             "updatedAt" : "\(finalDate)",
             "__v" : 0 ,
             "isProgress" :  false ,
+           
             
         ] as [String : Any]
         
@@ -562,6 +607,7 @@ class APIServices{
         "updatedAt" : "\(finalDate)",
         "__v" : 0 ,
         "isProgress" :  false ,
+        "bookmarked" : bookmark,
         ] as [String : Any]
         
         
@@ -722,11 +768,9 @@ class APIServices{
                             ] as [String : Any]
                               SocketIOManager.sharedInstance.sendMessage(message: dummyparameter)
                         }
+                        }
 
-                        
-                    }
-
-
+                    
                 case .failure(let encodingError):
                     print("the error is  : \(encodingError.localizedDescription)")
                 }
@@ -795,7 +839,7 @@ func sendFile(receiverId: String ,document: UIDocument?,docName:String,filesurl:
             "user_image" : "",
             
         ]
-        
+        let bookmark : [String] = []
         let RepliedTo = [
             
             "_id" : "comment_Id" ,
@@ -835,6 +879,7 @@ func sendFile(receiverId: String ,document: UIDocument?,docName:String,filesurl:
         "updatedAt" : "\(finalDate)",
         "__v" : 0 ,
         "isProgress" :  false ,
+        "bookmarked" : bookmark,
         ] as [String : Any]
         
         
@@ -1046,8 +1091,8 @@ func sendFile(receiverId: String ,document: UIDocument?,docName:String,filesurl:
     //Hide Chat
     func muteFriend(muteId: String, muteType: Int, muteStatus: Int,  onCompletion: @escaping onCompletion<Bool>){
           let param = [
-            "senderId" : AppUtils.shared.senderID,
-            "receiverId" : muteId,
+            "userId" : AppUtils.shared.senderID,
+            "friendId" : muteId,
             "muteStatus" : muteStatus
         ] as [String : Any]
         print(param)
@@ -1068,8 +1113,8 @@ func sendFile(receiverId: String ,document: UIDocument?,docName:String,filesurl:
         
         let param = [
             "blockStatus" : blockStatus,
-            "senderId" : AppUtils.shared.senderID,
-            "receiverId" : blockUserId,
+            "userId" : AppUtils.shared.senderID,
+            "friendId" : blockUserId,
         ] as [String : Any]
         
         NetworkController.shared.serviceResponseObject(method: .post, parameter: param, serviceName: ServiceURL.blockFriend) { (response, errorMessage) in

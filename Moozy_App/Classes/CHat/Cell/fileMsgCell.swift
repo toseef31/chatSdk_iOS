@@ -52,7 +52,9 @@ class FileMsgCell:  SwipyCell {
     
     var isSmsSelected: Bool?  = false
     var isdownloading : Bool?  = false
-    
+    var isBookMar = false
+    let bookImage = UIImageView(image:  UIImage(systemName: "bookmark.fill")!.withTintColor(AppColors.primaryColor, renderingMode: .alwaysOriginal), contentModel: .scaleAspectFit)
+   
     var chatData: chat_data? = nil{
         didSet{
             
@@ -117,7 +119,7 @@ class FileMsgCell:  SwipyCell {
                 imgRecivedSlected.image = #imageLiteral(resourceName: "Oval3x")
                 
             }
-            if chatData?.receiverId == AppUtils.shared.senderID {
+            if chatData?.receiverId == AppUtils.shared.senderID || isBookMar == true {
                 leadingConstraint.isActive = true
                 trailingConstraint.isActive = false
                 
@@ -148,6 +150,13 @@ class FileMsgCell:  SwipyCell {
                         imgSendSlected.isHidden = true
                     }
             }
+            
+            if chatData?.bookmarked.count ?? 0 != 0 && isBookMar == false {
+                if let firstSuchElement = chatData?.bookmarked.first(where: { $0 == (AppUtils.shared.user?._id) }) {
+                    bookImage.isHidden = false   } else {
+                    bookImage.isHidden = true   }
+            } else {  bookImage.isHidden = true }
+            
         }
     }
   
@@ -160,13 +169,10 @@ class FileMsgCell:  SwipyCell {
         configureUI()
         mainView?.backgroundColor = .white
         NotificationCenter.default.addObserver(self, selector: #selector(CustomerObjRecevied(_:)), name: .dowloadFile, object:nil)
-  
-      
     }
     
     
     func initializedControls(){
-        
         
         imgFolder = UIImageView(image: #imageLiteral(resourceName: "folder"), contentModel: .scaleAspectFit)
         imgFolder?.setImageColor(color: AppColors.primaryColor)
@@ -181,8 +187,8 @@ class FileMsgCell:  SwipyCell {
         
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
 //        stack = UIStackView(views: [lblDatetTimeDay! , statusView!], axis: .horizontal, spacing: 5, distribution: .fill)
-
-        stack = UIStackView(views: [lblDatetTimeDay! ], axis: .horizontal, spacing: 5, distribution: .fill)
+        let view = UIView(maskToBounds: true)
+        stack = UIStackView(views: [lblDatetTimeDay! ,bookImage,view], axis: .horizontal, spacing: 5, distribution: .fill)
     }
     
     //ConfigureUI

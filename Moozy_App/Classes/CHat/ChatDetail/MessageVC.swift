@@ -31,14 +31,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
     var oldContentOffset = CGPoint.zero
     let topConstraintRange = (CGFloat(0)..<CGFloat(140))
 
-    var profileDataView : UIView?
-    var onlineView: UIView?
-    var lblOnlineStaus : UILabel?
-    var profileViewe: ProfileView?
-    
-    var viewUserName : UIView?
-    var lblUserName : UILabel?
-    
+   
     //Vrible using to play audion
     var cellToDeSelect:UITableViewCell?
     var isHighlighted: Bool?
@@ -108,21 +101,16 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
 
     var imageDictionary = [NSURL: UIImage]()
 
-
-//    var chatMessagesArr = [NewChatMessages]()
     let HeadercontainerView = UIView()
     var OpenfileUrl :NSURL?
     var statusOnlineStack : UIStackView?
     private var sourceType: SourceType!
 
-    //let chatMessages = ChatMessageModel(user_id: "", frind_id: "", message: "", message_Type: 0, status: nil, isSeen: nil, receiptStatus: nil, createdDate: "", hide: nil, sender_id: "", sender_name: "", sender_image: "", receiver_id: "", receiver_name: "", receiver_image: "")
-
     //Buttom Constraint of Tableview.
     var tblCHatBottomConstraint: NSLayoutConstraint?
     var tblCHatHeightConstraint: NSLayoutConstraint?
     
-    var ProfileTopConstraint: NSLayoutConstraint?
-
+   
     //Component to delete or forward sms
     var  BtnForwrdDelete : MoozyActionButton?
     var  btnCancel : MoozyActionButton?
@@ -138,7 +126,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
     var images = [UIImage]()
     var imageName = [String]()
     var selectedAssets = [TLPHAsset]()
-
+    var topShadowView : UIView?
 
     private var documents = [Document]()
 
@@ -148,7 +136,7 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
  var iskeyboardOpend = false
     public var btnScrollToBottom : UIView?
    //Initilization..
-    init(receiverData: friendInfoModel? = nil, ChatMessages: [ChatMessagesModel] ) {
+    init(receiverData: friendInfoModel? = nil, ChatMessages: [ChatMessagesModel]? = [] ) {
          if let receiver = receiverData {
             self.receiverData = receiver
             self.receiverID = receiver.friendId ?? ""
@@ -169,78 +157,12 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         super.viewDidLoad()
         APIServices.shared.sendDelegate = self
         isdelForward = false
-       
-        print(view.frame.width)
-    }
-    func resettablesize(isOpen : Bool? = false){
-        
-        self.tblChat?.layoutIfNeeded()
-        self.containerView?.layoutIfNeeded()
-        var height = self.containerView!.bounds.height
-        tblCHatBottomConstraint?.isActive = false
-        if isOpen == true || isKeyboardShow == true {
-           
-            if height - 70  >= (tblChat?.contentSize.height ?? 0) {
-            tblCHatBottomConstraint?.isActive = false
-            tblCHatHeightConstraint?.isActive = false
-            tblCHatHeightConstraint = self.tblChat?.heightAnchor.constraint(equalToConstant: (tblChat?.contentSize.height ?? 0))
-            tblCHatHeightConstraint?.isActive = true
-            } else {
-                tblCHatBottomConstraint?.isActive = false
-                tblCHatHeightConstraint?.isActive = false
-            tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-                tblCHatBottomConstraint?.isActive = true
-                
-            }
-            
-            ProfileTopConstraint?.isActive = false
-            ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: -120)
-            ProfileTopConstraint?.isActive = true
-            return
-        }
-        if tblChat?.contentSize.height == 0 {
-           
-            ProfileTopConstraint?.isActive = false
-            ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: 2)
-            ProfileTopConstraint?.isActive = true
-            return
-        }
-        if (tblChat?.contentSize.height)! >= height - 10 {
-        tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -15)
-            tblCHatBottomConstraint?.isActive = true }
-        else {
-           
-            let contetnh = height
-    
-            let diffrence = contetnh -  (tblChat?.contentSize.height)!
-            print(diffrence - 94)
-            var fyp = diffrence + 94
-            let nag = (0-fyp)
-            print(nag)
-            
-            print(tblChat?.contentSize.height)
-            if contetnh - 70  >= (tblChat?.contentSize.height ?? 0) {
-            tblCHatBottomConstraint?.isActive = false
-            tblCHatHeightConstraint?.isActive = false
-            tblCHatHeightConstraint = self.tblChat?.heightAnchor.constraint(equalToConstant: (tblChat?.contentSize.height ?? 0))
-            tblCHatHeightConstraint?.isActive = true
-            }
-            else {
-                tblCHatBottomConstraint?.isActive = false
-                tblCHatHeightConstraint?.isActive = false
-            tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-                tblCHatBottomConstraint?.isActive = true
-            }
-            ProfileTopConstraint?.isActive = false
-            ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: 2)
-            ProfileTopConstraint?.isActive = true
-            viewUserName?.isHidden = false
-        }
     }
     
           
     override func viewWillAppear(_ animated: Bool) {
         notificationListener()
+       
     }
     override func viewDidAppear(_ animated: Bool) {
         tblChat?.reloadData()
@@ -263,7 +185,48 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         URLCache.shared.memoryCapacity = 0
     }
 
+    //MARK: Configure TableView Acording to Heifht or other..
+    func resettablesize(isOpen : Bool? = false){
 
+        self.tblChat?.layoutIfNeeded()
+        self.containerView?.layoutIfNeeded()
+        var height = self.containerView!.bounds.height
+        
+        print(tblChat?.contentSize.height)
+        print(height)
+        if (tblChat?.contentSize.height)! >= height - 30 {
+            
+            tblCHatHeightConstraint?.isActive = false
+            tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
+            tblCHatBottomConstraint?.isActive = false
+            tblCHatBottomConstraint?.isActive = true
+            tblCHatBottomConstraint?.priority = UILayoutPriority(999)
+            topShadowView?.isHidden = false
+            profileView?.isHidden = false
+            statusOnlineStack?.isHidden = false
+        }
+        else {
+
+            let contetnh = height
+
+            tblCHatBottomConstraint?.isActive = false
+            tblCHatHeightConstraint?.isActive = false
+            if tblChat?.contentSize.height ?? 0 <= 110 {
+                tblCHatHeightConstraint = self.tblChat?.heightAnchor.constraint(equalToConstant: (710))
+            } else {
+            tblCHatHeightConstraint = self.tblChat?.heightAnchor.constraint(equalToConstant: (tblChat?.contentSize.height ?? 0))
+            }
+            tblCHatHeightConstraint?.isActive = true
+            topShadowView?.isHidden = true
+           // self.tblChat?.layoutIfNeeded()
+            profileView?.isHidden = true
+            statusOnlineStack?.isHidden = true
+            
+           // self.tblChat?.layoutIfNeeded()
+            
+
+        }
+    }
 
     //MARK: -- initializedControls--
     func initializedControls(){
@@ -272,10 +235,6 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         configureInputView()
 
         containerView = UIView(backgroundColor: UIColor.white, maskToBounds: true)
-        containerView?.roundCorners(corners: [.topLeft,.topRight], radius: 32, clipToBonds: true)
-        containerView?.applyContainerShadow()
-        //containerView?.addBorders(edges: .all, color: .gray)
-//        applyShadowWithColor
         self.replyView?.isHidden = true
 
         btnScrollToBottom = {
@@ -295,43 +254,32 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
     func configureUI(){
         initializedControls()
         view.backgroundColor = .white
-        view.addMultipleSubViews(views: navigationView!, profileDataView! , onlineView! ,lblOnlineStaus!,containerView!,viewUserName!)
-        profileDataView?.applyProfileShadow()
+        view.addMultipleSubViews(views: navigationView! , containerView!)
       
         var bottomSeprationLine = UIView(backgroundColor:  #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1), maskToBounds: true)
-     
-        containerView?.addMultipleSubViews(views: tblChat!,bottomSeprationLine,inputBottomView!,inputBottomOperationView! , btnScrollToBottom!)
+      
+         topShadowView = UIView(backgroundColor: .white, maskToBounds: true)
+        topShadowView?.applyContainerShadowB()
+        
+        containerView?.addMultipleSubViews(views: topShadowView! ,tblChat!,bottomSeprationLine,inputBottomView!,inputBottomOperationView! , btnScrollToBottom!)
+        
+        containerView?.bringSubviewToFront(topShadowView!)
+        
+        topShadowView?.roundCorners(corners: [.topLeft,.topRight], radius: 32, clipToBonds: false)
+        
+        topShadowView?.anchor(top: containerView?.topAnchor, leading: containerView?.leadingAnchor, bottom: nil, trailing: containerView?.trailingAnchor,padding: .init(top: 11.5, left: 0, bottom: 10, right: 0),size: .init(width: 0, height: 27))
+        
+        
         btnScrollToBottom?.isHidden = true
         inputBottomOperationView?.roundCorners(corners: .allCorners, radius: 15, clipToBonds: true)
         inputBottomOperationView?.anchor(top: nil, leading: containerView?.leadingAnchor, bottom: containerView?.bottomAnchor, trailing: containerView?.trailingAnchor,padding: .init(top: 0, left: 10, bottom: 10, right: 10),size: .init(width: 0, height: 50))
 
 
-
         navigationView?.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
 
-        navigationView?.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12).isActive = true
+        navigationView?.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.10).isActive = true
         
-        
-        profileDataView?.anchor(top: nil, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0),size: .init(width: view.frame.width/4 , height: view.frame.width/4))
-        profileDataView?.horizontalCenterWith(withView: view)
-        
-        ProfileTopConstraint?.isActive = false
-        ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: -120)
-        ProfileTopConstraint?.isActive = true
-        
-        viewUserName?.isHidden = true
-        
-        onlineView?.anchor(top: profileDataView?.bottomAnchor, leading: profileDataView?.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: -15, left: 0, bottom: 0, right: 0), size: .init(width: 10, height: 10))
-        lblOnlineStaus?.anchor(top: nil, leading: onlineView?.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 7, bottom: 0, right: 0))
-        
-        lblOnlineStaus?.verticalCenterWith(withView: onlineView!)
-        
-        viewUserName?.anchor(top: profileDataView?.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top:  15, left: 0, bottom: 0, right: 0),size: .init(width: view.frame.width/2.5, height: view.frame.width/9 ))
-        
-        viewUserName?.horizontalCenterWith(withView: profileDataView!)
-       
-        
-        containerView?.anchor(top: profileDataView?.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 35, left: 0, bottom: 0, right: 0))
+        containerView?.anchor(top: navigationView?.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
 
         containerViewConstraint = containerView?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
         containerViewConstraint.isActive = true
@@ -342,12 +290,10 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
 
         inputBottomViewConstraint = inputBottomView?.heightAnchor.constraint(equalToConstant: 50)
         inputBottomViewConstraint.isActive = true
-
         inputBottomOperationView?.isHidden = true
 
         btnScrollToBottom?.anchor(top: nil, leading: nil, bottom: inputBottomView?.topAnchor, trailing: containerView?.trailingAnchor,padding: .init(top: 0, left: 0, bottom: 50, right: 20),size: .init(width: 40, height: 40))
-
-        tblChat?.anchor(top: viewUserName?.bottomAnchor, leading: containerView?.leadingAnchor, bottom: nil , trailing: containerView?.trailingAnchor, padding: .init(top: 10, left: 0, bottom: 0, right: 0))
+        tblChat?.anchor(top: containerView?.topAnchor, leading: containerView?.leadingAnchor, bottom: nil , trailing: containerView?.trailingAnchor, padding: .init(top: 42, left: 0, bottom: 0, right: 0))
 
         tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -15)
         tblCHatBottomConstraint?.isActive = true
@@ -359,15 +305,10 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         inputBottomView?.bringSubviewToFront(tblChat!)
         tblChat?.bringSubviewToFront(btnScrollToBottom!)
         
-        containerView?.bringSubviewToFront(viewUserName!)
-        view.bringSubviewToFront(viewUserName!)
-       
         view?.bringSubviewToFront(navigationView!)
         
-      
-        
         btnScrollToBottom?.isHidden = true
-        replayImage = createImage(text: "", img: UIImage(named: "reply")!, size: 55.0, isRound: false, corners: "")
+        replayImage = createImage(txt: "", img: UIImage(named: "reply")!, size: 55.0, isRound: false, corners: "")
         addTapGesture()
     }
 
@@ -381,56 +322,8 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
     }
     //MARK: -- configure Navigation View
     func configureNavitionView(){
-        let statusOnline = receiverData?.onlineStatus == 0 ?  "offline" : "online"
-        lblOnlineStaus = UILabel(title: "\(statusOnline)", fontColor: AppColors.BlackColor, alignment: .left, font: UIFont.font(.Roboto, type: .Light, size: 12))
-        
-        statusColor = receiverData?.onlineStatus == 1 ? .green : .red
-        onlineView = UIView(backgroundColor: statusColor!, cornerRadius: 5)
-        
-        viewUserName = {
-            let view = UIView(backgroundColor: #colorLiteral(red: 0.9490196078, green: 0.2078431373, blue: 0.2352941176, alpha: 1), cornerRadius:  view.frame.width/22,borderWidth: 1, maskToBounds: true)
-            
-            view.setGradientBackground(frame: CGRect(x: 0, y: 0, width: 1000, height: 20), colorLeft: AppGradentColor.colorLeft, colorRight: AppGradentColor.colorRight)
-            
-            lblUserName = UILabel(title: "\(receiverData?.name ?? "")", fontColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), alignment: .center, numberOfLines: 1, font: UIFont.font(.Roboto, type: .Medium, size: 17))
-            view.addSubview(lblUserName!)
-            lblUserName?.fillSuperView()
-            return view
-        }()
-        
-        
-       profileDataView = {
-           let profileview = UIView()
-          
-           profileViewe = ProfileView(title: "\(receiverData?.name.checkNameLetter() ?? "")", font: UIFont.font(.Roboto, type: .Medium, size: 40), BGcolor: #colorLiteral(red: 0.04705882353, green: 0.831372549, blue: 0.7843137255, alpha: 1), titleFontColor: UIColor.white, borderColor: #colorLiteral(red: 0.04705882353, green: 0.831372549, blue: 0.7843137255, alpha: 1), borderWidth: 1, size: .init(width: view.frame.width/4, height: view.frame.width/4))
-           profileViewe?.applyBottomShadow()
-           profileview.addMultipleSubViews(views: profileViewe!)
-             profileViewe?.fillSuperView()
-           
-           let image =  receiverData?.profile_image ?? nil
-           if image != "" && image != nil {
-
-               let imgUrl = userImages.userImageUrl
-               print(imgUrl)
-               if let url = URL(string: imgUrl){
-                   profileViewe?.profileImagesss = "\(url)\(receiverData?.profile_image ?? "")"
-                   //imgTitle?.profileImagesss = "\(url)\(dataSet?.friend.user_image ?? "")"
-               }else {
-                   profileViewe?.titleProfile = receiverData?.name != "" ? (receiverData?.name.checkNameLetter()) : "No Name".checkNameLetter()
-               }
-               profileViewe?.titleProfile = ""
-           } else {
-               profileViewe?.titleProfile = receiverData?.name != "" ? (receiverData?.name.checkNameLetter()) : "No Name".checkNameLetter()
-
-           }
-
-           profileViewe?.isBound = true
-           profileViewe?.titleProfile = receiverData?.name.checkNameLetter() ?? ""
-
-            return profileview
-        }()
-        
-        
+       statusColor = receiverData?.onlineStatus == 1 ? .green : .red
+     
         
         navigationView = {
             let view = UIView(backgroundColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), maskToBounds: true)
@@ -490,9 +383,9 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
 
                 self.replyView?.isHidden = true
                 //update table view..
-                tblCHatBottomConstraint?.isActive = false
-                tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-                tblCHatBottomConstraint?.isActive = true
+//                tblCHatBottomConstraint?.isActive = false
+//                tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
+//                tblCHatBottomConstraint?.isActive = true
                 self.pushTo(viewController: ChatDetailVC(receiverData: receiverData))
             }
 
@@ -502,16 +395,16 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
 
                 self.replyView?.isHidden = true
                 //update table view..
-                tblCHatBottomConstraint?.isActive = false
-                tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-                tblCHatBottomConstraint?.isActive = true
+//                tblCHatBottomConstraint?.isActive = false
+//                tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
+//                tblCHatBottomConstraint?.isActive = true
                 self.pushTo(viewController: ChatDetailVC(receiverData: receiverData))
             })
             view.addMultipleSubViews(views: btnBack, profileView!, statusOnlineStack!, stack,TopView)
 
             btnBack.anchor(top: nil, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 12, bottom: 0, right: 0), size: backButtonSize)
 
-            profileView?.anchor(top: nil, leading: btnBack.trailingAnchor, bottom: view.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 8, bottom: 24, right: 0), size: .init(width: 30, height: 30))
+            profileView?.anchor(top: nil, leading: btnBack.trailingAnchor, bottom: view.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 8, bottom: 4, right: 0), size: .init(width: 30, height: 30))
             btnBack.verticalCenterWith(withView: profileView!)
 
             statusOnlineStack?.anchor(top: nil , leading: profileView?.trailingAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 8, bottom: 0, right: 0))
@@ -638,9 +531,9 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
                                     self.commentId = ""
                                     self.replyView?.isHidden = true
                                     //update table view..
-                                    tblCHatBottomConstraint?.isActive = false
-                                    tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-                                    tblCHatBottomConstraint?.isActive = true
+//                                    tblCHatBottomConstraint?.isActive = false
+//                                    tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
+//                                    tblCHatBottomConstraint?.isActive = true
                                     resettablesize()
                                 }
                             }
@@ -666,9 +559,6 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
                                     self.commentId = ""
                                     self.replyView?.isHidden = true
                                     //update table view..
-                                    tblCHatBottomConstraint?.isActive = false
-                                    tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-                                    tblCHatBottomConstraint?.isActive = true
                                     resettablesize()
                                     txtMessage?.text = "Enter Message"
                                     self.txtMessage?.textColor = AppColors.primaryColor
@@ -761,14 +651,13 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         }
         inputBottomOperationView?.isHidden = true
         inputBottomView?.isHidden = false
-//        tblCHatBottomConstraint?.isActive = false
-//        tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-//        tblCHatBottomConstraint?.isActive = true
         resettablesize()
         isdelForward = false
         isLongPressAction = false
         viewModel?.CancelSelectionMessages()
         isdelForward = false
+        
+        
     }
 
     //MARK: --Configure TableView--
@@ -779,14 +668,13 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         tblChat?.register(TextMsgCell.self, forCellReuseIdentifier: "TextMsgCell")
         tblChat?.register(PhotoMsgCell.self, forCellReuseIdentifier: "Cell2")
         tblChat?.register(ReplyViewCell.self, forCellReuseIdentifier: "Cell3")
-        tblChat?.register(LocationMsgCell.self, forCellReuseIdentifier: "Cell4")//LocationMsgCell
         tblChat?.register(VideoMsgCell.self, forCellReuseIdentifier: "Cell5")//LocationMsgCell
         tblChat?.register(AudioMsgCell.self, forCellReuseIdentifier: "Cell6")//AudioMsgCell
         tblChat?.register(FileMsgCell.self, forCellReuseIdentifier: "Cell7") //FileMsgCell
 
         tblChat?.delegate = self
         tblChat?.dataSource = self
-        tblChat?.backgroundColor = .clear
+        tblChat?.backgroundColor = .white
         tblChat?.separatorStyle = .none
         tblChat?.keyboardDismissMode = .onDrag
         tblChat?.showsVerticalScrollIndicator = false
@@ -819,8 +707,15 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
         NotificationCenter.default.addObserver(self, selector: #selector(handleNotificationFuncName), name: NSNotification.Name(rawValue: "aNotificationName"), object: nil)
     }
     @objc func handleNotificationFuncName(_ notification: Notification) {
+        
         chatMsgArr?.removeAll()
+        if let data = constatntChatModels.data(using: .utf8) {
+            let login = try? JSONDecoder().decode(chat_data.self, from: data)
+            chatMsgArr?.append(ChatMessagesModel(isSelected: false, date: "no", messagesData: [ChatMessageModelselection(isSelected: false, isSending: false, isDownloading: false, messages: login!)]))
+        }
+        
         tblChat?.reloadData()
+        resettablesize()
     }
     @objc func DoneAction(){
         txtMessage?.text = ""
@@ -863,40 +758,44 @@ class MessageVcCopy: UIViewController, UIImagePickerControllerDelegate & UINavig
             viewModel?.updatalocalChat(data: chatMsgArr ?? [] )
            
             if viewModel?.isSelecting != true {
-               // resettablesize()
+               //
                 tblChat?.reloadData()
                 
                 //if chatMsgArr?.first?.messagesData!.count ?? 0 >= 0 &&  chatMsgArr?.first?.messagesData?.count ?? 0 <= 3 {
                     let k = self.containerView!.bounds.height
                     print(k)
-                if k - 70  >= (tblChat?.contentSize.height ?? 0) {
-                    print( (tblChat?.contentSize.height)! - k)
-                    
-                    tblCHatBottomConstraint?.isActive = false
-                    
-                    tblCHatHeightConstraint?.isActive = false
-                    tblCHatHeightConstraint = self.tblChat?.heightAnchor.constraint(equalToConstant: (tblChat?.contentSize.height ?? 0))
-                    tblCHatHeightConstraint?.isActive = true
-                  
-                }
-                else {
-                  
-                    tblCHatHeightConstraint?.isActive = false
-                    tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
-                    tblCHatBottomConstraint?.isActive = true
-                    tblCHatBottomConstraint?.isActive = false
-                }
-                
-                if chatMsgArr?.count ?? 0 > 1 {
-                    
-                   // self.tblChat?.scrollToTop()
-                }
+//                if k - 70  >= (tblChat?.contentSize.height ?? 0) {
+//                    print( (tblChat?.contentSize.height)! - k)
+//
+//                    tblCHatBottomConstraint?.isActive = false
+//
+//                    tblCHatHeightConstraint?.isActive = false
+//                    tblCHatHeightConstraint = self.tblChat?.heightAnchor.constraint(equalToConstant: (tblChat?.contentSize.height ?? 0))
+//                    tblCHatHeightConstraint?.isActive = true
+//
+//                }
+//                else {
+//
+//                    tblCHatHeightConstraint?.isActive = false
+//                    tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomView!.topAnchor, constant: -10)
+//                    tblCHatBottomConstraint?.isActive = true
+//                    tblCHatBottomConstraint?.isActive = false
+//                }
+//
+//                if chatMsgArr?.count ?? 0 > 1 {
+//
+//                   // self.tblChat?.scrollToTop()
+//                }
+               
+                tblChat?.reloadData()
+                resettablesize()
             }
            
-            
-          //  ActivityController.shared.hideActivityIndicator(uiView: view)
-
             tblChat?.reloadData()
+           // resettablesize()
+          //  ActivityController.shared.hideActivityIndicator(uiView: view)
+           
+           
         })
     }
 
@@ -950,9 +849,7 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
     func IMGorMapSelected(cell: PhotoMsgCell) {
 
         let index = tblChat?.indexPath(for: cell)
-        print(chatMsgArr![index!.section].messagesData![index!.row].messages?.messageType)
-        print(chatMsgArr![index!.section].messagesData![index!.row].messages?.chatType)
-
+      
          if (chatMsgArr![index!.section].messagesData![index!.row].messages?.messageType == 1 && chatMsgArr![index!.section].messagesData![index!.row].messages?.chatType == 0  || (chatMsgArr![index!.section].messagesData![index!.row].messages?.messageType == 7 && chatMsgArr![index!.section].messagesData![index!.row].messages?.chatType == 0 )){
 
              let cellImage = AppUtils.shared.loadImage(fileName:chatMsgArr![index!.section].messagesData![index!.row].messages?.message ?? "")
@@ -1020,11 +917,7 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
 
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        
-        print(viewModel?.AllChatMsg.value?.count ?? 0)
-
-        print(chatMsgArr ?? [])
-
+       
         if chatMsgArr?.count == 0{
             return 0
         }else{
@@ -1032,15 +925,15 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
         }
     }
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        print(section)
-       
+            let containerView = UIView()
+        containerView.backgroundColor = .white
              let date = chatMsgArr![section].date
             let label = DateHeaderLabel()
-            if date == nil {
-                return nil
+            if date == nil || date == "no" {
+                return containerView
             }
             label.text = "\(date!)"
-            let containerView = UIView()
+          
             containerView.addSubview(label)
             label.centerSuperView()
             containerView.transform = CGAffineTransform(scaleX: 1, y: -1)
@@ -1048,27 +941,8 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
         
         
     }
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//
-//        print(section)
-//        if section == 0 {
-//            return nil
-//        }else {
-//             let date = chatMsgArr![section].date
-//            let label = DateHeaderLabel()
-//            if date == nil {
-//                return nil
-//            }
-//            label.text = "\(date!)"
-//            let containerView = UIView()
-//            containerView.addSubview(label)
-//            label.centerSuperView()
-//            containerView.transform = CGAffineTransform(scaleX: 1, y: -1)
-//            return containerView
-//        }
-//    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 30
     }
 
@@ -1080,15 +954,16 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        if indexPath.row == 0, indexPath.section == 0 {
-//            let cell = tblChat?.dequeueReusableCell(withIdentifier: "Cell") as! DisclaimerCell
-//            cell.mainView?.transform = CGAffineTransform(scaleX: 1, y: -1)
-//            cell.selectionStyle = .none
-//            return cell
-//        }else
-        if (chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.messageType == 0 && chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.chatType == 0) {
-
-
+       
+        if chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?._id == "setLastCell" {
+            let cell = tblChat?.dequeueReusableCell(withIdentifier: "Cell") as! DisclaimerCell
+            cell.receiverData = receiverData
+            cell.conteteView?.transform = CGAffineTransform(scaleX: 1, y: -1)
+            cell.selectionStyle = .none
+            return cell
+        }
+        else if (chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.messageType == 0 && chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.chatType == 0) {
+            
             let cell = tblChat?.dequeueReusableCell(withIdentifier: "TextMsgCell") as! TextMsgCell
             cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
             configureCell(cell, forRowAtIndexPath: indexPath)
@@ -1096,7 +971,7 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
             cell.isdelForward = isdelForward
             cell.isSmsSelected = chatMsgArr?[indexPath.section].messagesData![indexPath.row].isSelected
             cell.chatData = chatMsgArr?[indexPath.section].messagesData![indexPath.row].messages
-            cell.backgroundColor = UIColor.clear
+            cell.backgroundColor = UIColor.white
             cell.mainView?.applyBottomShadow()
             //For blurr
             let interaction = UIContextMenuInteraction(delegate: self)
@@ -1110,7 +985,7 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
                 })
             }
             else{
-                cell.contentView.backgroundColor = .clear
+                cell.contentView.backgroundColor = .white
             }
             return cell
         }
@@ -1311,33 +1186,15 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
                         let indexPath = IndexPath(row: CommentSmsIndex!, section: Secton)
                         CommentindexPath = indexPath
                         tblChat?.scrollToRow(at: indexPath, at: .middle, animated: true)
-
-//                        cellToDeSelect = tblChat?.cellForRow(at: indexPath)
-//                        cellToDeSelect?.contentView.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)//UIColor.gray
                           isHighlighted = true
-//
                         DispatchQueue.main.asyncAfter(deadline: .now()+0.9, execute: { [self] in
-////
-////                            cellToDeSelect = tblChat?.cellForRow(at: indexPath)
-////                            cellToDeSelect?.contentView.backgroundColor = UIColor.red
                             CommentindexPath = nil
                               isHighlighted = false
-////
                         })
-
-
-//                        tblChat?.selectRow(at: indexPath, animated: true, scrollPosition: .none)
 
                     }
                     print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
             })
-
-//            chatMsgArr?.firstIndex(where: {$0.messagesData?.first?.messages?.commentId._id == (chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.commentId._id ) })
-
-//
-//            let filteredIndex = chatMsgArr?.firstIndex(where: {$0.messagesData?.first?.messages?._id == (chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.commentId._id ) })
-//            print(filteredIndex)
-//
 
         }
         else  if (chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.messageType == 2 && chatMsgArr![indexPath.section].messagesData![indexPath.row].messages?.chatType == 0) {
@@ -1381,96 +1238,63 @@ extension MessageVcCopy: UITableViewDelegate, UITableViewDataSource ,ChatItemSel
             print("nil")
         }
     }
-
-
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
         let height = scrollView.frame.size.height
             let contentYOffset = scrollView.contentOffset.y
             let distanceFromBottom = scrollView.contentSize.height - contentYOffset
         if distanceFromBottom - 145 >= height &&  contentYOffset > 10 {
             btnScrollToBottom?.isHidden = false
+           // topShadowView?.isHidden = false
+
         }
         else{
             btnScrollToBottom?.isHidden = true
+           // topShadowView?.isHidden = true
+
         }
-        
-            if distanceFromBottom - 145 <= height {
-//                btnScrollToBottom?.isHidden = false
-                
-                  print(cycle)
+
+            if distanceFromBottom - 140 <= height {
                   if cycle <= 2 {
                       cycle =  cycle + 10
-              ProfileTopConstraint?.isActive = false
-              ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: CGFloat(cycle))
-                          ProfileTopConstraint?.isActive = true
-                      viewUserName?.isHidden = false
-                      profileView?.isHidden = true
+                  profileView?.isHidden = true
                       statusOnlineStack?.isHidden = true
+                      topShadowView?.isHidden = true
                   }
-                     
+
             }
         else {
-           print()
             cycle =  cycle - 10
               print(cycle)
               if cycle <= 2 {
                   if cycle >= -119 {
-          ProfileTopConstraint?.isActive = false
-          ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: CGFloat(cycle))
-                  ProfileTopConstraint?.isActive = true
-                      viewUserName?.isHidden = true
                       profileView?.isHidden = false
                       statusOnlineStack?.isHidden = false
+                      topShadowView?.isHidden = false
                   }
                   else {
                       cycle = -100
                   }
-            
+
               }
-//            btnScrollToBottom?.isHidden = true
         }
 
     }
-    
-    
-    func reConfigContainer(){
-        
-    }
-    
-    
-    
-    
 }
 
 
 //MARK: - UITextView Delegate
 extension MessageVcCopy: UITextViewDelegate {
 
-
-
-
-
     func textViewDidBeginEditing(_ textView: UITextView) {
-//        SocketIOManager.sharedInstance.StartTyping(receiver_id: receiverData?.friendId ?? "")
-//
-        txtMessage?.text = ""
+       txtMessage?.text = ""
         textView.textColor = UIColor.black
 
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
         SocketIOManager.sharedInstance.StopTyping(receiver_id: receiverData?.friendId ?? "")
-//        if EditingEnable?.range(of:"Enter Message") != nil   {
-//            //self.txtMessage?.text =  ""
-//            btnRecoard?.isHidden = false
-//            btnSend?.isHidden = true
-//
-//        }
-//        else {
-//            //self.txtMessage?.text = EditingEnable ?? ""
-//            btnRecoard?.isHidden = false
-//            btnSend?.isHidden = true
-//        }
     }
     func textViewShouldEndEditing(_ textView: UITextView)  {
 
@@ -1610,10 +1434,6 @@ extension MessageVcCopy {
             }
         }
         
-        ProfileTopConstraint?.isActive = false
-        ProfileTopConstraint = self.profileDataView?.topAnchor.constraint(equalTo: navigationView!.bottomAnchor, constant: CGFloat(-120))
-            ProfileTopConstraint?.isActive = true
-        viewUserName?.isHidden = true
         profileView?.isHidden = false
         statusOnlineStack?.isHidden = false
         resettablesize(isOpen: true)
@@ -1942,6 +1762,7 @@ extension MessageVcCopy {
                     
                     let indexPath = IndexPath(row: 0, section: filteredIndex)
                     self.tblChat!.insertRows(at: [indexPath], with: .none)
+                    resettablesize()
                     self.tblChat!.scrollToTop()
 
                 }
@@ -1950,7 +1771,7 @@ extension MessageVcCopy {
                     
                     chatMsgArr?.insert(ChatMessagesModel(isSelected: false, date: messageDate, messagesData: [ChatMessageModelselection(isSelected: false, isSending: isProgress , isDownloading: false, messages: msgObject[count].msgData)]), at: 0)
                     
-
+                    resettablesize()
                     self.tblChat!.reloadData()
                     self.tblChat!.scrollToTop()
                 }
@@ -2022,7 +1843,7 @@ extension MessageVcCopy {
 //                continue
             }
             else {
-                return
+           //     return
             }
             let msgname = msgObject[count].msgData.message ?? ""
             if let viewControllers = navigationController?.viewControllers {
@@ -2093,7 +1914,7 @@ extension MessageVcCopy {
                     print(indexPath.section)
                    // let indexPath = IndexPath(row: chatMsgArr![filteredIndex].messagesData!.count - 1, section: filteredIndex)
                     self.tblChat!.insertRows(at: [indexPath], with: .none)
-                    resettablesize()
+                    
                     self.tblChat!.scrollToTop()
                     
                 }
@@ -2103,7 +1924,7 @@ extension MessageVcCopy {
                     //chatMsgArr?.append(ChatMessagesModel(isSelected: false, date: messageDate, messagesData: [ChatMessageModelselection(isSelected: false, isSending: isProgress , isDownloading: false, messages: msgObject[count].msgData)]))
 
                     self.tblChat!.reloadData()
-                    resettablesize()
+                    
                     self.tblChat!.scrollToTop()
                 }
             }
@@ -2328,7 +2149,7 @@ extension MessageVcCopy {
 //            tblCHatBottomConstraint?.isActive = false
 //            tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: replyView!.topAnchor, constant: -20)
 //            tblCHatBottomConstraint?.isActive = true
-            resettablesize()
+            
 
        // })
     }
@@ -2397,13 +2218,22 @@ extension MessageVcCopy : UIContextMenuInteractionDelegate {
                 issmsRecived = false
 
             }
-            return self.createContextMenu(issmsRecived: issmsRecived, stringTocpy: chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?.message ?? "0", messageType: chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?.messageType ?? 0, indexRow: indexPath)
+            
+            var isBookMarked = false
+            
+            if chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?.bookmarked.count ?? 0 != 0 {
+                if let firstSuchElement = chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?.bookmarked.first(where: { $0 == (AppUtils.shared.user?._id) }) {
+                    isBookMarked = true   } else {
+                        isBookMarked = false  }
+            } else {  isBookMarked = false }
+             
+            return self.createContextMenu(issmsRecived: issmsRecived, stringTocpy: chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?.message ?? "0", messageType: chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?.messageType ?? 0 , messageid: chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?._id ?? "", reciverid: chatMsgArr?[indexPath.section].messagesData?[indexPath.row].messages?.receiverId ?? "", status: "0" , indexRow: indexPath,isBookMarked: isBookMarked)
         }
 
     }
 
-    func createContextMenu(issmsRecived: Bool,stringTocpy: String, messageType : Int, indexRow : IndexPath) -> UIMenu {
-        print(issmsRecived)
+    func createContextMenu(issmsRecived: Bool,stringTocpy: String, messageType : Int,messageid: String? = "", reciverid: String? = "" , status: String? = "" , indexRow : IndexPath, isBookMarked: Bool? = false) -> UIMenu {
+       
         let image = UIImage(systemName: "ellipsis.circle", withConfiguration: UIImage.SymbolConfiguration(scale: .default))
 
 
@@ -2415,7 +2245,18 @@ extension MessageVcCopy : UIContextMenuInteractionDelegate {
             EditingEnable = stringTocpy
             isLongPressAction = true
         }
+        let bookImage = UIImage(systemName: "bookmark")?.withTintColor(AppColors.primaryColor, renderingMode: .alwaysOriginal)
+        let bookMark = UIAction(title: "Add bookmark", image: bookImage) { [self] _ in
+           viewModel?.bookMark(messageId: messageid, receiverId: reciverid, status: "1")
+            viewModel?.updateBookMark(Messages: chatMsgArr ?? [], location: indexRow, isRemovingMark: false)
+        }
+        let removebookMark = UIAction(title: "Remove bookmark", image: bookImage) { [self] _ in
+            viewModel?.bookMark(messageId: messageid, receiverId: reciverid, status: "0")
+            viewModel?.updateBookMark(Messages: chatMsgArr ?? [], location: indexRow, isRemovingMark: true)
+     
+        }
 
+        
         let reply = UIAction(title: "Reply", image: UIImage(named: "Reply-1")) { [self] _ in
             print("Copy")
             isReply = true
@@ -2428,11 +2269,6 @@ extension MessageVcCopy : UIContextMenuInteractionDelegate {
             isdeleted = false
             inputBottomOperationView?.isHidden = false
             inputBottomView?.isHidden = true
-//            tblCHatBottomConstraint?.isActive = false
-//            tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomOperationView!.topAnchor, constant: -20)
-//            tblCHatBottomConstraint?.isActive = true
-            resettablesize()
-
             lblForwardDelete?.text = "Forward"
 
             BtnForwrdDelete?.setImage(UIImage(named: "Forward"), for: .normal)
@@ -2450,11 +2286,8 @@ extension MessageVcCopy : UIContextMenuInteractionDelegate {
             isdeleted = true
             inputBottomOperationView?.isHidden = false
             inputBottomView?.isHidden = true
-//            tblCHatBottomConstraint?.isActive = false
-//            tblCHatBottomConstraint = self.tblChat?.bottomAnchor.constraint(equalTo: inputBottomOperationView!.topAnchor, constant: -20)
-//            tblCHatBottomConstraint?.isActive = true
+            
             resettablesize()
-
             BtnForwrdDelete?.setImage(UIImage(named: "delete-2"), for: .normal)
 
             lblForwardDelete?.text = "Delete"
@@ -2463,15 +2296,25 @@ extension MessageVcCopy : UIContextMenuInteractionDelegate {
             viewModel?.updateCustomerSelection(Messages: chatMsgArr ?? [], location: indexRow)
 
         }
+        
 
         if messageType == 0  &&  issmsRecived == false {
-            return UIMenu( options: .displayInline, children: [Edit, reply, Forward, Copy , Delete ])
+            if isBookMarked ?? false {
+                return UIMenu( options: .displayInline, children: [Edit, reply, Forward, Copy,removebookMark, Delete, ])
+            } else {
+                return UIMenu( options: .displayInline, children: [Edit, reply, Forward, Copy,bookMark, Delete, ])
+            }
         }
         else if messageType == 0  &&  issmsRecived == true {
-            return UIMenu( options: .displayInline, children: [reply, Forward, Copy, Delete ])
+            if isBookMarked ?? false {
+                return UIMenu( options: .displayInline, children: [reply, Forward, Copy,removebookMark, Delete ]) }
+            else{ return UIMenu( options: .displayInline, children: [reply, Forward, Copy,bookMark, Delete ]) }
         }
-        else {
-            return UIMenu( options: .singleSelection, children: [reply, Forward, Delete])
+        else {  if isBookMarked ?? false {
+            return UIMenu( options: .singleSelection, children: [reply, Forward,removebookMark, Delete]) }
+            else {
+                return UIMenu( options: .singleSelection, children: [reply, Forward,bookMark, Delete])
+            }
         }
 
     }
@@ -2775,48 +2618,7 @@ extension MessageVcCopy {
         }
     }
 
-    //Get Vedio details
-
-    //    func encodePhasset(ivasset:PHAsset){
-    //        if ivasset.mediaType == .video {
-    //            let options = PHVideoRequestOptions()
-    //            options.deliveryMode = .automatic
-    //            options.isNetworkAccessAllowed = true
-    //            PHImageManager.default().requestAVAsset(forVideo: ivasset, options: options) { [self] (asset, audiomix, info) in
-    //                if let urlAsset = asset as? AVURLAsset {
-    //                    let localVideoUrl = urlAsset.url
-    //                    self.gotoVideoTrim(vidUrl:localVideoUrl)
-    //                } else{
-    //                    hideCustomLoading()
-    //                    print("Asset is of not kind of AvUrlAsset.")
-    //                }
-    //            }
-    //        }else if ivasset.mediaType == .image {
-    //            let option = PHImageRequestOptions.init()
-    //            PHImageManager.default().requestImage(for: ivasset, targetSize: PHImageManagerMaximumSize, contentMode: PHImageContentMode.aspectFit, options: option) { [self] (result, info) in
-    //                if result != nil {
-    //                    if (String(describing: info!["PHImageResultIsDegradedKey"]!) == "0"){
-    //                    }
-    //                }else{
-    //                    hideCustomLoading()
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    func gotoVideoTrim(vidUrl:URL){
-    //     //   isImageCapturing = true
-    //        DispatchQueue.main.async(execute: { [self] in
-    //            hideCustomLoading()
-    //            let asset = AVURLAsset.init(url: vidUrl as URL)
-    //            let viewcontroller = VideoTrim_ViewController(nibName: "VideoTrim_ViewController", bundle: nil)
-    //            viewcontroller.delegate = self
-    //            viewcontroller.url = vidUrl
-    //            viewcontroller.asset = asset
-    //            self.navigationController?.pushViewController(viewcontroller, animated: true)
-    //        })
-    //    }
-
+   
     func hideCustomLoading(){
         DispatchQueue.main.async(execute: {
             print("Hide Loading Called.")
@@ -3000,7 +2802,7 @@ extension MessageVcCopy : UIDocumentPickerDelegate {
         let fileName = "File_\(timestampname)." + String(res.last!)
 
         self.writeFileToPath(name: fileName, data: nil, fileFolderName: "Document", destinationUrl: urls[urls.count - 1])
-
+        isForwardByMe = true
         APIServices.shared.sendFile(receiverId: "\(receiverData?.friendId ?? "")", document: documents[documents.count - 1], docName: fileName, filesurl: urls[urls.count - 1], isGroup: false, receiptStatus: false, isSeen: false) { response, Progress, errorMessage in
             if response != nil{
                 print(response)
@@ -3145,7 +2947,6 @@ extension MessageVcCopy: AVAudioPlayerDelegate {
             dummycell.downloadbtn.image = #imageLiteral(resourceName: "play-circle-1")
             dummycell.audioslider?.value =  Float(0.0)
             }
-
         }
 
         else {
@@ -3154,7 +2955,6 @@ extension MessageVcCopy: AVAudioPlayerDelegate {
 
         print("Play/Puse")
         let stopCurrent = false
-//        audioPlayer?.currentTime = 5
         let indexpath = IndexPath(row: IndexpateRow.row, section: IndexpateRow.section)
         let dummycell = self.tblChat?.cellForRow(at: indexpath) as! AudioMsgCell
 
@@ -3214,20 +3014,11 @@ extension MessageVcCopy: AVAudioPlayerDelegate {
         @objc func updateslider(sender:UISlider) {
 
             var clrimg = UIImage()
-
-        print(urlPlayed!)
-            print(SelectedAudionRow?.row ?? 0)
-            print(SelectedAudionRow?.section ?? 0)
             var audioduration:Float? = 0
             var audiotimestring:String? = ""
             (audioduration,audiotimestring) = checkaudiotime(audiourl: URL(string: urlPlayed!)!)
             let indexpath = IndexPath(row: SelectedAudionRow?.row ?? 0, section: SelectedAudionRow?.section ?? 0)
             
-//            if indexpath.section == 0 {
-//                audiotimer?.invalidate()
-//                return
-//            }
-
             let visibleIndexPaths = tblChat?.indexPathsForVisibleRows
             let res = visibleIndexPaths?.contains(indexpath)
             if res == false {
@@ -3258,20 +3049,11 @@ extension MessageVcCopy: AVAudioPlayerDelegate {
             }
         }
 
-
-
-
     //New Code OF THE Audeio Poalyere
 
     @objc func playAudio(url: String, IndexpateRow : IndexPath) {
         print("playAudio and  updata sliders..")
     }
-
-
-
-
-
-
 }
 
 

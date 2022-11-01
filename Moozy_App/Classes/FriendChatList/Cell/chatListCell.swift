@@ -38,7 +38,6 @@ class ChatListCell: UITableViewCell{
             
                 let imgUrl = "\(profileUrl.Url)\(chatData?.profile_image ?? "")" //url
                 if let url = URL(string: imgUrl){
-                  
                     imgTitle?.sd_setImage(with: url, completed: nil)
                 }else {
                     imgTitle?.image = UIImage(named: "profile3")

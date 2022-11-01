@@ -36,7 +36,10 @@ class ReplyViewCell: SwipyCell {
     var isSmsSelected: Bool?  = false
   
     var heightBackView: NSLayoutConstraint!
+    var isBookMar = false
     
+    let bookImage = UIImageView(image:  UIImage(systemName: "bookmark.fill")!.withTintColor(AppColors.primaryColor, renderingMode: .alwaysOriginal), contentModel: .scaleAspectFit)
+   
     var dataSet: chat_data? = nil {
         didSet{
             mainView?.backgroundColor = dataSet?.receiverId == AppUtils.shared.senderID ? AppColors.outgoingMsgColor : AppColors.incomingMsgColor
@@ -49,7 +52,14 @@ class ReplyViewCell: SwipyCell {
             
             lbltitleName?.text = dataSet?.receiverId == AppUtils.shared.senderID ? "\(dataSet?.senderId.name ?? "")" : "You"
           
-         //   lblReplyMessage?.text = "\(dataSet?.commentId.message ?? "\(commentSms ?? "")")"
+            if dataSet?.bookmarked.count ?? 0 != 0 && isBookMar == false {
+                if let firstSuchElement = dataSet?.bookmarked.first(where: { $0 == (AppUtils.shared.user?._id) }) {
+                    bookImage.isHidden = false
+                } else {
+                    bookImage.isHidden = true
+                }
+            } else {  bookImage.isHidden = true }
+            
             lblmessage?.text = "\(dataSet?.message ?? "")"
             if dataSet?.repliedTo != nil {
                 
@@ -95,7 +105,7 @@ class ReplyViewCell: SwipyCell {
                 
             }
             
-            if dataSet?.receiverId == AppUtils.shared.senderID {
+            if dataSet?.receiverId == AppUtils.shared.senderID || isBookMar == true {
                 leadingConstraint.isActive = true
                 trailingConstraint.isActive = false
                 
@@ -195,7 +205,8 @@ class ReplyViewCell: SwipyCell {
         lblDatetTimeDay = UILabel(title: "date??", fontColor: UIColor.gray, alignment: .left, font: UIFont.font(.Poppins, type: .Regular, size: 12))
         
         statusView?.constraintsWidhHeight(size: .init(width: 12, height: 12))
-        stack = UIStackView(views: [lblDatetTimeDay!], axis: .horizontal, spacing: 5, distribution: .fill)
+        let view = UIView( maskToBounds: true)
+        stack = UIStackView(views: [lblDatetTimeDay!,bookImage,view], axis: .horizontal, spacing: 0, distribution: .fill)
 //        stack = UIStackView(views: [lblDatetTimeDay! , statusView! ], axis: .horizontal, spacing: 5, distribution: .fill)
         
         mainView?.translatesAutoresizingMaskIntoConstraints = false

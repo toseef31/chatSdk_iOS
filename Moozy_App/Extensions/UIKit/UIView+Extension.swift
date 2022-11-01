@@ -127,18 +127,14 @@ extension UIView
         layer.maskedCorners = maskedCorners
     }
     
-    open func addShadow(){
-        let shadowPath0 = UIBezierPath(roundedRect: self.bounds, cornerRadius: 10)
-        let layer0 = CALayer()
-        layer0.shadowPath = shadowPath0.cgPath
-        layer0.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).cgColor
-        layer0.shadowOpacity = 1
-        layer0.shadowRadius = 6
-        layer0.shadowOffset = CGSize(width: 2, height: 2)
-        layer0.bounds = self.bounds
-        layer0.position = self.center
-        layer.addSublayer(layer0)
+    func roundCorners(corners:UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        self.layer.mask = mask
+        self.layer.masksToBounds = false
     }
+    
     
     /// Add 4 Sided border
     public func addBorder(width: CGFloat, color: UIColor) {
@@ -146,178 +142,22 @@ extension UIView
         layer.borderColor = color.cgColor
         layer.masksToBounds = true
     }
-    
-    /// TOP Border
-    public func addBorderTop(size: CGFloat, color: UIColor) {
-        addBorderUtility(x: 0, y: 0, width: frame.width, height: size, color: color)
-    }
-    
-    /// Bottom Border
-    public func addBorderBottom(size: CGFloat, color: UIColor) {
-        addBorderUtility(x: 0, y: frame.height - size, width: frame.width, height: size, color: color)
-    }
-    
-    /// Left Border
-    public func addBorderLeft(size: CGFloat, color: UIColor) {
-        addBorderUtility(x: 0, y: 0, width: size, height: frame.height, color: color)
-    }
-    
-    /// Right Border
-    public func addBorderRight(size: CGFloat, color: UIColor) {
-        addBorderUtility(x: frame.width - size, y: 0, width: size, height: frame.height, color: color)
-    }
-    
-    /// Add Border
-    fileprivate func addBorderUtility(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, color: UIColor) {
-        let border = CALayer()
-        border.backgroundColor = color.cgColor
-        UIView.animate(withDuration: 1) {
-            border.frame = CGRect(x: x, y: y, width: width, height: height)
-        }
-        layer.addSublayer(border)
-    }
+
 }
 
 //  MARK: TapGuestures
 // MARK: Gesture Extensions
 extension UIView {
-    
-    /// EZSwiftExtensions
-    public func addTapGesture(tapNumber: Int = 1, tagId: Int, target: AnyObject, action: Selector) {
-        let tap = UITapGestureRecognizer(target: target, action: action)
-        tap.numberOfTapsRequired = tapNumber
-        addGestureRecognizer(tap)
-        isUserInteractionEnabled = true
-        tag = tagId
-    }
-    
-    /// EZSwiftExtensions - Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
+//
+//    /// EZSwiftExtensions - Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
     public func addTapGesture(tapNumber: Int = 1, tagId: Int, action: ((UITapGestureRecognizer) -> Void)?) {
         let tap = BlockTap(tapCount: tapNumber, fingerCount: 1, action: action)
         addGestureRecognizer(tap)
         isUserInteractionEnabled = true
         tag = tagId
     }
-    
-    /// EZSwiftExtensions
-    public func addSwipeGesture(direction: UISwipeGestureRecognizer.Direction, numberOfTouches: Int = 1, target: AnyObject, action: Selector) {
-        let swipe = UISwipeGestureRecognizer(target: target, action: action)
-        swipe.direction = direction
-        
-        #if os(iOS)
-        
-        swipe.numberOfTouchesRequired = numberOfTouches
-        
-        #endif
-        
-        addGestureRecognizer(swipe)
-        isUserInteractionEnabled = true
-    }
-    
-    /// EZSwiftExtensions - Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-    public func addSwipeGesture(direction: UISwipeGestureRecognizer.Direction, numberOfTouches: Int = 1, action: ((UISwipeGestureRecognizer) -> Void)?) {
-        let swipe = BlockSwipe(direction: direction, fingerCount: numberOfTouches, action: action)
-        addGestureRecognizer(swipe)
-        isUserInteractionEnabled = true
-    }
-    
-    /// EZSwiftExtensions
-    public func addPanGesture(target: AnyObject, action: Selector) {
-        let pan = UIPanGestureRecognizer(target: target, action: action)
-        addGestureRecognizer(pan)
-        isUserInteractionEnabled = true
-    }
-    
-    /// EZSwiftExtensions - Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-    public func addPanGesture(action: ((UIPanGestureRecognizer) -> Void)?) {
-        let pan = BlockPan(action: action)
-        addGestureRecognizer(pan)
-        isUserInteractionEnabled = true
-    }
-    
-    #if os(iOS)
-    
-    /// EZSwiftExtensions
-    public func addPinchGesture(target: AnyObject, action: Selector) {
-        let pinch = UIPinchGestureRecognizer(target: target, action: action)
-        addGestureRecognizer(pinch)
-        isUserInteractionEnabled = true
-    }
-    
-    #endif
-    
-    #if os(iOS)
-    
-    /// EZSwiftExtensions - Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-    public func addPinchGesture(action: ((UIPinchGestureRecognizer) -> Void)?) {
-        let pinch = BlockPinch(action: action)
-        addGestureRecognizer(pinch)
-        isUserInteractionEnabled = true
-    }
-    
-    #endif
-    
-    /// EZSwiftExtensions
-    public func addLongPressGesture(target: AnyObject, action: Selector) {
-        let longPress = UILongPressGestureRecognizer(target: target, action: action)
-        addGestureRecognizer(longPress)
-        isUserInteractionEnabled = true
-    }
-    
-    /// EZSwiftExtensions - Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-    public func addLongPressGesture(action: ((UILongPressGestureRecognizer) -> Void)?) {
-        let longPress = BlockLongPress(action: action)
-        addGestureRecognizer(longPress)
-        isUserInteractionEnabled = true
-    }
-}
 
-//  MARK: Animations
-extension UIView{
-    
-    //Rotate View 360 Animation
-    func rotate360Degrees(duration: CFTimeInterval = 5.0, completionDelegate: AnyObject? = nil) {
-        let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
-        rotateAnimation.fromValue = 0.0
-        rotateAnimation.toValue = CGFloat(.pi * 2.0)
-        rotateAnimation.duration = duration
-        rotateAnimation.repeatCount = Float.infinity
-        if let delegate: AnyObject = completionDelegate {
-            rotateAnimation.delegate = delegate as? CAAnimationDelegate
-        }
-        layer.add(rotateAnimation, forKey: nil)
-    }
-    
-    func stopRotating(){
-        self.layer.sublayers?.removeAll()
-        //or
-        self.layer.removeAllAnimations()
-    }
-    
-    //Blinking Animation
-    func blink() {
-        self.alpha = 0.0
-        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveLinear, .repeat, .autoreverse], animations: {self.alpha = 1.0}, completion: nil)
-    }
-    
-    ///Fade in with duration, delay and completion block.
-    public func fadeIn(_ duration: TimeInterval? = UIViewDefaultFadeDuration, delay: TimeInterval? = 0.0, completion: ((Bool) -> Void)? = nil) {
-        fadeTo(1.0, duration: duration, delay: delay, completion: completion)
-    }
-    
-    ///Fade out with duration, delay and completion block.
-    public func fadeOut(_ duration: TimeInterval? = UIViewDefaultFadeDuration, delay: TimeInterval? = 0.0, completion: ((Bool) -> Void)? = nil) {
-        fadeTo(0.0, duration: duration, delay: delay, completion: completion)
-    }
-    
-    /// Fade to specific value     with duration, delay and completion block.
-    public func fadeTo(_ value: CGFloat, duration: TimeInterval? = UIViewDefaultFadeDuration, delay: TimeInterval? = 0.0, completion: ((Bool) -> Void)? = nil) {
-        UIView.animate(withDuration: duration ?? UIViewDefaultFadeDuration, delay: delay ?? UIViewDefaultFadeDuration, options: .curveEaseInOut, animations: {
-            self.alpha = value
-        }, completion: completion)
-    }
 }
-
 ///Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
 open class BlockTap: UITapGestureRecognizer {
     private var tapAction: ((UITapGestureRecognizer) -> Void)?
@@ -345,96 +185,6 @@ open class BlockTap: UITapGestureRecognizer {
     
     @objc open func didTap (_ tap: UITapGestureRecognizer) {
         tapAction? (tap)
-    }
-}
-
-///Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-open class BlockPinch: UIPinchGestureRecognizer {
-    private var pinchAction: ((UIPinchGestureRecognizer) -> Void)?
-    
-    public override init(target: Any?, action: Selector?) {
-        super.init(target: target, action: action)
-    }
-    
-    public convenience init (action: ((UIPinchGestureRecognizer) -> Void)?) {
-        self.init()
-        self.pinchAction = action
-        self.addTarget(self, action: #selector(BlockPinch.didPinch(_:)))
-    }
-    
-    @objc open func didPinch (_ pinch: UIPinchGestureRecognizer) {
-        pinchAction? (pinch)
-    }
-}
-
-
-///Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-open class BlockSwipe: UISwipeGestureRecognizer {
-    private var swipeAction: ((UISwipeGestureRecognizer) -> Void)?
-    
-    public override init(target: Any?, action: Selector?) {
-        super.init(target: target, action: action)
-    }
-    
-    public convenience init (
-        direction: UISwipeGestureRecognizer.Direction,
-        fingerCount: Int = 1,
-        action: ((UISwipeGestureRecognizer) -> Void)?) {
-        self.init()
-        self.direction = direction
-        
-        #if os(iOS)
-        
-        numberOfTouchesRequired = fingerCount
-        
-        #endif
-        
-        swipeAction = action
-        addTarget(self, action: #selector(BlockSwipe.didSwipe(_:)))
-    }
-    
-    @objc open func didSwipe (_ swipe: UISwipeGestureRecognizer) {
-        swipeAction? (swipe)
-    }
-}
-
-///Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-open class BlockPan: UIPanGestureRecognizer {
-    private var panAction: ((UIPanGestureRecognizer) -> Void)?
-    
-    public override init(target: Any?, action: Selector?) {
-        super.init(target: target, action: action)
-    }
-    
-    public convenience init (action: ((UIPanGestureRecognizer) -> Void)?) {
-        self.init()
-        self.panAction = action
-        self.addTarget(self, action: #selector(BlockPan.didPan(_:)))
-    }
-    
-    @objc open func didPan (_ pan: UIPanGestureRecognizer) {
-        panAction? (pan)
-    }
-}
-
-///Make sure you use  "[weak self] (gesture) in" if you are using the keyword self inside the closure or there might be a memory leak
-open class BlockLongPress: UILongPressGestureRecognizer {
-    private var longPressAction: ((UILongPressGestureRecognizer) -> Void)?
-    
-    public override init(target: Any?, action: Selector?) {
-        super.init(target: target, action: action)
-    }
-    
-    public convenience init (action: ((UILongPressGestureRecognizer) -> Void)?) {
-        self.init()
-        longPressAction = action
-        addTarget(self, action: #selector(BlockLongPress.didLongPressed(_:)))
-    }
-    
-    @objc open func didLongPressed(_ longPress: UILongPressGestureRecognizer) {
-        if longPress.state == UIGestureRecognizer.State.began {
-            longPressAction?(longPress)
-        }
     }
 }
 

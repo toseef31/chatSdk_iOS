@@ -437,17 +437,3 @@ extension UIImage{
 }
 
 
-
-//extension UIImage{
-    
-//static func fromPod(_ name: String) -> UIImage {
-//    let traitCollection = UITraitCollection(displayScale: 3)
-//    var bundle = Bundle(for: RecordView.self)
-//
-//    if let resource = bundle.resourcePath, let resourceBundle = Bundle(path: resource + "/iRecordView.bundle") {
-//        bundle = resourceBundle
-//    }
-//    
-//    return UIImage(named: name, in: bundle, compatibleWith: traitCollection) ?? UIImage()
-//    }
-//}

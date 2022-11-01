@@ -46,18 +46,16 @@ class ChatListVM{
         APIServices.shared.getAllFriends { [self] (response, errorMessage) in
             isLoader.value = false
             if response != nil{
-                var disct : [String : Any]? = ["" :""]
-              
+               
                 db.DeleteAllFriends()
                 response?.forEach({ da in
                     let inputFriend = friendInfoModel()
-                                  
                     inputFriend.message = da.message
                     inputFriend.messageType  = da.messageType
                     inputFriend.receipt_status  = da.unread
                     inputFriend.createdAt = da.createdAt
                     inputFriend.messageCounter  = da.messageCounter
-                    inputFriend.friendId = da.friendId
+                    inputFriend.friendId = da._id
                     inputFriend.name = da.name
                     inputFriend.profile_image = da.profile_image
                     inputFriend.onlineStatus  = da.onlineStatus

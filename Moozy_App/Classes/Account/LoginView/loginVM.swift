@@ -16,7 +16,6 @@ class LoginVM{
     init(){
     }
     
-    
     //Login User with Phone_Number
     func loginUser(phone: String, password: String){
         isLoader.value = true
